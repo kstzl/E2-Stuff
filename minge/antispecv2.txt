@@ -1,0 +1,99 @@
+@name AntiSpecV2
+@persist [ Infos ]:table
+
+interval(1)
+
+if(first()){
+    
+    Players = players()
+
+    foreach(K, Player:entity = Players){
+        
+        if(Player != owner()){
+        
+            HIndex = (time() * K)
+            HIndex = int(HIndex * 0.00000001)
+            
+            H1 = HIndex
+            H2 = HIndex + 1
+            H3 = HIndex + 2
+            H4 = HIndex + 3
+            
+            holoCreate(H1)
+            holoScaleUnits(H1, vec(20, 20, 60))
+        
+            holoCreate(H2)
+            holoScaleUnits(H2, vec(20, 20, 50))
+            holoColor(H2, vec(255, 0, 0))
+            holoModel(H2, "hqcone")
+            
+            holoCreate(H3)
+            holoScaleUnits(H3, vec(200, 200, 200))
+            holoModel(H3, "hqsphere")
+            
+            holoCreate(H4)
+            holoModel(H4, "hqsphere")
+            holoScale(H4, vec(5))
+            holoColor(H4, vec(255, 25, 25))
+            
+            holoMaterial(H3, "pp/sub")
+            
+            holoVisible(H1, players(), 0)
+            holoVisible(H1, owner(), 1)
+            
+            holoVisible(H2, players(), 0)
+            holoVisible(H2, owner(), 1)
+            
+            holoVisible(H3, players(), 0)
+            holoVisible(H3, owner(), 1)
+            
+            holoVisible(H4, players(), 0)
+            holoVisible(H4, owner(), 1)
+            
+            Infos:pushTable(table(
+            "Player" = Player,
+            "BodyHolo" = H1,
+            "HeadHolo" = H2,
+            "WallHackHolo" = H3,
+            "AimposHolo" = H4
+            ))
+        
+        }
+        
+    }
+    
+    entity():setName("e2 voiture")
+    entity():setAlpha(0)
+}
+
+for(I = 0, Infos:count()){
+    
+    Info = Infos[I, table]
+    
+    Player = Info["Player", entity]
+    H1 = Info["BodyHolo", number]
+    H2 = Info["HeadHolo", number]
+    H3 = Info["WallHackHolo", number]
+    H4 = Info["AimposHolo", number]
+    
+    holoPos(H1, Player:pos() + vec(0, 0, 20))
+    holoPos(H2, Player:pos() + vec(0, 0, 60))
+    holoPos(H3, Player:pos() + vec(0, 0, 20))
+    
+    holoAng(H1, Player:eye():toAngle():setPitch(0))
+    holoAng(H3, Player:eye():toAngle():setPitch(0))
+    holoAng(H2, Player:eye():toAngle() + ang(-90, 0, 0))
+    
+    holoPos(H4, Player:aimPos())
+    
+    Alpha = 255 * (Player:getMaterial() != "")
+    
+    holoAlpha(H1, Alpha)
+    holoAlpha(H2, Alpha)
+    holoAlpha(H3, Alpha)    
+    holoAlpha(H4, Alpha)    
+    
+    if(Alpha){
+        #print(Player:name() + " : " + Player:getMaterial())
+    }
+}

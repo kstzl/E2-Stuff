@@ -1,0 +1,27 @@
+@name FakePrinter
+@persist 
+@model models/props_c17/consolebox01a.mdl
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(0)
+    holoParent(0, entity())
+    holoAlpha(0, 0)
+    holoEntity(0):soundPlay(0, 0, "k_lab.printer")
+    
+}
+
+findByClass("player")
+findSortByDistance(entity():pos())
+Player = find()
+
+if(changed(Player:keyUse()) && Player:keyUse() == 1 && Player:aimEntity() == entity()){
+    
+    holoEntity(0):soundPlay(1, 0, "k_lab.plug_insert")
+    
+    Money = propSpawn("models/props/cs_assault/money.mdl", 0)
+    Money:setPos(holoEntity(0):toWorld(vec(0, 0, 25)))
+    
+}

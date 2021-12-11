@@ -1,0 +1,48 @@
+@name PropKill gun
+@persist [Target Prop]:entity D Lock
+
+runOnTick(1)
+
+findByClass("player")
+findSortByDistance(owner():aimPos())
+
+if(first()){ Prop=propSpawn("models/props_c17/FurnitureBed001a.mdl", 0) D=1
+    
+ holoCreate(0)
+ holoModel(0,"hqsphere")
+ holoMaterial(0,"models/XQM/lightlinesRed_tool")
+ holoAlpha(0,100)
+ holoScale(0,vec(4))
+ holoPos(0,Prop:pos())
+ holoParent(0,Prop)
+ #holoEntity(0):setTrails(300,10,1,"trails/laser",vec(randint(0,255),randint(0,255),randint(0,255)),255)
+ holoAlpha(0,1)
+
+ holoCreate(1)
+ holoScale(1,vec(-3,-3,-7))
+ holoColor(1,vec(255,0,0),0)
+
+     }
+if(Lock == 0 & changed(owner():keyAttack2()) && owner():keyAttack2() == 1){
+    
+   #holoEntity(0):setTrails(300,10,1,"trails/laser",vec(randint(0,255),randint(0,255),randint(0,255)),255)
+   timer("D1",5)
+   timer("D2",10)
+   timer("D3",400)
+   Target=find()  
+   Lock=1
+}
+
+if(clk("D1")){ holoEntity(1):soundPlay(1,5,"Weapon_MegaPhysCannon.Charge") }
+if(clk("D2")){ D=0 holoEntity(1):soundPlay(1,1,"BaseExplosionEffect.Sound ") }
+if(clk("D3")){ D=1 Target=noentity() Lock=0 }
+
+if(D == 0){ Prop:setPos(Target:pos()+vec(randint(-15,15),randint(-15,15),randint(0,15))) }
+if(D == 1){ Prop:setPos(owner():pos()+vec(0,0,200)) }
+
+
+Prop:setAlpha(0)
+Prop:applyAngForce(ang(1,1,701)*Prop:mass()*30)
+
+holoPos(1,Target:pos()+vec(0,0,43))
+holoAng(1,holoEntity(1):angles()+ang(0,25,0))

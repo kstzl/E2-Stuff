@@ -1,0 +1,28 @@
+@name PlayerSmoothPos
+@inputs 
+@outputs 
+@persist Target:entity Pos:vector State
+@trigger 
+
+interval(1)
+runOnLast(1)
+
+if(first()){
+    
+    Target = findPlayerByName("Hanks")
+    Pos = owner():pos()
+    
+}
+
+if(changed(owner():keyAttack2()) && owner():keyAttack2() == 1){
+    
+    State = !State
+    
+}
+
+local TargetPos = Target:pos() + Target:angles():setPitch(0):forward() * -75
+Pos += (TargetPos - owner():pos()) / 10
+
+if(State){
+    owner():plySetPos(Pos)
+}

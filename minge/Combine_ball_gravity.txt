@@ -1,0 +1,36 @@
+@name Combine ball gravity
+@inputs 
+@outputs 
+@persist I A:array P:array RD
+@model models/sprops/rectangles/size_1_5/rect_6x6x3.mdl
+
+ runOnTick(1)
+
+ Weapon = owner():weapon():type()
+
+ if (Weapon == "weapon_ar2"){
+    Class = "prop_combine_ball"
+ }
+ elseif(Weapon == "weapon_frag"){
+    Class = "npc_grenade_frag"
+ }
+ else{
+    Class = "grenade_helicopter"
+ }
+
+
+
+ P=players()
+ A=findToArray()
+ RD=randint(1,P:count())
+
+ I=0
+
+ findByClass(Class)
+
+ while(I < A:count()){
+        I++
+        A[I,entity]:setPos(P[RD, entity]:pos())
+
+ } 
+ 

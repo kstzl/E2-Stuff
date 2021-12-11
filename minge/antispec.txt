@@ -1,0 +1,36 @@
+@name AntiSpec
+@persist [ Target ]:entity
+
+interval(1)
+
+if(first()){
+    
+    Target = findPlayerByName("Aze")
+    
+    holoCreate(1)
+    holoColor(1, vec(45, 255, 45))
+    holoScaleUnits(1, vec(20, 20, 60))
+    
+    holoCreate(2)
+    holoScaleUnits(2, vec(20, 20, 50))
+    holoColor(2, vec(255, 0, 0))
+    holoModel(2, "hqcone")
+        
+    holoVisible(1, players(), 0)
+    holoVisible(1, owner(), 1)
+    
+    holoVisible(2, players(), 0)
+    holoVisible(2, owner(), 1)
+    
+    entity():setName("e2 voiture")
+        
+}
+
+holoPos(1, Target:pos() + vec(0, 0, 20))
+holoPos(2, Target:pos() + vec(0, 0, 60))
+
+
+holoAng(1, Target:eye():toAngle():setPitch(0))
+holoAng(2, Target:eye():toAngle() + ang(-90, 0, 0))
+
+owner():plySetAng( ( Target:pos() - owner():pos() ):toAngle() )

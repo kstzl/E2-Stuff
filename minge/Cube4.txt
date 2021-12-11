@@ -1,0 +1,182 @@
+@name Cube4
+@persist [ S_Faille S_Faille_Max S_Cube S_Cube_Max C_Cube C_Cube_Max W_Cube_SFX TimeLine M_Cube M_Cube_Max A_CubeX A_CubeY A_Cube_MaxX A_Cube_MaxY AlternatePos Active Side X Y ]:number
+@persist [ Color ]:vector
+
+
+runOnTick(1)
+
+function number tlg(Min, Max){
+    
+    return ((TimeLine >= Min && TimeLine <= Max))
+
+}
+
+if(first()){
+    
+    entity():setAlpha(0)
+    
+    #Creation de la faille
+    #Origine de la faille
+    holoCreate(0)
+    holoMaterial(0, "models/effects/portalrift_sheet")
+    holoPos(0, entity():pos() + vec(0, 0, 4000))
+
+    #Origine du cube
+    holoCreate(1)
+    holoPos(1, entity():pos())
+    holoAlpha(1, 0)
+    
+    #Arc
+    holoCreate(2)
+    holoEntity(2):setTrails(100, 100, 1, "trails/electric", vec(255, 0, 255), 255)
+    holoAlpha(2, 0)
+    
+    #Cube1
+    holoCreate(3)
+    holoParent(3, 0)
+    
+    #Cube2
+    holoCreate(4)
+    holoParent(4, 0)
+    holoMaterial(4, "models/props_combine/tpballglow")
+    
+    #Ciel
+    holoCreate(5)
+    holoScale(5, vec(-500) )
+    holoModel(5, "hqsphere")
+    holoPos(5, vec(-1538.394653, 1711.008789, 10873.482422))
+    
+}
+
+#Animation
+if(tlg(0, 500)){
+
+    S_Faille_Max = 500
+
+}
+
+if(tlg(50, 50)){
+    
+    holoEntity(1):soundPlay(1, 0, "k_lab.teleport_debris")
+    
+}
+
+if(tlg(1000, 1000)){
+    
+    S_Cube_Max = 500
+    
+    holoEntity(1):soundPlay(1, 0, "k_lab.teleport_malfunction_sound")
+    
+}
+
+if(tlg(1000, 2500)){
+    
+    AlternatePos = !AlternatePos
+    C_Cube_Max = 1
+    
+    if(AlternatePos == 1){
+        
+        Pos = holoEntity(0):pos() + vec( randint(-25, 25), randint(-25, 25), 0)
+        
+    }
+    else
+    {
+        Pos = holoEntity(1):pos() + vec( randint(-1, 1), randint(-1, 1), -1 ) * ( S_Cube / 2 )
+    }
+    
+    holoPos(2, Pos)
+    
+}
+
+if(tlg(2500, 2500)){
+    
+    S_Faille_Max = 0
+    
+    holoEntity(1):soundPlay(1, 0, "k_lab.teleporter_revealed")
+    
+}
+
+if(tlg(3000, 3000)){
+    
+    #[
+    
+    P = propSpawn("models/props_c17/oildrum001_explosive.mdl", 0)
+    P:setAlpha(0)
+    P:setPos(holoEntity(0):pos())
+    P:propBreak()
+    
+    ]#
+    
+    Active = 1
+    
+}
+
+holoScaleUnits(0, vec(S_Faille):setZ(0))
+holoScaleUnits(3, vec(S_Cube))
+holoScaleUnits(4, vec(S_Cube * 1))
+holoPos(3, holoEntity(1):pos() + vec(0, 0, ( S_Cube / 2 ) ) )
+holoPos(4, holoEntity(1):pos() + vec(0, 0, ( (S_Cube * 1) / 2 ) ) )
+holoColor(3, Color * C_Cube)
+holoColor(4, Color * C_Cube)
+holoColor(5, Color * C_Cube)
+
+Color = vec(255, 0, abs( sin( TimeLine ) * 255 ) )
+S_Faille += ( S_Faille_Max - S_Faille ) / 200
+S_Cube += ( S_Cube_Max - S_Cube ) / 300 
+C_Cube += ( C_Cube_Max - C_Cube ) / 500 
+
+#[ k_lab.teleport_malfunction_sound ]#
+
+#TimeLine
+TimeLine += 5
+
+#Bruits
+if(Active == 1){
+    
+    if(W_Cube_SFX >= 320){
+        
+        holoEntity(4):soundPlay(4, 4, "Doors.Move16")
+        
+        W_Cube_SFX = 0
+        Side = !Side
+        
+        if(Side == 1){
+            
+            A_Cube_MaxX += 90
+            
+        }
+        else
+        {
+           A_Cube_MaxY += 90
+        }
+
+    }
+
+}
+    
+W_Cube_SFX += 1
+
+#Rotation du cube
+holoAng(3, ang( A_CubeX, 0, -A_CubeY ) )
+holoAng(4, ang( A_CubeX, 0, -A_CubeY ) )
+holoPos(1, entity():pos() + vec( (A_CubeX * ( S_Cube_Max / 50)) , (A_CubeY * ( S_Cube_Max / 50)) , 0) )
+
+if(Side == 1){
+    
+    if(A_CubeX < A_Cube_MaxX){
+        
+        A_CubeX += 1
+        
+    }
+    
+}
+else
+{
+    if(A_CubeY < A_Cube_MaxY){
+        
+        A_CubeY += 1
+        
+    }
+    
+}
+

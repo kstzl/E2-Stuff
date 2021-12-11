@@ -1,0 +1,29 @@
+@name SkyInFire
+
+interval(1)
+
+if(first()){
+    
+    entity():setName("e2 setang stearing")
+    
+    for(I = 0, 50){
+        
+        holoCreate(I)
+        holoDisableShading(I, 1)
+        holoModel(I, "hqsphere")
+        holoScale(I, vec(-500 - I * 1.5))
+        
+        holoColor(I, vec(
+            random(3, 255),
+            random(3, 50),
+            random(3, 50)
+        ))
+        
+        holoAlpha(I, random(50, 255))
+        holoEntity(I):ignite()
+        holoAng(I, ang(I * 35))
+        holoEntity(I):soundPlay(I, 0, "Fire.Plasma")
+        
+    }
+
+}

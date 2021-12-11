@@ -1,0 +1,66 @@
+@name Cube_Qui_Saute
+@persist [ I F Up ]:number [ Target Player ]:entity [ Pos ]:vector
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoAlpha(1, 0)
+    
+    holoCreate(2)
+    holoScaleUnits(2, vec(100))
+    holoMaterial(2, "models/XQM/BoxFull_diffuse")
+    holoParent(2, 1)
+    
+    Target = owner()
+    Pos = Target:pos()
+    F = 45
+    
+}
+
+function launch(){
+    
+    Pos = Target:pos()
+    Up = -holoEntity(1):pos():distance(Pos)/2
+    
+}
+
+if(Up < 0){ Up += F/2 }
+
+holoPos(1, holoEntity(1):pos() + (Pos - holoEntity(1):toWorld(vec(0, 0, Up - 50))) / holoEntity(1):pos():distance(Pos)*F)
+holoAng(2, ang(I))
+
+if(holoEntity(1):pos():distance(Pos) <= 50){
+    
+    findByClass("player")
+    findSortByDistance(holoEntity(1):pos())
+    
+    if(find() == Target){
+        
+        Player = players()[randint(1, players():count()), entity]
+        Target = Player
+        
+    }
+    
+    launch()
+    
+}
+
+if(holoEntity(1):pos():distance(Target:pos()) <= 100 && Target != entity()){
+   
+ 
+    if(1 == 1){
+        
+        #ifdef P = propSpawn("models/props_c17/oildrum001_explosive.mdl", 0)
+        P:setAlpha(0)
+        P:setPos(holoEntity(1):pos())
+        P:propBreak()
+        #endif
+    
+    }
+    
+    
+}
+
+I += 1

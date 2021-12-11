@@ -1,0 +1,77 @@
+@name boombox2
+@inputs 
+@outputs 
+@persist Shake Alpha Z R V [ Pos ShakePos ShakeScale Scale]:vector
+@trigger 
+
+#include "fastlib"
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoModel(1, "models/props/cs_office/radio.mdl")
+    holoEntity(1):streamStart(1, "http://k007.kiwi6.com/hotlink/32ufzu9ag2/NEW_Boombox_Music_Fortnite.mp3")
+    holoScale(1, vec(5))
+    
+    holoCreate(2)
+    holoPos(2, holoEntity(1):toWorld(vec(0, 90, 0)))
+    holoModel(2, "models/effects/portalfunnel.mdl")
+    holoScale(2, vec(0.1, 0.1, 0.5))
+    holoAng(2, holoEntity(1):angles() + ang(90, 90, 0))
+    holoMaterial(2, "models/props_combine/tpballglow")
+    
+    holoCreate(3)
+    holoPos(3, holoEntity(1):toWorld(vec(0, -90, 0)))
+    holoModel(3, "models/effects/portalfunnel.mdl")
+    holoScale(3, vec(0.1, 0.1, 0.5))
+    holoAng(3, holoEntity(1):angles() + ang(90, -90, 0))
+    holoMaterial(3, "models/props_combine/tpballglow")
+        
+    Pos = entity():pos()
+    
+    entity():teleport(entity():toWorld(vec(0, 0, -500)))
+    
+    timer("bpm", 0)
+}
+
+if(clk("bpm")){
+
+    Shake = 2
+    Alpha = 255
+    Z = 45
+    R = chooseNumber(array(1, -1))
+    
+    findInSphere(holoEntity(1):pos(), 50)
+    findIncludePlayerProps(owner())
+    findByClass("prop_*")
+    Props = findToArray()
+    
+    for(I = 0, 5){
+    Prop = Props[randint(1, Props:count()), entity]
+    
+    Prop:applyForce(vec(0, 0, randint(150, 350)) * Prop:mass() )
+}
+
+    timer("bpm", 650)
+}
+
+Shake += ( 0 - Shake ) / 3
+Alpha += ( 0 - Alpha ) / 3
+
+if(Z > 0){ Z-=V }else{ V=0 }
+V+=1
+
+ShakePos = vec(randint(-5, 5), randint(-5, 5), randint(-5, 5)) * Shake
+ShakeScale = vec(0, 1, 0) * Shake
+
+holoPos(1, Pos + ShakePos + vec(0, 0, Z))
+holoScale(1, vec(5) + ShakeScale)
+holoAng(1, ang(Z/5 * R ))
+
+holoPos(2, holoEntity(1):toWorld(vec(0, 90, 0)))
+holoPos(3, holoEntity(1):toWorld(vec(0, -90, 0)))
+
+holoAlpha(2, Alpha)
+holoAlpha(3, Alpha)

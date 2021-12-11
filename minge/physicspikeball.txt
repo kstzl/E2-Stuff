@@ -1,0 +1,105 @@
+@name PhysicSpikeball
+@inputs 
+@outputs 
+@persist Pos:vector Target:entity Prop:entity DirY I TSpeed Speed TZ Z VZ Scale
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    Prop = entity():isWeldedTo()
+    Scale = 100
+    
+    holoCreate(0)
+    holoAng(0, ang(0))
+    holoAlpha(0, 0)
+    
+    holoCreate(1)
+    holoModel(1, "hqsphere")
+    holoScaleUnits(1, vec(Scale))
+    holoMaterial(1, "sprops/textures/sprops_metal1")
+    holoColor(1, vec(200))
+    holoEntity(1):soundPlay(1, 0, "Boulder.ScrapeRough")
+    
+    for(I = 2, 60){
+        
+        holoCreate(I)
+        holoModel(I, "hqcone")
+        holoScaleUnits(I, vec(Scale / 5, Scale / 5, Scale / 3))
+        holoAng(I, ang(
+            random(0, 360),
+            random(0, 360),
+            random(0, 360)
+        ))
+        holoPos(I, holoEntity(I):toWorld(vec(0, 0, Scale / 2)))
+        holoMaterial(I, "sprops/textures/sprops_metal1")
+        holoParent(I, 1)
+        
+    }
+    
+    Z = entity():pos():z()
+    Target = owner()
+}
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos())
+Target = find()
+
+if(Target){
+    
+    #ifdef entity:removeNoColideAll()
+    if(changed(Cond) && Cond == 0){ Prop:removeNoCollideAll() prnt("NO COLLIDE REMOVED") }
+    if(changed(Cond) && Cond == 1){ Prop:setNoCollideAll() prnt("NO COLLIDE APPLYIED") }
+    #endif
+    
+    TargetVec = ((holoEntity(1):pos() + vec(
+        random(-100, 100),
+        random(-100, 100),
+        random(-150, 10)
+    )) - Prop:pos()) * Prop:mass() * 55
+    
+    entity():setAlpha(0)
+    Prop:setAlpha(0)
+    
+    Prop:applyForce(TargetVec + $TargetVec)
+    
+    Prop:applyAngForce(ang(
+        35,
+        35,
+        35
+    ) * Prop:mass())
+}
+
+Ranger = rangerOffset(3000, holoEntity(0):toWorld(vec(0, 0, 30)), -holoEntity(0):up())
+TSpeed = (Scale / 25) + abs(Ranger:hitNormal():toAngle():yaw()) / 25
+Speed += (TSpeed - Speed) / 25
+Pos = holoEntity(0):toWorld(vec(Speed, 0, 0))
+TZ = Ranger:pos():z()
+
+if(Z > TZ){
+    
+    Z -= VZ
+    VZ += 0.1
+    
+}
+else
+{
+    Z += ((TZ + 35) - Z) / 15
+    VZ = -1
+}
+
+if(randint(0, 2) < 1){
+    local Id = randint(2, 60)
+    
+    holoEntity(Id):soundPlay(Id, 0, "EpicMetal_Heavy.ImpactHard")
+    soundPitch(Id, randint(160, 200))
+    soundVolume(Id, 0.25)
+       
+}
+
+holoAng(0, (Target:pos() - holoEntity(0):pos()):toAngle())
+holoAng(1, (Target:pos() - holoEntity(0):pos()):toAngle() + ang(I, sin(I) * 1, 0))
+holoPos(0, Pos:setZ(Z))
+holoPos(1, holoEntity(0):pos() + vec(0, 0, Scale / 2))
+I+=10

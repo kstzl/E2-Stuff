@@ -1,0 +1,25 @@
+@name EarthQuake
+@inputs 
+@outputs 
+@persist E:entity C I A:array
+@trigger 
+
+if(first()){
+    
+   entity():setAlpha(0)
+    
+}
+
+X = randint(-5,5) 
+Y = randint(-5,5) 
+Z = randint(-3,4)
+
+   findByClass("prop_*")
+   findSortByDistance(entity():pos())
+
+A = findToArray()
+I = 0
+while(I < A:count()){
+    I++
+    A[I,entity]:applyForce(vec(X,Y,Z)*A[I,entity]:mass()*randint(3,8)) 
+}

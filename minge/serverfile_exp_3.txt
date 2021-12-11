@@ -1,0 +1,46 @@
+@name serverfile_exp_3
+@inputs 
+@outputs 
+@persist [ RootFileContent ]:string State Total
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    State = 1
+    RootFileContent = "xD"
+    
+}
+
+if(State == 1){
+    
+    if(RootFileContent:length() < 512){
+        
+        RootFileContent += RootFileContent
+        print("[ROOT CONTENT] Length : " + RootFileContent:length())
+        
+    }
+    else
+    {
+        print("[ROOT CONTENT] OK !")
+        State = 2
+    }
+    
+}
+elseif(State == 2){
+    
+    local FileName = randint(0, 1000000000) + ".txt"
+
+    e2serverfileWrite(FileName, RootFileContent)
+    
+    if(e2serverfileExists(FileName)){
+        
+        local Size = e2serverfileSize(FileName)
+        
+        print("[COPY] Created " + FileName + " ! (Size : " + Size + ") TOTAL : " + Total:toString())
+        Total += Size
+        
+    }
+
+}

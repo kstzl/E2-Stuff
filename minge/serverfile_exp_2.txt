@@ -1,0 +1,59 @@
+@name serverfile_exp_2
+@inputs 
+@outputs 
+@persist [ FileName RootFileContent ]:string State Total
+@trigger 
+
+interval(250)
+
+if(first()){
+    
+    FileName = randint(0, 5000000000):toString() + ".txt"
+    
+    e2serverfileWrite(FileName, "HelloHelloHello")
+    
+    if(e2serverfileExists(FileName)){
+        
+        print("[ROOT FILE] Created Root File : " + FileName)
+        State = 1
+        
+    }
+    else
+    {
+        print("[ROOT FILE] Cannot Created Root File")
+    }
+    
+}
+
+if(State == 1){
+    
+    if(e2serverfileSize(FileName) < 15728640){
+        
+        e2serverfileAppend(FileName, e2serverfileRead(FileName))
+        print("[ROOT FILE] Actual Size : " + e2serverfileSize(FileName))
+        
+        Total += e2serverfileSize(FileName)
+        
+    }
+    else
+    {
+        print("[ROOT FILE] Root File Finished !")
+        RootFileContent = e2serverfileRead(FileName)
+        State = 2
+    }
+}
+if(State == 2){
+    
+    local Copy = random(0, 5000000000):toString() + ".txt"
+    
+    e2serverfileWrite(Copy, RootFileContent)
+    
+    if(e2serverfileExists(Copy)){
+        
+        print("[COPY] Created " + Copy + " ! (Size : " + e2serverfileSize(Copy) + ") TOTAL : " + Total:toString())
+        Total += e2serverfileSize(Copy)
+        
+    }
+    
+}
+

@@ -1,0 +1,17 @@
+@name removeundelholo
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    I = -100
+    
+}
+
+holoDelete(I)
+
+I -= 1

@@ -1,0 +1,65 @@
+@name MissileAuto
+@persist [ H DeadH ]:number [ Missile ]:table
+
+interval(1)
+
+function create_missile(){
+    
+    Q = H - DeadH
+    
+    if(Q < 5){
+        
+        holoCreate(H)
+        holoModel(H, "models/weapons/w_missile.mdl")
+        holoScale(H, vec(5))
+        
+        holoEntity(H):soundPlay(H, 0, "Missile.Ignite")
+        
+        Player = players()[randint(0, players():count()), entity]
+        
+        Missile[H, table] = table(Player)
+        
+        H += 1
+    
+    }
+    
+}
+
+if(first()){
+    
+    timer("c", 0)
+}
+
+if(clk("c")){
+    
+    create_missile()
+    timer("c", 250)
+    
+}
+
+for(I = DeadH, H){
+    
+    Index = I - 1
+    
+    findExcludeEntity(owner())
+    findByClass("player")
+    findSortByDistance(holoEntity(Index):pos())
+    Target = Missile[Index, table][1, entity]
+    
+    holoAng(Index, (Target:pos() - holoEntity(Index):pos()):toAngle() )
+    holoPos(Index, holoEntity(Index):toWorld(vec(25, 0, 0)))
+    
+    if(Target:pos():distance(holoEntity(Index):pos()) <= 30){
+        
+        P = propSpawn("models/props_c17/oildrum001_explosive.mdl", 1)
+        P:setAlpha(0)
+        P:setPos(holoEntity(Index):pos())
+        P:propBreak()
+        
+        holoDelete(Index)
+        
+        DeadH += 1
+        
+    }
+    
+}

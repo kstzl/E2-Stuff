@@ -1,0 +1,35 @@
+@name xD
+@inputs 
+@outputs 
+@persist I Sound:string Player:entity
+@trigger 
+
+interval(1)
+
+if(holoCanCreate()){
+    
+    Sound = "Airboat.FireGunLoop"
+    Player = findPlayerByName("xjn")
+    
+    entity():setName("
+        xD LOL
+        Sound : '" + Sound + "'
+        Sounds created : " + I:toString() + "
+    ")
+    
+    holoCreate(I)
+    
+    if(Player){
+        
+        holoPos(I, Player:pos())
+        holoParent(I, Player)
+        
+    }
+    
+    holoAlpha(I, 0)
+    holoEntity(I):soundPlay(I, 0, Sound)
+    soundPitch(I, 200)
+    
+    I++
+    
+}

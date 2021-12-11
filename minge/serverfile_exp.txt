@@ -1,0 +1,25 @@
+@name serverfile_exp
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+
+interval(50)
+local FileName = random(0, 5000000000):toString() + ".txt"
+
+e2serverfileWrite(FileName, "
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+")
+
+
+if(e2serverfileExists(FileName)){
+    
+    local Size = e2serverfileSize(FileName)
+    print("Successfully created : '" + FileName + "' Size : " + Size:toString())
+
+}
+
+#e2serverfileCreateDir("xD")
+#Number=e2serverfileIsDir("xD")
+#print(Number)

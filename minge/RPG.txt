@@ -1,0 +1,120 @@
+@name RPG
+@inputs 
+@outputs 
+@persist NB Pos:vector Pos2:vector P:entity Force Exp Exp2 Time RTime Dist DistP Color:vector Find:string
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+    
+##########CONFIG###########
+
+
+Dist = 50
+DistP = 0.1
+Force = 90000
+Color = vec(200,200,200)
+Find = "player"
+
+
+###########################
+
+NB=0  
+Exp=0
+
+
+
+ holoCreate(-5)
+ holoModel(-5,"hqcylinder")
+ holoColor(-5,vec(255,0,0))
+ holoScale(-5,vec(3.5,3.5,0.1))
+}
+
+Pos = owner():pos()+vec(0,0,70) 
+
+if(owner():keyAttack2() && Exp <= 0){
+Push=1
+}
+
+if(changed(Push) && Push == 1){
+
+holoCreate(NB)
+holoPos(NB,Pos)
+
+holoEntity(NB):soundPlay(1,100,"Weapon_RPG.Single")
+holoEntity(NB):soundPlay(2,100,"ep2_outland_11.silo_steam_loop")
+holoEntity(NB):soundPlay(3,100,"Town.d1_town_01_spin_loop")
+
+holoScale(NB,vec(3,3,3))
+holoAlpha(NB,0)
+
+P=propSpawn("models/XQM/Rails/gumball_1.mdl",0)
+P:setTrails(10,2,1,"trails/smoke",Color,255)
+P:setPos(Pos)
+P:applyForce(owner():eye()*P:mass()*Force^3)
+P:setAlpha(0)
+
+Pos2 = owner():eye()*P:mass()*Force^1
+
+Exp=1
+}
+
+if(Exp==1){
+    Time++
+    soundPitch(2,Time)
+    soundPitch(3,Time*5)
+}
+if(Time >= 100){
+    
+Exp2=1
+}
+
+if(Time >= 0.1){
+    
+    Dist+=DistP/0.1
+    
+    findSortByDistance(holoEntity(NB):pos())
+    findByClass(Find)
+    
+    if(holoEntity(NB):pos():distance(find():pos()) <= Dist*2.5 && find() != owner()){
+    
+    holoEntity(NB):soundPlay(4,100,"Buttons.snd17")
+    
+    }
+    
+    if(holoEntity(NB):pos():distance(find():pos()) <= Dist*5.5 && Time >= 0.1 && find() != owner()){
+    
+    P:setPos(find():pos())
+    holoPos(NB,find():pos())
+    
+    
+    }
+    
+    if(holoEntity(NB):pos():distance(find():pos()) <= Dist && find() != owner()){
+    
+    #concmd("ulx ungod " + find():getName())
+    
+    P2=propSpawn("models/props_c17/oildrum001_explosive.mdl",1) 
+    P2:setPos(holoEntity(NB):pos())
+    P2:propBreak()
+
+    Exp2=1
+}
+
+}
+
+if(Exp2 == 1){
+    RTime++
+    if(RTime >= 2){
+    propDeleteAll()
+    reset() 
+       
+    }
+}
+
+holoPos(NB,P:pos())
+P:applyForce(Pos2)
+Ang = owner():aimNormal():toAngle()+ang(90,0,0)
+holoAng(-5,Ang)
+#holoPos(-5,owner():aimPos())

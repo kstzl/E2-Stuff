@@ -1,0 +1,16 @@
+@name PENIS
+@inputs 
+@outputs 
+@persist N N2
+@trigger 
+
+ runOnTick(1)
+
+
+ if(changed(owner():keyAttack2()) && owner():keyAttack2() == 1){
+    
+    N+=5
+    holoCreate(N) holoModel(N,"hqsphere") holoParent(N,owner():aimEntity()) holoPos(N,owner():aimPos()+vec(-85,0,20)) holoScale(N,vec(15)) holoColor(N,vec(255,170,0))
+    holoCreate(N+1) holoModel(N+1,"hqsphere") holoParent(N+1,owner():aimEntity()) holoPos(N+1,owner():aimPos()+vec(85,0,20)) holoScale(N+1,vec(15)) holoColor(N+1,vec(255,170,0))
+    holoCreate(N+2) holoModel(N+2,"hqsphere") holoParent(N+2,owner():aimEntity()) holoPos(N+2,owner():aimPos()+vec(0,0,290)) holoScale(N+2,vec(10,10,55)) holoColor(N+2,vec(255,5,0))
+ }

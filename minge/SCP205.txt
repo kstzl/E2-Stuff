@@ -1,0 +1,66 @@
+@name SCP205
+@persist [ W S ]:number [ Pos ]:vector [ Models Anims ]:array
+@model models/props_c17/light_floodlight02_off.mdl
+
+interval(100)
+
+if(first()){
+    
+    holoCreate(0)
+    holoAlpha(0, 0)
+    holoPos(0, entity():toWorld(vec(0, 0, 90)))
+    entity():setAng( owner():eyeAngles():setPitch(0) )
+    holoParent(0, entity())
+    
+    holoCreate(1)
+    holoModel(1, "models/Barney.mdl")
+    holoAnim(1, "lineidle01", 0.1, 0.1)
+    holoMaterial(1, "Boba_Fett/textures/atlantisfloor_tile")
+    holoScale(1, vec(0.1, 2, 2))
+    holoColor(1, vec(0))
+    #holoEntity(0):streamStart(1, "http://k007.kiwi6.com/hotlink/ygm5kuvd1b/Music205.ogg")
+    
+    Models[0, string] = "models/odessa.mdl"
+    Models[1, string] = "models/vortigaunt.mdl"
+    Models[2, string] = "models/Lamarr.mdl"
+    Models[3, string] = "models/gman_high.mdl"
+    
+    Anims[0, string] = "heal"
+    Anims[1, string] = "butcher"
+    Anims[2, string] = "lockerjump01"
+    Anims[3, string] = "duckunder"
+    
+    lightCreate(1)
+    lightDistance(1, 100)
+    
+    lightCreate(2)
+    lightDistance(2, 100)
+    lightBrightness(2, 15)
+    lightPos(2, holoEntity(0):toWorld(vec(0, 0, 50)))
+    holoParent(2, holoEntity(0))
+
+}
+
+Ranger = rangerOffset(3000, holoEntity(0):pos(), holoEntity(0):forward())
+Pos = Ranger:pos()
+W += 1
+
+lightPos(1, Pos)
+lightBrightness(1, 15 - (randint(0, 15) * S) )
+lightBrightness(2, 15 - (randint(0, 255) * S) )
+    
+holoPos(1, Pos - vec(0, 0, 50) + holoEntity(1):forward() * 1.5)
+holoAng(1, Ranger:hitNormal():toAngle())
+
+S = S * 0.9
+
+if(W >= 30){
+    
+    RD = randint(0, Models:count())
+    holoModel(1, Models[RD, string])
+    holoAnim(1, Anims[RD, string])
+    
+    S = 1
+    W = 0
+    
+}

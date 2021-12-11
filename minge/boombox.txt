@@ -1,0 +1,38 @@
+@name boombox
+@persist [ S S2 I W ]:number
+
+runOnTick(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoModel(1, "models/props/cs_office/radio.mdl")
+    holoEntity(1):streamStart(1, "http://k007.kiwi6.com/hotlink/hd9j3m2lx5/NEW_Boombox_Music_Fortnite.mp3")
+    
+}
+
+holoPos(1, entity():toWorld(vec(0, 0, S)))
+holoAng(1, ang(0, 0, S2))
+holoScale(1, vec(5))
+
+if(W >= 30){
+    
+    findByClass("prop_*")
+    findSortByDistance(holoEntity(1):pos())
+                                                                                                                                                
+    Prop = find()
+    #Prop2 = propSpawn("models/props_phx/ball.mdl", 0)
+    #Prop2:setPos(Prop:pos())
+    
+    #Prop2:propBreak()
+    Prop:propBreak()
+    
+    W = 0
+    
+}
+
+S = 15 + abs(sin(I) * 15)
+S2 = cos(I) * 25
+I += 15
+W += 1
+#
