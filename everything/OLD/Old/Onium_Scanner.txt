@@ -1,0 +1,42 @@
+@name Onium Scanner
+@inputs 
+@outputs H
+@persist H G R
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+    holoCreate(1,entity():pos(),vec(5,5,0.1),ang(),vec(255,0,0)) holoAlpha(1,100) holoParent(1,entity())
+    holoCreate(2,entity():pos(),vec(6,6,0.1),ang(),vec(255,0,0),"hq_stube") holoAlpha(2,200) holoParent(2,entity())
+
+ }
+
+ findByClass("player")
+ findSortByDistance(entity():pos())
+
+ if(entity():pos():distance(find():pos()) <= 70){
+    Sound=1
+    
+    if(G < 255){ G+=20 }
+    if(R > 1){ R-=20 }
+    
+    H+=5
+    
+    
+ }
+ else
+ {   
+    if(R < 255){ R+=10 }
+    if(G > 1){ G-=10 }
+    
+    if(H >= 1){ H-=3 }
+ }
+
+
+ if(changed(Sound) && Sound == 1){
+    holoEntity(1):soundPlay(1,1,"eli_lab.elevator_ding")
+    
+ }
+   holoColor(1,vec(R,G,0))
+   holoColor(2,vec(R,G,0))

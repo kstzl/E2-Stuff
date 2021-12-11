@@ -1,0 +1,25 @@
+@name Ragdoll Template Test
+@inputs
+@outputs 
+@persist [Target Ragdoll]:entity [L_hand_id R_hand_id L_foot_id R_foot_id Head_id Ass_id]:bone [I]:number
+@trigger 
+
+interval(1)
+
+if(first()){   
+     
+    Ragdoll = entity():isWeldedTo() 
+    Target = findPlayerByName("kec")
+    entity():propFreeze(0)
+
+}
+function applyRagdollForce(Bone:bone, Vec:vector, Force:number){
+    Bone:applyForce((Vec-Bone:massCenter()-Bone:vel()/2) * Bone:mass() * Force)
+}
+
+for(I = 0, Ragdoll:boneCount()){
+    
+    applyRagdollForce(Ragdoll:bone(I), Target:pos(), 1)
+    
+}
+

@@ -1,0 +1,43 @@
+@name Herobrine
+@inputs 
+@outputs 
+@persist RD I I2 I3 Alpha A:array T:entity
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+
+              RD2=-1
+              Alpha=150
+              A=players()
+    while(I < A:count()){
+          I++
+          T=A[I,entity]
+    
+          holoCreate(I)
+          holoCreate(I) holoModel(I,"hqsphere") holoScale(I,vec(-5)) holoColor(I,vec(0))
+          holoPos(I,T:pos()+vec(0,0,50))
+          holoPos(I,T:attachmentPos("eyes"))
+          holoAng(I,T:attachmentAng("eyes"))
+          holoParentAttachment(I,T,"eyes")
+          holoAlpha(I,Alpha)
+          holoEntity(I):soundPlay(I,0,"ambient.electrical_zap_9")
+    }
+    
+ }
+
+ if(I2 < I && Alpha < 260){ I2+=0.5 holoAlpha(I2,Alpha) }
+ if(I2 >= I){ I2=0 Alpha+=5 }
+
+ if(Alpha >= 255){
+ RD=randint(0,I)
+ holoAlpha(RD,randint(254,255))
+ }
+
+ if(changed(Alpha) && Alpha >= 255){
+    while(I3 < I){
+          I3++
+          holoEntity(I3):soundPlay(I3,0,"novaprospekt.teleport_post_thunder")
+    }
+ }

@@ -1,0 +1,110 @@
+@name animation_lib_v2_test
+@persist 
+
+#include "animation_lib_v2"
+
+Code=
+    "
+    Object ground;
+    Object chair;
+    Object npc;
+    Object radio;
+    Object wrench;
+    
+    ObjectModel ground models/hunter/plates/plate5x5.mdl;
+    ObjectModel chair models/props_c17/FurnitureCouch001a.mdl;
+    ObjectModel npc models/Kleiner.mdl;
+    ObjectModel radio models/props_lab/citizenradio.mdl;
+    ObjectModel wrench models/props_c17/tools_wrench01a.mdl;
+    
+    ObjectMoveToWorld chair 0 0 20;
+    ObjectMoveToWorld npc 12 0 4;
+    ObjectMoveToWorld radio 70 0 4;
+    ObjectMoveToWorld wrench -70 0 4;
+    
+    ObjectScale wrench 2 2 2;
+    
+    ObjectAngle radio 0 180 0;
+    
+    ObjectAnim npc silo_sit;
+    
+    Sequence radiobug;
+        ObjectRotate radio 5 15 10;
+        Pause 5;
+        ObjectRotate radio -5 -15 -10;
+        Pause 5;
+    End;
+    
+    Sequence radiobugsfx;
+        Sfx radio ReallyLoudSpark;
+        Pause 1500;
+    End;
+    
+    Sequence npcwalk;
+        ObjectMoveToWorld npc 2 0 0;
+    End;
+    
+    Pause 1000;
+    
+    Sfx radio song4;
+    
+    Pause 3500;
+    
+    SequencePlay radiobug loop;
+    SequencePlay radiobugsfx loop;
+    
+    Pause 2500;
+    
+    ObjectAnim npc lineidle01;
+    ObjectMoveToWorld npc 15 0 -4;
+    
+    Pause 1500;
+    
+    ObjectAnim npc plaza_walk_all;
+    SequencePlay npcwalk loop;
+    
+    ObjectAngle npc 0 90 0;
+    
+    Pause 1000;
+    
+    ObjectAngle npc 0 180 0;
+    
+    Pause 1500;
+    
+    ObjectAngle npc 0 270 0;
+    
+    Pause 500;
+    
+    ObjectAnim npc crouch_reload_smg1;
+    SequenceStop npcwalk;
+    
+    Pause 500;
+    
+    ObjectMoveToWorld wrench 0 0 20;
+    ObjectRotate wrench 0 90 0;
+    ObjectParent wrench npc;
+    Sfx wrench SolidMetal.ImpactSoft;
+    
+    Pause 1500;
+    
+    ObjectAnim npc plaza_walk_all;
+    SequencePlay npcwalk loop;
+    
+    Pause 1000;
+    
+    ObjectRotate npc 0 90 0;
+    
+    Pause 2000;
+    
+    ObjectRotate npc 0 90 0;
+    
+    Pause 10;
+    
+    ObjectAnim npc lineidle01;
+    SequenceStop npcwalk;
+    "
+
+if(first()){
+    al_disable_logs()
+    al_start_analyse_execution(Code)
+}

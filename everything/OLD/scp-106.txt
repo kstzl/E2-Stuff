@@ -1,0 +1,31 @@
+@name SCP-106
+@persist [ Target ]:entity
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoModel(1, "models/player/charple.mdl")
+    holoAnim(1, "swim_idle_all")
+    
+    holoCreate(2)
+    holoScale(2, vec(2))
+    
+    holoCreate(3)
+    holoPos(3, holoEntity(1):toWorld(vec(100, 0, 50)))
+    holoAng(3, holoEntity(1):angles())
+    holoParent(3, 1)
+    
+    holoCreate(4)
+    holoColor(4, vec(255, 0, 0))
+}
+
+Target = owner()
+Ranger = rangerOffset(3000, holoEntity(3):toWorld(vec(0, 0, 0)), -holoEntity(3):forward())
+
+holoPos(2, Ranger:pos())
+
+holoAng(1, ( Target:pos() - holoEntity(1):pos() ):toAngle():setPitch(0))
+holoPos(1, holoEntity(1):toWorld(vec(1, 0, 0)))
+

@@ -1,0 +1,15 @@
+@name Aimbot
+@inputs 
+@outputs 
+@persist OP:vector T:entity
+@trigger 
+
+ runOnTick(1)
+
+ if(first())
+ {
+ OP=owner():pos() O=owner() T=findPlayerByName("jo")
+ }
+
+ owner():plySetAng((T:attachmentPos("eyes") - vec(OP:x(),OP:y(),OP:z()+55 + O:height())):toAngle())
+ 

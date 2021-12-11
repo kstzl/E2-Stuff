@@ -1,0 +1,15 @@
+@name 
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+if(owner():keyAttack1()){
+    Prop = propSpawn("models/props_c17/oildrum001_explosive.mdl",0)
+    timer("fire",200)
+}
+
+if(clk("fire")){
+    Prop:applyForce(owner():aimPos()*3)
+    print("ok")
+}

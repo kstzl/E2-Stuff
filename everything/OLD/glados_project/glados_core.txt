@@ -1,0 +1,82 @@
+@name glados_core
+@inputs
+@outputs
+@persist [ CORE_POSITIVE CORE_HOUR ]:number
+
+interval(1)
+
+CORE_HOUR = time("hour")
+
+if(first() || dupefinished()){
+    
+    CORE_POSITIVE = 5
+    
+    entity():soundPlay(0, 0, "d3_citadel.combine_ball_field_loop1")
+    dsJoinGroup("glados")
+    
+    print("GLaDOS : By K3CR4FT.:DLL - 2020")
+    
+}
+
+function glados_reply_positive(Amount:number){
+    
+    CORE_POSITIVE += Amount
+    
+}
+
+function glados_reply_negative(Amount:number){
+    
+    CORE_POSITIVE -= Amount
+    
+}
+
+if(dsClk("positive")){
+    
+    print("Glados : received")
+    
+    local Amount = dsGetNumber()
+    
+    if(CORE_POSITIVE < 30){
+        
+        CORE_POSITIVE += Amount
+        
+    }
+    
+}
+if(dsClk("negative")){
+    
+    local Amount = dsGetNumber()
+    CORE_POSITIVE -= Amount
+    
+}
+
+
+if(dsClk("ask") && CORE_POSITIVE > 0){
+    
+    local M = dsGetString()
+    
+    if(M == "ia"){
+        
+        print("glados : ia")
+        
+        dsSend("ia", "glados", "")
+        
+    }
+    
+    if(M == "ib"){
+        
+        if(owner():pos():distance(entity():pos()) < 150){
+            
+            print("glados : ib : ACCEPTED")
+            dsSend("ib", "glados", "")
+            
+        }
+        else
+        {
+            print("glados : ib : ERROR")
+            glados_reply_negative(1)
+        }
+        
+    }
+    
+}

@@ -1,0 +1,100 @@
+@name CinematiqueFinServeur
+@persist [ Players Models ]:array [ TornadoActive TornadoHolo BHActive BHHolo ]:number
+
+interval(1)
+
+function sfxAP(Sfx_:string){
+    
+    for(I = 0, Players:count()){
+        
+        holoEntity(I):soundPlay(I + time(), 0, Sfx_)
+    
+    }
+}
+
+if(first()){
+    
+    Players = players()
+    
+    for(I = 0, Players:count()){
+        
+        Player = Players[I, entity]
+        
+        holoCreate(I)
+        holoPos(I, Player:pos())
+        holoParent(I, Player)
+        holoAlpha(I, 0)
+        
+    }
+    
+    TornadoHolo = Players:count() + 1
+    
+    holoCreate(TornadoHolo)
+    holoModel(TornadoHolo, "models/effects/portalfunnel.mdl")
+    holoScale(TornadoHolo, vec(5))
+    holoAlpha(TornadoHolo, 0)
+    
+    BHHolo = TornadoHolo + 1
+    
+    holoCreate(BHHolo)
+    holoScale(BHHolo, vec(1))
+    holoModel(BHHolo, "models/props_phx/construct/metal_tube.mdl")
+    
+    Models[0, string] = "models/props_phx/construct/metal_tube.mdl"
+    Models[1, string] = "models/props_phx/construct/metal_plate1.mdl"
+    Models[2, string] = "models/props_borealis/bluebarrel001.mdl"
+    Models[3, string] = "models/Cranes/crane_frame.mdl"
+    Models[4, string] = "models/props_lab/blastdoor001c.mdl"
+    Models[5, string] = "models/props_vehicles/apc_tire001.mdl"
+    Models[6, string] = "models/props_wasteland/cargo_container01.mdl"
+    
+    timer("partie1", 100)
+}
+
+if(TornadoActive){
+    
+    holoAlpha(TornadoHolo, 255)
+    holoAng(TornadoHolo, holoEntity(TornadoHolo):angles() + ang(0, 5, 0))
+    
+}
+
+if(BHActive){
+    
+    if(holoEntity(BHHolo):pos():distance(holoEntity(TornadoHolo):pos()) > 50){
+        
+        holoPos(BHHolo, holoEntity(BHHolo):pos() + (holoEntity(TornadoHolo):pos() - holoEntity(BHHolo):pos()) / 15 )
+        holoAng(BHHolo, holoEntity(BHHolo):angles() + ang(1))
+        
+    }
+    else
+    {
+        holoPos(BHHolo, holoEntity(TornadoHolo):pos() + vec(randint(-3000, 3000), randint(-3000, 3000), randint(1000, 3000)))   
+        holoModel(BHHolo, Models[randint(0, Models:count()), string])
+    }
+    
+}
+
+if(clk("partie1")){
+    
+    sfxAP("k_lab.mini_teleport_crack1")
+    
+    timer("partie2", 1)
+
+}
+
+if(clk("partie2")){
+    
+    sfxAP("ep2_outland_11.silo_alarm")
+    
+    timer("partie3", 1)
+    
+}
+
+if(clk("partie3")){
+    
+    sfxAP("k_lab.teleport_warmup1")
+    
+    TornadoActive = 1
+    BHActive = 1
+    
+}

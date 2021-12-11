@@ -1,0 +1,37 @@
+@name Noclip Beta
+@inputs 
+@outputs 
+@persist Ply:entity Gravity
+@trigger 
+
+if( first() ){
+    runOnTick(1)
+    runOnLast(1)
+    
+    #Ply = findPlayerByName( "pataproute" )
+    Ply = owner()
+    Gravity = owner():plyGetGravity()
+    
+    Ply:plySetGravity( 0 )
+}
+
+KW      = Ply:keyForward()
+KA      = Ply:keyLeft()
+KS      = Ply:keyBack()
+KD      = Ply:keyRight()
+KSpace  = Ply:keyJump()
+KShift  = Ply:keySprint()
+KCtrl   = Ply:keyDuck()
+KAlt    = Ply:keyWalk()
+
+Friction      = -Ply:vel() / 10
+Multiplier    = ( KShift * 2 + 1 ) / ( KCtrl * 2 + 1 ) / ( KAlt * 2 + 1 ) * 60
+ForwardForce  = Ply:eyeAngles():forward() * ( KW - KS )
+RightForce    = Ply:eyeAngles():right() * ( KD - KA )
+UpForce       = vec( 0, 0, 1 ) * KSpace
+
+Ply:plyApplyForce( Friction + ( ForwardForce + RightForce + UpForce ) * Multiplier )
+
+if( last() ){
+    Ply:plySetGravity(600)
+}

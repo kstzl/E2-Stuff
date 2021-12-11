@@ -1,0 +1,23 @@
+@name Bounce BALL HOLO
+@inputs 
+@outputs 
+@persist Ang:angle OldAng:angle I
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){ holoCreate(1) holoModel(1,"hqsphere")}
+
+ Ranger=rangerOffset(3000,holoEntity(1):pos(),holoEntity(1):up())
+
+ holoPos(1,holoEntity(1):pos()+holoEntity(1):up()*5)
+
+ if(Ranger:distance() <= 25){ Ang=Ranger:hitNormal():toAngle()+ang(90,90,0)+OldAng/2 holoAng(1,Ang) Sound=1 I+=1 }
+ if(changed(Sound) && Sound == 1){ 
+    holoEntity(1):soundPlay(1,0,"NPC_CombineBall.Impact")   
+    soundPitch(1,randint(95,110))
+ }
+
+ if(changed(I) && I == 1){ OldAng=Ang }
+ if(I == 2){ I=1 }
+

@@ -1,0 +1,80 @@
+@name Auto_Door_v2
+@inputs 
+@outputs 
+@persist [JustOwner MinDistance UpDistance U CanGo AllPlayer]:number [OpenSound CloseSound Wl]:string [Spos Sens]:vector [Sang]:angle [E Target]:entity
+@trigger 
+
+    interval(5)
+
+#Code:
+
+if (first()) {
+    E = entity():isWeldedTo()
+    Spos = E:pos()
+    Sang = E:angles()
+    holoCreate(1) 
+    holoPos(1, E:pos()) 
+    holoAng(1, E:angles())
+    holoScale(1, vec(0.4))
+    holoAlpha(1,0)
+    entity():setAlpha(0)
+    
+#Auto Door config:
+#Sens [ex: vec(0, 0, 1) = haut]:
+    Sens = vec(0, 0, 1)
+#Juste l'owner peut ouvrir la porte ? [0: non / 1: oui]:
+    JustOwner = 0
+#Autoriser tout les joueurs a passer [0:non / 1:oui]:
+    AllPlayer = 0
+#Son d'ouverture:
+    OpenSound = "Doors.Move16"
+#Son de fermeture:
+    CloseSound = "Doors.FullClose10"
+#Distance min:
+    MinDistance = 120
+#Distance up:
+    UpDistance = 100
+#WhiteList:
+    Wl = "k3 ; Wordred"
+#Fin config:
+
+}
+
+if (JustOwner == 1) {
+    Target = owner()
+}
+if (JustOwner == 0) {
+    findByClass("player")
+    findSortByDistance(holoEntity(1):pos())
+    Target = find()
+    
+    Wl2 = Wl:explode(" ")
+    
+    CanGo = 0
+    for(I = 1, Wl2:count()){
+        if (Target:name() == Wl2[I, string]) {
+        CanGo = 1   
+        }
+    }
+    if(CanGo == 1){ E:setColor(vec(0,255,0))}
+}
+
+if(holoEntity(1):pos():distance(Target:pos()) <= MinDistance && (CanGo == 1 || AllPlayer == 1)){
+    
+    E:setPos(Spos + vec(UpDistance, UpDistance, UpDistance) * Sens)
+    Sound1 = 1
+     
+}else{
+    
+    U = 0
+    E:setPos(Spos)
+    E:setAng(Sang)
+    E:setColor(vec(255))
+    Sound2 = 1
+    CanGo = 0
+
+}
+
+if (changed(Sound1) && Sound1 == 1) { holoEntity(1):soundPlay(1, 5, OpenSound) }
+if (changed(Sound2) && Sound2 == 1) { holoEntity(1):soundPlay(2, 5, CloseSound) }
+E:setAlpha(400-find():pos():distance(E:pos()))

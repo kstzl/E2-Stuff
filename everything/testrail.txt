@@ -1,0 +1,17 @@
+@name TestRail
+
+@persist [ Sens ]:vector
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoPos(1, entity():toWorld(vec(0, 0, 15)))
+    
+}
+
+Ranger = rangerOffset(3000, holoEntity(1):pos(), -holoEntity(1):up())
+
+holoAng(1, Ranger:hitNormal():toAngle() + ang(0, 0, 0))
+#holoPos(1, holoEntity(1):toWorld(vec(0, -1, 0)))

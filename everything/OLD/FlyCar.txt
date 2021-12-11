@@ -1,0 +1,76 @@
+@name FlyCar
+@persist [Vitesse]:number [Nom Version Model]:string [E]:entity
+
+#Vehicule volant Par k3, pour Nekros
+#(c) k3 2017 touts droits reserves.
+Version = "1.0"
+Nom = "FlyCar"
+
+interval(1)
+
+    #--Fonctions:
+    
+function info(Arg1:string, Arg2:string, Arg3:string) {
+    
+    print("[----------------------------------------------------------------]")
+    print(Nom + " " + "info:")
+    print(Arg1)
+    print(Arg2)
+    print(Arg3)
+    print("[----------------------------------------------------------------]")
+    
+}
+
+if(first()) {
+    
+    #--Configuration:
+    Vitesse = 5
+    Model = "models/buggy.mdl"
+    
+    #--Code (A ne pas toucher):
+    E = entity():isWeldedTo()
+    if(E:model() != Model) {
+        
+         info("Erreur ! L'E2 ne peut pas etre creer.", "L'E2 n'est surement pas sur le vehicule, ou sur le mauvais.", "Le model doit etre: " + Model) 
+         selfDestructAll() 
+        
+    }
+    else {
+        
+        info("L'E2 spawne avec succes.", "by k3, pour Nekros", "Version: " + Version)
+        
+        #--Hologramme: centre:
+        holoCreate(1)
+        holoPos(1, E:pos() + vec(0, 0, 15))
+        holoAng(1, E:angles())
+        holoParent(1, E)
+        
+        #--Hologramme: aile gauche:
+        holoCreate(2)
+        holoPos(2, E:pos() + vec(0, 0, 15))
+        holoAng(2, E:angles())
+        
+        #--Hologramme: aile droite:
+        holoCreate(3)
+        holoPos(3, E:pos() + vec(0, 0, 15))
+        holoAng(3, E:angles())
+        
+        
+        
+        
+    }
+    
+}
+
+    #--Controles:
+    Dri = E:driver()
+    W = Dri:keyForward()
+    A = Dri:keyLeft()
+    S = Dri:keyBack()
+    D = Dri:keyRight()
+    Shi = Dri:keySprint()
+    Spc = Dri:keyJump()
+    R = Dri:keyReload()
+    M1 = Dri:keyAttack1()
+    M2 = Dri:keyAttack2()
+

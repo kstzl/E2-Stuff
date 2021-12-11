@@ -1,0 +1,44 @@
+@name Black Hole Prop Kill
+@inputs 
+@outputs 
+@persist Start Prop:entity I A:array C D Time
+@trigger 
+
+ runOnTick(1)
+ 
+ findByClass("player")
+ A=findToArray()
+
+ if(first()){
+    
+    Time=6
+    Prop=propSpawn("models/props_c17/FurnitureBed001a.mdl",0)
+    Prop:setTrails(5,5,1,"trails/laser",vec(0,150,0),255)
+    
+    holoCreate(1)
+    holoModel(1,"hqsphere")
+    holoScale(1,vec(-2))   
+    holoColor(1,vec(0))
+    
+    timer("s", 1000)
+    
+    
+ }
+if(clk("s")){ Start = 1 }
+
+    holoPos(1,entity():pos()+vec(0,0,40))
+    
+    Prop:applyAngForce(ang(1,1,301)*Prop:mass()*1320)
+    Prop:setAlpha(0)
+    
+    if(C < Time && Start == 1){ C+=1 }
+    if(C == Time/2){ I=randint(1,A:count()) D=0 }
+    if(C >= Time){ C=0 D=1 holoEntity(1):soundPlay(1,0,"ambient.electrical_random_zap_1") }
+ 
+    if(D == 1){
+    Prop:setPos(holoEntity(1):pos())
+    }
+    if(D == 0){
+    Prop:setPos(A[I,entity]:pos())   
+    }
+

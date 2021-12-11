@@ -1,0 +1,68 @@
+@name My Zone
+@inputs 
+@outputs 
+@persist I A:array Prop:entity Active
+@trigger 
+@model models/props_junk/sawblade001a.mdl
+
+ runOnTick(1)
+ runOnChat(1)
+
+ findByClass("player")
+
+ A=findToArray()
+
+ if(first()){
+ 
+ C=1
+
+ Active=1   
+ 
+ findExcludeEntity(findPlayerByName("Aku")) 
+ findExcludeEntity(findPlayerByName("ph")) 
+
+ Prop=propSpawn("models/props_c17/FurnitureBed001a.mdl",0)  findExcludeEntity(Prop)
+
+ holoCreate(1) holoScale(1,vec(-50,-50,-50)) holoAlpha(1,100) holoParent(1,entity())
+ holoCreate(0) holoScale(0,vec(0)) holoAlpha(0,100) holoPos(0,Prop:pos()) holoParent(0,Prop)
+ holoEntity(0):setTrails(40,10,1,"trails/laser",vec(255,0,0),255)
+ holoEntity(0):soundPlay(0,0,"d3_citadel.combine_ball_field_loop1")
+
+ entity():setMaterial("models/wireframe")
+    
+ }
+ 
+  if (chatClk(owner())) {
+    M = lastSaid():explode(" ")
+
+    if (M:string(1) == "-myzone") {
+        
+        if(M:string(2) == "active"){
+        if(M:string(3) == "yes"){
+           Active=1
+        }    
+        }
+        if(M:string(2) == "active"){
+        if(M:string(3) == "no"){
+           Active=0
+        }    
+        }
+        
+ }
+ }
+
+       if(Active == 1){ holoColor(0,vec(255,0,0)) holoColor(1,vec(255,0,0)) }else{ holoColor(0,vec(0,255,0)) holoColor(1,vec(0,255,0)) }
+       if(changed(Active)){ holoEntity(1):soundPlay(1,1,"Buttons.snd9") }
+
+       I=randint(0,A:count())
+    
+       if(A[I,entity]:pos():distance(entity():pos()) >= 530){ Prop:setPos(entity():pos()+vec(0,0,400)) }
+       if(A[I,entity]:pos():distance(entity():pos()) <= 530){ ZapSound=randint(0,12)
+       if(Active == 1){
+       Prop:setPos(A[I,entity]:pos()+vec(0,0,30))
+       }
+       }
+       if(changed(ZapSound) && ZapSound == 1 && Active==1){ holoEntity(0):soundPlay(1,15,"ambient.electrical_zap_9") }
+    
+       Prop:applyAngForce(ang(1,1,520)*Prop:mass()*30)
+       Prop:setAlpha(0)

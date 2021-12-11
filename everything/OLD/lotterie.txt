@@ -1,0 +1,40 @@
+@name Lotterie
+@inputs Egp:wirelink
+@persist Roll FinalPrice
+
+#Lotterie Arnaque LOL
+
+#include "borne_automatique/egplib"
+
+interval(1)
+
+User = Egp["User", entity]
+A = User:keyUse()
+
+if(changed(A) && A == 1){
+    
+    if(User == owner()){
+        timer("roll", 0)
+        timer("stoproll", 3500)
+        timer("clear", 7000)
+    }
+    
+}
+
+if(clk("roll")){ Roll = 1 }
+if(clk("stoproll")){ Roll = 0 }
+if(clk("clear")){ Egp:egpClear() }
+
+if(Roll == 1){
+    
+    Egp:egpClear()
+    
+    PrixRandom = 500 * random(0.4, 1.4)
+    PrixRandom = round(PrixRandom)
+    
+    Egp:text(1, PrixRandom:toString(), vec2(256, 256), vec(255), 150)
+    Egp:text(2, "kr", vec2(256, 256*1.5), vec(255), 30)
+    
+}
+
+

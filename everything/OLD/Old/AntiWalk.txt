@@ -1,0 +1,58 @@
+@name AntiWalk
+@inputs 
+@outputs 
+@persist T:array E:entity R Vel C I
+@model models/Gibs/HGIBS.mdl 
+
+# By k3 2016
+
+runOnTick(1)
+
+if(first()){
+    
+    findByClass("prop_*")
+    findExcludeEntity(E)
+    T=findToArray()
+    I=1
+    
+    E = entity():isWeldedTo()
+    E:setAlpha(0)
+    
+    entity():setAlpha(0)
+    
+    holoCreate(1)
+    holoCreate(2)
+    
+    holoModel(1,"hqsphere")
+    holoModel(2,"hqsphere")
+    
+    holoScale(1,vec(1.2,1.2,1.2)*2)
+    holoScale(2,vec(1.2,1.2,1.2)*3)
+    holoMaterial(2,"models/alyx/emptool_glow")
+    holoAlpha(2,40)
+    
+
+   holoEntity(1):setTrails(50,1,9999999,"trails/physbeam",vec(255,255,255),255)
+   holoEntity(1):soundPlay(0,0,"NPC_CombineBall.HoldingInPhysCannon") soundVolume(0,0.2)
+   holoEntity(1):soundPlay(1,0,"d3_citadel.combine_ball_field_loop3")
+
+    
+}
+
+holoPos(1,T[I,entity]:pos())
+holoPos(2,T[I,entity]:pos())
+
+holoAng(1,ang(R,R,R))
+holoAng(2,ang(R,R,R))
+R++
+
+if(T[I,entity]){
+E:setPos(holoEntity(1):pos()+vec(0,0,randint(-15,5)))
+E:applyAngForce(ang(1,1,720)*E:mass()*30)
+
+Vel = T[I,entity]:vel():length()
+holoColor(1,vec(0,Vel/2,Vel))
+
+if(C < 2){ C++ }
+if(C >= 2){ I=randint(1,T:count()) C=0 }
+}

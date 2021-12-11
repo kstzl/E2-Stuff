@@ -1,0 +1,18 @@
+@name animation_lib_v2_template
+@persist 
+
+#include "animation_lib_v2"
+
+Code=
+    "
+    Object npc;
+
+    ObjectModel npc models/Kleiner.mdl;
+    
+    ObjectAnim npc lineidle01;
+    "
+
+if(first()){
+    #al_disable_logs()
+    al_start_analyse_execution(Code)
+}

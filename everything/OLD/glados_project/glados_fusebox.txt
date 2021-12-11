@@ -1,0 +1,16 @@
+@name glados_fusebox
+@inputs IA IB IC
+@outputs OA OB OC
+@model models/props_lab/reciever01b.mdl
+
+interval(1)
+
+if(first()){
+    
+    dsJoinGroup("glados")
+    
+}
+
+if(changed(IA)){ dsSend("ask", "glados", "ia") } if(dsClk("ia")){ OA = IA }
+if(changed(IB)){ dsSend("ask", "glados", "ib") } if(dsClk("ib")){ OB = IB }
+if(changed(IC)){ dsSend("ask", "glados", "ic") } if(dsClk("ic")){ OC = IC }

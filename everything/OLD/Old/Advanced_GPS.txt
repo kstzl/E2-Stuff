@@ -1,0 +1,11 @@
+@name Advanced GPS (Pos/Ang/Vel..)
+@inputs 
+@outputs Pos:vector Ang:angle Vel
+@persist 
+@trigger 
+@model models/beer/wiremod/gps.mdl
+
+ runOnTick(1)
+ Pos=entity():pos()
+ Anb=entity():angles()
+ Vel=entity():vel():length()

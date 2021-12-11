@@ -1,0 +1,14 @@
+@name 
+@inputs 
+@outputs 
+@persist 
+@trigger
+
+if( first() ){
+    Ranger = rangerOffset(3000, entity():pos(), -entity():up())
+    print(Ranger:hitTexture())
+}
+
+holoCreate(1)
+holoMaterial(1, "models/cs_italy/plaster")
+ 

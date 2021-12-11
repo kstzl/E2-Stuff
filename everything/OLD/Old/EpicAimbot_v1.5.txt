@@ -1,0 +1,115 @@
+@name EpicAimbot v1.5
+@inputs 
+@outputs
+@persist R:ranger [A RA]:array OP:vector O:entity EI I HV  S:array AimBot AutoShoot
+
+if(first()){
+    runOnTick(1)
+    runOnChat(1)
+    
+    O = owner()
+    
+    EI = 0
+    
+    rangerPersist(1)
+    rangerFilter(owner())
+    rangerIgnoreWorld(1)
+    
+    hint("Aimbot loaded !",3)
+    
+}
+
+OP = owner():pos()
+
+if(changed(A:count()) || I == A:count()){
+    I = 0
+    EI = 0
+    findByClass("NPC_*")
+    A = findToArray()
+
+}
+
+
+if(O:isCrouch()){
+    HV = (O:height()/2)-5
+}
+else{HV = 0}
+
+if(chatClk(owner())){
+    S = owner():lastSaid():explode(" ")
+    
+    if(S:string(1) == "!aimbot"){
+        hideChat(1)
+        if(S:count() > 1){
+            AimBot = S:string(2):toNumber()
+        }
+        if(changed(AimBot) && AimBot == 1){
+        hint("AimBot ON!",2)
+        }
+        if(AimBot > 1){
+            hint("No such function",2)
+        }
+        if(changed(AimBot) && AimBot == 0){
+            hint("AimBot OFF!",2)
+        }
+    }
+    
+    
+    #---------AUTO-SHOOT-COMMAND----------#
+    if(S:string(1) == "!autoshoot"){
+        hideChat(1)
+        if(S:count() > 1){
+            AutoShoot = S:string(2):toNumber()
+        }
+    }
+    if(changed(AutoShoot) && AutoShoot == 1){
+        hint("AutoShoot ON!",2)
+    }
+    if(AutoShoot > 1){
+        hint("No such function",2)
+    }
+    if(changed(AutoShoot) && AutoShoot == 0){
+        hint("AutoShoot OFF!",2)
+    }
+    #---------AUTO-SHOOT-COMMAND----------#
+    
+}
+
+if(changed(AimBot) && AimBot != 1 && AutoShoot == 1){
+    AutoShoot = 0
+    hint("AutoShoot OFF!",2)
+}
+
+
+while(I < A:count()){   
+    
+    EI++
+    
+    
+    RA[EI,ranger] = rangerOffset(owner():pos()+vec(0,0,O:height()-8) , A[EI,entity]:attachmentPos("eyes"))
+    
+    if((RA[EI,ranger]:entity() != A[EI,entity]) || A[EI,entity]:health() < 0){
+        findClipFromEntity(A[EI,entity])
+    }
+    
+    
+    I++
+
+}
+if(AimBot == 1){
+    if(RA[EI,ranger]:entity() == A[EI,entity] && A[EI,entity]:health() > 0){
+        owner():plySetAng((A[EI,entity]:attachmentPos("eyes") - vec(OP:x(),OP:y(),OP:z() + O:height()-8 - HV)):toAngle())
+    }
+}
+
+if(AutoShoot == 1){
+
+    if(RA[EI,ranger]:entity() == A[EI,entity] && A[EI,entity]:health() > 0){
+        concmd("+attack")
+    }elseif(changed(A[EI,entity])){
+        concmd("-attack")
+    }
+}
+
+
+

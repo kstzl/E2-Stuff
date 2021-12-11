@@ -1,0 +1,54 @@
+@name Radar
+@inputs Ents:array
+@outputs A:number Speed:number
+@persist E:entity E_Name:string E_Speed:number Speed_Limit:number [ LastFlashedEnt ]:entity
+
+interval(1)
+
+if(first()){
+    
+    Speed_Limit = 40
+
+}
+
+foreach(K, E:entity = Ents){
+
+    KmH = toUnit("km/h", E:vel():length())
+    
+    E_Name = E:name()
+    E_Speed = round(KmH)
+    
+    if(A == 0){
+        Speed = E_Speed
+    }
+        
+    if(E_Speed > Speed_Limit){
+        
+        if(LastFlashedEnt != E){
+            
+        if(E:type() == "player"){
+            print("[Radar Flash] Joueur flashe : " + E_Name + " a " + E_Speed + " km/h !")
+        }
+        else
+        {
+            print("[Radar Flash] Vehicule flashe : " +  E:driver():toString() + " a " + E_Speed + " km/h !")
+        }
+        
+        A = 1
+        LastFlashedEnt = E
+        
+        timer("endA", 2500)
+        
+        }
+        
+    }
+
+}
+
+
+if(clk("endA")){
+    
+    A = 0
+    LastFlashedEnt = noentity()
+
+}

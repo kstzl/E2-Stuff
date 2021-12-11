@@ -1,0 +1,50 @@
+@name KnockKnock
+
+@persist [ Once Triggered ]:number
+@persist [ Sound ]:string
+@persist [ Target ]:entity
+
+interval(150)
+
+if(first()){
+    
+    #KnockKnock
+    #https://cdn.discordapp.com/attachments/837722455790714950/885544824063815730/knock-knock-sound-effect.mp3
+    
+    #Binaural
+    #https://cdn.discordapp.com/attachments/837722455790714950/888992312934408192/binaural_ears.mp3
+    
+    #Siren
+    #https://cdn.discordapp.com/attachments/837722455790714950/888993243684024320/131294__djmastah__uber-siren-1.mp3
+    
+    #Beat
+    #https://cdn.discordapp.com/attachments/837722455790714950/888993304916660235/133459__djmastah__impact-a.mp3
+    
+    Sound = "https://cdn.discordapp.com/attachments/837722455790714950/885544824063815730/knock-knock-sound-effect.mp3"
+    Once = 0
+    Target = findPlayerByName("gbra")
+    
+    print("Waiting streamCanStart() ... ")
+    
+}
+
+if(streamCanStart() == 1 && !Triggered){
+    
+    local Id = randint(1, 80)
+    
+    print("Knocked " + Target:name() + " ! (Sound ID : " + Id:toString() + ")")
+    
+    holoCreate(1)
+    holoAlpha(1, 0)
+    holoPos(1, Target:pos())
+    holoAng(1, Target:angles())
+    holoParent(1, Target)
+    
+    streamDisable3D(1)
+    holoEntity(1):streamStart(1, Sound)
+    streamVolume(1, 999)
+    
+    if(Once){ Triggered = 1 }
+
+}
+    

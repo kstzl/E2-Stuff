@@ -1,0 +1,28 @@
+@name HoloTroll
+@inputs 
+@outputs 
+@persist Target:entity
+@trigger 
+
+if(first()){
+Target = findPlayerByName("777")
+E = entity()
+}
+
+runOnTick(1)
+holoCreate(1)
+holoModel(1,"hqsphere")
+holoScale(1,vec(-3,-3,-3))
+holoColor(1,vec(randint(0,255),randint(0,255),randint(0,255)))
+holoPos(1, Target:attachmentPos("eyes"))
+
+
+holoCreate(2)
+holoModel(2,"hqsphere")
+holoScale(2,vec(-9,-9,-9))
+holoColor(2,vec(randint(0,255),randint(0,255),randint(0,255)))
+holoPos(2, Target:attachmentPos("eyes"))
+soundPitch(0, Target:vel():length()/ randint(0,10))
+
+
+holoEntity(1):soundPlay(0,0,"synth/tri.wav")

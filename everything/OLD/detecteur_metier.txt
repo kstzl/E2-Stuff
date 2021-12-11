@@ -1,0 +1,23 @@
+@name Detecteur_Metier
+@inputs Ents:array
+@persist BlackList:string
+@outputs SoundPlay:number Distance:number
+
+#By K3CR4FT.:DLL 2020
+
+interval(1)
+
+Alarm = 0
+
+foreach(K, Ent:entity = Ents){
+    
+    if(Ent:nxJob() == "gangster" || Ent:nxJob() == "cp"){
+        
+        Alarm = 1
+        Distance = round(entity():pos():distance(Ent:pos()))
+        print("Alert : " + Ent:nxJob())
+    }
+    
+}
+
+SoundPlay = Alarm

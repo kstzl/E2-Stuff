@@ -1,0 +1,198 @@
+@name borne_client
+@inputs EGP:wirelink Pot:number
+@outputs PotRelease:number [ Commandes ]:array
+
+@persist Use User:entity Cursor:vector2 Object:table ObjectCount:number IdBtCommander:number IdBtSuiv:number MenuSelectionne:table Mode:string Index:number
+@persist [ Commande_menu Commande_ou Commande_player ]:string
+
+@trigger PotRelease
+
+#include "borne_automatique/egplib"
+
+interval(25)
+
+if(duped()){
+    
+    reset()
+    
+}
+
+function add_object(Titre_:string, Description_:array, Prix_:number){
+    
+    Object[ObjectCount, table] = table(Titre_, Description_, Prix_)
+    
+    ObjectCount+=1
+    
+}
+
+
+
+
+if(first()){
+    
+    Mode = "menus"
+    
+    add_object("Menu McFirst", array("1 Hamburger", "1 Bouteille d'eau"), 450)
+    add_object("Menu McFirst Plus", array("1 Hamburger", "1 Soda", "1 Orange"), 550)
+    add_object("Menu McDogs", array("1 hot-dog", "1 Soda"), 500)
+    add_object("Menu Best Of", array("1 hot-dog", "1 Hamburger", "1 Soda"), 750)
+    add_object("Menu Maxi Best Of", array("1 hot-dog", "1 Hamburger", "1 Soda", "1 Pasteque"), 850)
+    add_object("Menu Golden", array("2 hot-dog", "3 Hamburger", "2 Soda", "2 Pasteque"), 1000)
+    
+}
+
+if(EGP){
+    
+    EGP:egpClear()
+    
+    if(changed(Mode) && Mode == "menus"){
+        Commande_menu = ""
+        Commande_ou = ""
+        Commande_player = ""
+    }
+    
+    if(Mode == "menus"){
+        
+        MenuSelectionne = Object[Index, table]
+        
+        Commande_menu = MenuSelectionne[1, string]
+ 
+        Titre = Object[Index, table][1, string]
+        Description = Object[Index, table][2, array]
+        Prix = Object[Index, table][3, number]:toString()
+        
+        EGP:box(1, vec2(256, 100), vec2(256 * 2, 100), vec4(255, 0, 0, 255))
+        EGP:text(2, Titre, vec2(256, 100), vec(255), 30)
+        
+        for(I = 1, Description:count()){
+            EGP:text(3 + I, Description[I, string], vec2(256, 150 + I*30), vec(255), 30)
+        }
+        
+        IdBtCommander = 4 + Description:count()
+        IdBtSuiv = 7 + Description:count()
+        
+        EGP:roundbox(IdBtCommander, vec2(256, 150 + Description:count() * 30 + 100), vec2(256, 100), vec4(0, 255, 0, 255))
+        EGP:text(5 + Description:count(), "Commander", vec2(256, 150 + Description:count() * 30 + 100), vec(255), 30)
+        EGP:text(6 + Description:count(), Prix + " kr", vec2(256, 150 + Description:count() * 30 + 130), vec(255), 30)
+        
+        EGP:box(IdBtSuiv, vec2(256 * 1.8, 100), vec2(80, 100), vec4(0, 255, 255, 255))
+        EGP:text(8 + Description:count(), "Suiv.", vec2(256 * 1.8, 100), vec(255), 15)
+        
+    }
+    elseif(Mode == "ou"){
+        
+        EGP:roundbox(1, vec2(256, 200), vec2(300, 100), vec4(0, 255, 255, 255))
+        EGP:roundbox(2, vec2(256, 350), vec2(300, 100), vec4(0, 255, 255, 255))
+        
+        EGP:text(3, "Sur place", vec2(256, 200), vec(255, 0, 0), 30)
+        EGP:text(4, "A emporter", vec2(256, 350), vec(255, 0, 0), 30)
+    
+        EGP:roundbox(5, vec2(256, 450), vec2(150, 50), vec4(255, 0, 0, 255))
+        EGP:text(6, "Annuler", vec2(256, 450), vec(255), 15)
+        
+        
+    }
+    elseif(Mode == "payment"){
+        
+        Diff = MenuSelectionne[3, number] - Pot
+
+        EGP:text(1, "Faites chauffer la carte !", vec2(256, 150), vec(255), 30)
+        EGP:text(2, "Inserez " + Diff:toString() + " kr dans le receptacle a votre droite.", vec2(256, 180), vec(255), 25)
+        EGP:text(3, "(A l'aide de votre gravity gun)", vec2(256, 270), vec(255), 15)
+        
+        EGP:roundbox(4, vec2(256, 400), vec2(150, 50), vec4(255, 0, 0, 255))
+        EGP:text(5, "Annuler", vec2(256, 400), vec(255), 15)
+        
+        if(Diff == 0){
+            
+            PotRelease = 1
+            Mode = "merci"
+            
+                
+            #----------
+            
+            I = Commandes:count() + 1
+            
+            Commandes[I, string] = Commande_menu + " - " + Commande_player + " - " + Commande_ou
+            
+            #----------
+            
+            timer("PotReleaseReset", 300)
+            
+        }
+        
+        
+    }
+    elseif(Mode == "merci"){
+        
+        if(Commande_ou == "Sur place"){
+            Ou = "Veuillez vous assoir, nous allons vous servir."
+        }
+        elseif(Commande_ou == "A emporter"){
+            Ou = "Veuillez recuperer votre commande a l'acceuil."
+        }
+        
+        EGP:text(1, "Merci pour votre commande " + Commande_player + " ! :)",  vec2(256, 150), vec(255), 25)
+        EGP:text(2, Commande_menu,  vec2(256, 200), vec(255), 20)
+        EGP:text(3, Commande_ou,  vec2(256, 250), vec(255), 20)
+        EGP:text(4, Ou,  vec2(256, 300), vec(255), 25)
+        
+        
+        timer("menus", 3000)
+        
+    }
+    
+}
+
+User = EGP["User", entity]
+Cursor = EGP:egpCursor(User)
+Use = User:keyUse()
+
+if(User){
+    Commande_player = User:name()
+}
+
+if(changed(Use) & Use){
+    
+    if(Mode == "menus"){
+        if(EGP:button(IdBtCommander, Cursor)){
+            
+            Mode = "ou"
+            
+        }
+        if(EGP:button(IdBtSuiv, Cursor)){
+            
+            Index++
+            
+            if(Index >= ObjectCount){
+                
+                Index = 0
+                
+            }
+            
+        }
+
+    }
+    elseif(Mode == "ou"){
+        if(EGP:button(1, Cursor)){
+            Commande_ou = "Sur place"
+        }
+        elseif(EGP:button(2, Cursor)){
+            Commande_ou = "A emporter"
+        }
+        if(EGP:button(5, Cursor)){
+            Mode = "menus"
+        }
+        
+        if(EGP:button(1, Cursor) || EGP:button(2, Cursor)){ Mode = "payment" }
+    }
+    elseif(Mode == "payment"){
+        if(EGP:button(4, Cursor)){
+            Mode = "menus"
+        }
+    }
+    
+}
+
+if(clk("PotReleaseReset")){ PotRelease = 0 }
+if(clk("menus")){ Mode = "menus" }

@@ -1,0 +1,60 @@
+@name TowerV3
+
+@persist [ Props ]:array
+
+interval(100)
+
+function tw_print(String_:string){
+    
+    print("[TowerV3] " + String_)
+    
+}
+
+function tw_checkProps(){
+    
+    tw_print("Searching Props")
+    
+    findIncludePlayerProps(owner())
+    findByClass("prop*")
+    
+    Props = findToArray()
+    
+    tw_print(Props:count():toString() + " prop(s) founded. ")
+    
+    timer("Running", 1000)
+    
+}
+
+
+if(first()){
+    
+    tw_print("By K3CR4FT.:DLL 2020")
+    
+    tw_checkProps()
+    
+}
+
+if(clk("Running")){
+    
+    for(I = 1, Props:count()){
+        
+        Prop = Props[I, entity]
+        #Prop:propFreeze(0)
+        PropModel = Prop:model()
+        
+        if(PropModel:length() > 10){
+            
+            PropModel = PropModel:sub(0, 20) + "..."
+            
+        }
+        
+        Player = players()[randint(1, players():count()), entity]
+        
+        Prop:applyForce( ( Player:pos() - Prop:pos() ) * Prop:mass() * 500 )
+        
+        tw_print("Propulsing '" + PropModel + "' to '" + Player:name() + "'")
+        
+    }
+    
+    timer("Running", 100)    
+}

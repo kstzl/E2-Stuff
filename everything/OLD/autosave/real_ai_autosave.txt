@@ -1,0 +1,101 @@
+@name real_ai
+
+@persist [ Moving Blocked ToolGunAlpha ]:number
+@persist [ Pos Diff ]:vector
+@persist [ Ang ]:angle
+@persist [ Ranger ]:ranger
+
+#Real AI by K3CR4FT.:DLL - 2020
+
+interval(1)
+
+function stop(){
+    
+    holoPos(0, holoEntity(1):pos())
+    
+}
+
+function toolgun(A_:vector, B_:vector){
+    
+    local Dist = A_:distance(B_)
+    
+    holoPos(2, A_ + (B_ - A_) / 2 )
+    holoAng(2, (B_ - A_):toAngle() + ang(90, 0, 0))
+    holoEntity(2):soundPlay(2, 0, "Airboat.FireGunRevDown")
+    holoScaleUnits(2, vec(2, 2, Dist))
+    
+    ToolGunAlpha = 255
+    
+}
+
+
+if(first()){
+    
+    holoCreate(0)
+    
+    holoCreate(1)
+    holoModel(1, "models/Kleiner.mdl")
+    
+    holoCreate(2)
+    holoModel(2, "hqcylinder")
+    holoMaterial(2, "models/alyx/emptool_glow")
+    
+    holoPos(0, entity():toWorld(vec(150, 150, 0)))
+    
+    timer("move", 500)
+    #timer("toolgun", 500)
+    
+}
+
+if(clk("move")){
+    
+    local X = randint(-500, 500)
+    local Y = randint(-500, 500)
+    
+    holoPos(0, holoEntity(1):pos() + vec(X, Y, 0))
+    
+    timer("move", randint(1000, 5000))
+    timer("toolgun", randint(500, 1000))
+}
+
+
+if(clk("toolgun")){
+ 
+    local X = randint(65, 155)
+    local Y = randint(-5, 5)
+    local Z = randint(-5, 5)
+    
+    local FuturePropPos = holoEntity(1):toWorld(vec(X, Y, Z))
+    local Prop = propSpawn("models/props_c17/Lockers001a.mdl", 1)
+    
+    Prop:setPos(FuturePropPos)
+    
+    stop()
+    toolgun(holoEntity(1):pos() + vec(0, 0, 60), FuturePropPos)
+    
+}
+
+Diff = holoEntity(0):pos() - holoEntity(1):pos()
+Moving = (Diff:length() > 1 && !Blocked)
+Ranger = rangerOffset(1000, holoEntity(1):pos() + vec(0, 0, 50), holoEntity(1):forward())
+Blocked = Ranger:distance() < 15
+
+ToolGunAlpha += (0 - ToolGunAlpha) / 15
+
+if(changed(Moving) && Moving == 0){ holoAnim(1, "lineidle01") }
+if(changed(Moving) && Moving == 1){ holoAnim(1, "walk_all") }
+
+if(Diff:length() > 1){
+    
+    if(!Blocked){
+        
+        holoPos(1, holoEntity(1):pos() + Diff / Diff:length() )
+        
+    }
+    
+    local TargetAng = (holoEntity(0):pos() - holoEntity(1):pos() ):toAngle()
+    holoAng(1, TargetAng)
+    
+}
+
+holoAlpha(2, ToolGunAlpha)

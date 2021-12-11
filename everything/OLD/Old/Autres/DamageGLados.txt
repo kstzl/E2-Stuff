@@ -1,0 +1,15 @@
+@name DamageGLados
+@inputs Screams:array A
+@outputs 
+@persist 
+@trigger 
+
+if(A == 1){
+Screams[1, string] = "Portal.GlaDOS.core_destroy3_01" 
+Screams[2, string] = "Portal.GlaDOS.core_destroy4_08" 
+Screams[3, string] = "Portal.GlaDOS.core_destroy4_10" 
+Screams[4, string] = "Portal.GlaDOS.core_destroy4_05" 
+Screams[5, string] = "Portal.GlaDOS.core_destroy4_06" 
+
+owner():soundPlay(0,0,Screams:string(randint(0,11)))
+}

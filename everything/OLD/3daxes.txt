@@ -1,0 +1,71 @@
+@name 3DAxes
+@inputs 
+@outputs 
+@persist [ OX OY OZ LX LY LZ ]:number [ AP Pos ]:vector
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(0)
+    holoModel(0, "models/maxofs2d/cube_tool.mdl")
+    
+    holoCreate(1)
+    holoScaleUnits(1, vec(20, 5, 5))
+    
+    holoCreate(2)
+    holoScaleUnits(2, vec(5, 20, 5))
+    
+    holoCreate(3)
+    holoScaleUnits(3, vec(5, 5, 20))
+    
+    Pos = entity():pos()
+    
+}
+
+AP = owner():aimPos()
+
+OX = (AP:distance(holoEntity(1):pos()) <  10)
+OY = (AP:distance(holoEntity(2):pos()) <  10)
+OZ = (AP:distance(holoEntity(3):pos()) <  10)
+
+holoColor(1, vec(255 - ((OX||LX) * 125), 0, 0))
+holoColor(2, vec(0, 255 - ((OY||LY) * 125), 0))
+holoColor(3, vec(0, 0, 255 - ((OZ||LZ) * 125)))
+
+if(owner():keyUse()){
+    
+    if(OX || LX){
+        
+        Pos = vec(Pos:x() + ( (owner():aimPos():x() - 20) - Pos:x() ) / 5, Pos:y(), Pos:z())
+        LX = 1
+        
+    }
+    if(OY || LY){
+        
+        Pos = vec(Pos:x(), Pos:y() + ( (owner():aimPos():y() - 20) - Pos:y() ) / 5, Pos:z())
+        LY = 1
+        
+    }
+    if(OZ || LZ){
+        
+        Pos = vec(Pos:x(), Pos:y(), Pos:z() + ( (owner():aimPos():z() - 20) - Pos:z() ) / 5)
+        LZ = 1
+        
+    }
+
+    
+}
+else
+{
+    LX = LY = LZ = 0
+}
+
+holoPos(0, Pos)
+
+holoPos(1, Pos + vec(20, 0, 0))
+
+holoPos(2, Pos + vec(0, 20, 0))
+
+holoPos(3, Pos + vec(0, 0, 20))

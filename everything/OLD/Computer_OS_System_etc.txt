@@ -1,0 +1,112 @@
+@name Computer OS System etc
+@model models/bull/gates/processor.mdl
+
+# OS SYSTEM EGP #
+# BY k3 2016 #
+
+
+#First       ##################
+#Base inputs
+
+@inputs EGP:wirelink
+
+#Time inputs
+
+@persist C1 C2 OsNm:string OsName:string Start EGP:wirelink
+
+runOnTick(1)
+
+#Screen 1   ###################
+
+#test EGP
+
+ if(EGP){
+
+ 
+ if(C1 <= 100){ C1++ EGP:egpText(1,"Loading OS..",vec2(20,20))}
+ if(changed(C1) && C1 >= 101){ TestOS=1}
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+#OPERATING SYSTEM (os)
+
+  function osStart(){
+          #Os name:
+          OsNm="TobbyOS"
+        
+          #Getting OS name
+          OsName=OsNm 
+
+          #Start: (display)
+        
+          if(C2 <= 350){ C2+=2 }
+          if(C2 >= 150){ StartOS=1}
+          if(changed(C2) && C2 == 150){
+          
+          #Os informations
+        
+          Title="TobbyOs"
+          Author="k3"
+          Version="1.0"
+          Description="TobbyOS mdr"   
+          
+          #Os informations (end)
+        
+          #Display OS informations:
+        
+          EGP:egpText(3,"Os informations:",vec2(20,70))
+          EGP:egpText(4,"Title: "+Title,vec2(20,100))
+          EGP:egpText(5,"Author: "+Author,vec2(20,120))
+          EGP:egpText(6,"Version: "+Version,vec2(20,140))
+          EGP:egpText(7,"Description: "+Description,vec2(20,160))
+
+          # Starting Operating system (gui etc.) 
+          }
+        
+          if(C2 >= 300){ 
+          if(changed(StartOS) && StartOS == 1){ EGP:egpClear() entity():soundPlay(2,3,"coast.thumper_startup") }
+          if(StartOS==1){
+            
+            EGP:egpBox(1,vec2(220,40),vec2(1000,150))
+            EGP:egpColor(1,vec(255,0,0))
+            EGP:egpText(2,"TobbyOS",vec2(220,40))
+            EGP:egpColor(2,vec(255,100,0))
+            
+            
+          }
+          }
+        
+        
+        
+        
+        
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+  #Os start
+ if(TestOS==1){ Start=1 }
+ if(Start == 1){ osStart() } 
+ if(changed(Start) && Start == 1){ EGP:egpText(2,"'"+OsName+"' "+" loaded.",vec2(20,50)) entity():soundPlay(1,1,"Buttons.snd17") }
+
+
+ if(first()){ EGP:egpClear() }

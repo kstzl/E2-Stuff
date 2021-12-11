@@ -1,0 +1,125 @@
+@name POO_Minecraft
+
+@persist [ Aim_Pos ]:vector
+
+@persist [ S BlockIndex ]:number
+
+@persist [ BlockInfo ]:table
+
+#include "POO_Lib"
+#include "fastlib"
+
+interval(50)
+
+Aim_Pos = round(( owner():aimPos() + owner():aimNormal())/ S )* S
+holoPos(0, Aim_Pos)
+
+function place_block(Pos_:vector, BlockName_:string){
+    
+    for(I = 0, BlockInfo:count()){
+        
+        if(BlockInfo[I, table]["name", string] == BlockName_){
+
+            Block = BlockInfo[I, table]
+            
+            NewBlock = poo_createObject("block")
+            NewBlock:poo_setString("name", Block["name", string])
+            NewBlock:poo_setString("texture", Block["texture", string])
+            NewBlock:poo_setString("type", Block["type", string])
+            NewBlock:poo_setVector("pos", Pos_)
+            
+            holoEntity(0):sfx(Block["sound", string], 1)
+        }
+        
+    }
+    
+}
+
+if(first()){
+    
+    S = 47
+    BlockIndex = 5
+    
+    holoCreate(0)
+    holoScaleUnits(0, vec(S))
+    holoMaterial(0, "models/wireframe")
+    
+    BlockInfo = table(
+        table("name" = "stone", "texture" = "models/props_debris/concretewall019a", "sound" = "Concrete.ImpactHard", "type" = "normal"),
+        table("name" = "wood", "texture" = "phoenix_storms/fender_wood", "sound" = "Wood_Box.BulletImpact", "type" = "normal"),
+        table("name" = "metal", "texture" = "phoenix_storms/MetalSet_1-2", "sound" = "EpicMetal.ImpactSoft", "type" = "normal"),
+        table("name" = "iron gate", "texture" = "models/props_interiors/metalfence007a", "sound" = "EpicMetal.ImpactSoft", "type" = "normal"),
+        table("name" = "glass", "texture" = "models/props_combine/health_charger_glass", "sound" = "Glass.ImpactHard", "type" = "normal"),
+        table("name" = "gravel", "texture" = "models/props/CS_militia/militiarockb", "sound" = "Glass.ImpactHard", "type" = "dynamic") #TEST
+    )
+    
+    
+    
+
+}
+
+for(I = 0, POO_Objects:count()){
+    
+    Object = POO_Objects[I, table]
+    
+    if(Object:poo_init("block")){
+        
+        NewProp = propSpawn("models/hunter/blocks/cube1x1x1.mdl", 0)
+        NewProp:setMaterial(Object:poo_getString("texture"))
+        NewProp:setPos(Object:poo_getVector("pos"))
+        NewProp:propFreeze(1)
+        NewProp:propStatic(1)
+        
+        Object:poo_setEntity("BlockBase", NewProp)
+        
+        if(Object:poo_getString("type") == "normal"){
+            Object:poo_deleteObject()
+        }
+       
+    }
+
+    if(Object:poo_loop("block")){
+        
+        BlockName = Object:poo_getString("name")
+        BlockType = Object:poo_getString("type")
+        BlockProp = Object:poo_getEntity("BlockBase")
+        
+        if(BlockType == "dynamic"){
+            
+            if(BlockName){
+                
+                Ranger = rangerOffset(3000, BlockProp:pos(), -BlockProp:up())
+                
+                if(Ranger:distance() > 47/2){
+                    Object:poo_setVector("pos", Object:poo_getVector("pos") - vec(0, 0, 10))
+                }
+                   
+            }
+            
+            BlockProp:setPos( Object:poo_getVector("pos") )
+            
+            
+        }
+        
+    }
+    
+}
+
+if(changed(owner():keyAttack2()) && owner():keyAttack2() == 1 ){
+    
+    place_block(Aim_Pos, BlockInfo[BlockIndex, table]["name", string])
+    
+}
+
+if( changed(owner():keyPressed("m")) && owner():keyPressed("m") == 1){
+    
+    BlockIndex++
+    
+    if(BlockIndex > BlockInfo:count()){ BlockIndex = 1 }
+}
+
+
+
+if( owner():keyPressed("z"):change(1) ){
+    propDeleteAll()
+}

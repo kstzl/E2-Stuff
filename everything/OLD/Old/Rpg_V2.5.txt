@@ -1,0 +1,71 @@
+@name Rpg V2.5
+@inputs 
+@outputs 
+@persist Fire Time Force TPos:vector Eye:vector Count Ang P:entity
+@trigger 
+
+runOnTick(1)
+
+ Ranger=rangerOffset(3000,holoEntity(1):pos(),Eye)
+
+ findByClass("player")
+ findSortByDistance(holoEntity(1):pos())
+ findExcludeEntity(owner())
+
+ if(first()){
+    
+   Time=3000
+   Force=50
+   
+   holoCreate(1) holoScale(1,vec(1.5)) holoModel(1,"icosphere") holoColor(1,vec(0,50,255)) holoAlpha(1,245)
+   holoEntity(1):setTrails(30,0.5,0.5,"trails/smoke",vec(0,50,255),255)
+
+ }
+
+ if(changed(owner():keyAttack2()) && owner():keyAttack2() == 1 && Fire==0){
+    
+  Fire=1 timer("stop_fire",Time)  
+  TPos=owner():shootPos()
+  Eye=owner():eye()
+
+  holoEntity(1):soundPlay(1,0,"Weapon_RPG.Single")
+ holoEntity(1):soundPlay(2,0,"PhysicsCannister.ThrusterLoop")
+ }
+
+ if(Fire == 1){
+    TPos+=Eye*Force
+    holoPos(1,TPos)
+    
+    if(changed(Ranger:distance()) && Ranger:distance() < 60 && holoEntity(1):pos():distance(owner():pos()) >= 230){
+        
+        P=propSpawn("models/props_c17/oildrum001_explosive.mdl",0)
+        P:setPos(holoEntity(1):pos())
+        P:propBreak()
+        Stop_fire=1
+        
+    }
+    if(changed(holoEntity(1):pos():distance(find():pos())) && holoEntity(1):pos():distance(find():pos()) <= 230){
+        
+        P=propSpawn("models/props_c17/oildrum001_explosive.mdl",0)
+        P:setPos(find():pos())
+        P:propBreak()
+        Stop_fire=1
+    }
+    
+    
+ }
+ if(Fire == 0){
+    
+ Count += 0.01
+ N = 5
+
+ X1 = N*cosr(30*Count)
+ Y1 = N*sinr(30*Count)
+ Z1 = 110
+ holoPos(1,owner():pos()+vec(X1,Y1,Z1))
+ }
+
+ Ang+=3 holoAng(1,ang(Ang))
+
+ if(clk("stop_fire")){ Fire=0 soundStop(2) }
+ if(Stop_fire == 1){ Fire=0 soundStop(2)}

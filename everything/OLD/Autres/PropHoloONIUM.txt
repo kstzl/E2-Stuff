@@ -1,0 +1,22 @@
+@name PropHoloONIUM
+@persist I A:array NB
+
+findByClass("prop_*")
+findExcludeClass("player")
+findExcludeClass("weapon_*")
+findExcludeClass("gmod_*")
+findInSphere(entity():pos(),1300)
+A = findToArray()
+I = 0
+while(I < A:count()){
+    I++
+  print(A[I,entity])
+  NB+=1
+  holoCreate(NB)
+  holoModel(NB,A[I,entity]:model())
+  holoPos(NB,A[I,entity]:pos()+vec(0,0,190))
+  holoAng(NB,A[I,entity]:angles())
+  holoParent(NB,entity())
+  holoColor(NB,A[I,entity]:getColor())  
+  holoMaterial(NB,A[I,entity]:getMaterial())
+}

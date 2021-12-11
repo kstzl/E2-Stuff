@@ -1,0 +1,87 @@
+@name MinecraftPiston
+@persist [ STATE Z PistonDistance ]
+@persist [ Prop ]:entity
+@model models/hunter/blocks/cube075x075x075.mdl
+
+interval(1)
+
+if(first()){
+    
+    entity():setAlpha(0)
+    #entity():setNoCollideAll(0)
+    
+    holoCreate(1)
+    holoScaleUnits(1, vec(32, 32, 24))
+    holoMaterial(1, "models/props_debris/concretewall019a")
+    
+    holoCreate(2)
+    holoScaleUnits(2, vec(8, 8, 32))
+    holoMaterial(2, "phoenix_storms/simplyMetallic1")
+    
+    holoCreate(3)
+    holoScaleUnits(3, vec(32, 32, 8))
+    holoMaterial(3, "phoenix_storms/wood_dome")
+    
+    STATE = 0
+    PistonDistance = 44
+}
+
+if(STATE == 0){ Z += (12 - Z) / 5 }
+if(STATE == 1){ Z += (PistonDistance - Z) / 5 }
+
+if(changed(STATE) && STATE == 0){ holoEntity(1):soundPlay(0, 0, "Doors.FullOpen7") }
+if(changed(STATE) && STATE == 1){ holoEntity(2):soundPlay(0, 0, "Doors.FullOpen7") }
+
+
+if(changed(owner():keyUse()) && owner():keyUse() == 1){ STATE = !STATE }
+
+holoAng(1, entity():angles())
+holoAng(2, entity():angles())
+holoAng(3, entity():angles())
+
+holoPos(1, entity():toWorld(vec(0, 0, -4)))
+holoPos(2, entity():toWorld(vec(0, 0, Z/2)))
+holoPos(3, entity():toWorld(vec(0, 0, Z)))
+
+holoScaleUnits(2, vec(8, 8, Z))
+
+if(STATE == 1){ Pitch = 250 }else{ Pitch = 150 }
+soundPitch(0, Pitch)
+
+function findProp(){
+
+    findByClass("prop_*")
+    findIncludePlayerProps(owner())
+    findInBox(holoEntity(3):pos(), vec(75))
+        
+    findSortByDistance(holoEntity(3):pos())
+    
+    Prop = find()
+
+    Prop:setPos( Prop:pos() + (holoEntity(3):toWorld(vec(0, 0, 5)) - Prop:pos() ) / 2 )
+    Prop:propFreeze(1)
+
+        
+}
+
+
+
+if(STATE == 1){
+    
+    if(Z < PistonDistance-1){
+        
+        findProp()
+        
+    }
+    
+}
+if(STATE == 0){
+    
+    if(Z > 13){
+        
+        findProp() 
+    
+    }
+
+    
+}

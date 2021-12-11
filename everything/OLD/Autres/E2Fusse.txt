@@ -1,0 +1,12 @@
+@name E2Fusse
+@inputs A B
+@outputs Txt:string
+@persist
+@trigger 
+
+if(A == 1){
+    Txt = "Attachez vos ceintures"
+}
+if(B == 1){
+    Txt = "decollage !"
+}

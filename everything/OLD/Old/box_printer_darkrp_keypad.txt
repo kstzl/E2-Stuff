@@ -1,0 +1,27 @@
+@name Box_Printer_DarkRp_Keypad
+@inputs [ Keypad_acces_granted ]:number
+@outputs [ FadingDoor ]:number
+@persist [ Temps_Ouverture ]:number
+
+#By K3CR4FT.:DLL 2020
+
+interval(1)
+
+if(first() || duped()){
+    
+    #Temps de l'ouverture en seconde
+    Temps_Ouverture = 5
+    
+    FadingDoor = 0
+    
+}
+
+if(changed(Keypad_acces_granted) && Keypad_acces_granted == 1){
+    
+    timer("open", 0)
+    timer("close", Temps_Ouverture * 1000)
+    
+}
+
+if(clk("open")){ FadingDoor = 1 }
+if(clk("close")){ FadingDoor = 0 }

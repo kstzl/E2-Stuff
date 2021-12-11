@@ -1,0 +1,37 @@
+@name Clock
+@persist [ Cloack ]:number [ Mat ]:string
+
+interval(1)
+runOnLast(1)
+
+if(first()){
+    
+    Cloack = 1
+    Mat = "Models/effects/vol_light001"
+    
+    entity():setAlpha(0)
+    entity():setName("e2 voiture")
+    
+}
+
+if(last()){
+    
+    Cloack = 0
+    
+}
+
+if(changed(Cloack) || last()){
+    
+    if(Cloack){
+        
+        owner():setMaterial(Mat)
+        owner():weapon():setMaterial(Mat)
+        
+    }
+    else
+    {
+        owner():setMaterial("")
+        owner():weapon():setMaterial("")
+    }
+    
+}

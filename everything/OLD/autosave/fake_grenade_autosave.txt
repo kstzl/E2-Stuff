@@ -1,0 +1,36 @@
+@name fake_grenade
+@persist Time
+@model models/items/grenadeammo.mdl
+
+interval(1)
+
+if(first() || dupefinished()){
+    
+    timer("sfx", 0)
+    Time = 5
+    
+}
+
+if(clk("sfx") && Time > 0){
+    
+    entity():soundPlay(randint(1, 50), 100, "PipeBomb.Bounce")
+    
+    timer("sfx", 150 * Time)
+    Time--
+    
+}
+
+if(changed(Time) && Time <= 0){
+    
+    entity():soundPlay(0, 0, "Explo.ww2bomb")
+    
+    timer("destruct", 800)
+    
+}
+
+if(clk("destruct")){
+    
+    selfDestructAll()
+    
+}
+

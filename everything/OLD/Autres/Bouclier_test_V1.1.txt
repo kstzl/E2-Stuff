@@ -1,0 +1,33 @@
+@name Bouclier test V1.1
+@inputs 
+@outputs 
+@persist E:entity E2:entity Spawn
+@trigger 
+
+if(Spawn == 0 & owner():keyPressed("p")){
+    Spawn == 1
+    holoCreate(1)
+    holoModel(1, "hqsphere")
+    holoScale(1, vec(8,8,0.1))
+    holoPos(1, entity():toWorld(vec(0,0,50)))
+    holoParent(1, entity())
+    if(!E){
+        E = propSpawn("models/hunter/tubes/circle2x2.mdl",entity():toWorld(vec(0,0,5)),entity():toWorld(ang(0,0,0)),1)
+        #                      Model ^                             Position Base ^                   Angle base ^   ^ Freeze
+    }
+}
+if(Spawn == 1 & owner():keyPressed("p")){
+    E:propDelete()
+    holoDeleteAll()
+    Spawn == 0
+}
+interval(1)
+    
+E:setPos(entity():toWorld(vec(0,0,50)))
+E:setAng(entity():toWorld(ang(0,0,0)))
+E:setMaterial("debug/white")
+E:setAlpha(0)
+
+E2:parentTo(holoEntity(1))
+
+

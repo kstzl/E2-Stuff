@@ -1,0 +1,45 @@
+@name Spider
+@inputs Pod:wirelink
+@outputs GotoPos:vector Jump
+@persist Target:entity
+
+#Made By RonnieSuperSpy#
+
+if(first()|duped()){
+    runOnTick(1)
+    runOnChat(1)
+    hint("Type /gt playername while in chair or something",5)
+}
+Jump=0
+Driver=Pod["Entity",entity]:driver()
+Active=Pod["Active",number]
+
+if(changed(Active)){
+    Pod["Entity",entity]:printDriver(_HUD_PRINTCENTER,"Type /goto playername")
+    Pod["Entity",entity]:hintDriver("/sp goes to spawn",5)
+    Pod["Entity",entity]:hintDriver("Type /gt playername",5)
+}
+if(chatClk(Driver)){
+    Explode = lastSaid():explode(" ")
+    Name = Explode[2,string]
+    
+    if(Driver:lastSaid() == "/sp"){
+        hideChat(1)
+        Jump=1
+        GotoPos=vec(0,0,100)
+        Pod["Entity",entity]:printDriver("Going to: spawn")
+    }
+    #Check to see if the first part is "goto "
+    if(Explode[1,string] == "/gt"){
+        hideChat(1)
+        #Find the player's name that has been typed. It can be just part of the name.
+        Target = findPlayerByName(Name)
+        if(Target!=noentity()){
+                Jump=1
+                Pod["Entity",entity]:printDriver(_HUD_PRINTTALK,"Going to: "+Target:name())
+                GotoPos=Target:pos()+vec(0,0,30)
+            }
+            else{Pod["Entity",entity]:hintDriver("Not a Valid Target!",5)
+        }
+    }
+} 

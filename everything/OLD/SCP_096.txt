@@ -1,0 +1,165 @@
+@name SCP 096
+@persist B J C I A:array AP Ang:angle Prop:entity Move Mode All Speed PlayerNALL:entity
+@model models/props_junk/PopCan01a.mdl
+
+ #By k3 / 2017 / V1.0
+ runOnTick(1)
+ runOnChat(1)
+
+ if(first())
+ {
+
+  Color=vec(255)
+  Speed=2
+  Mode=0
+  All=0
+    
+  entity():setAng(ang(0)) 
+  entity():propFreeze(0)
+  entity():setAlpha(0)
+
+  holoCreate(6) holoColor(6,vec(1))  holoAlpha(6,0) 
+  holoCreate(7) holoColor(7,vec(1)) holoPos(7,entity():pos()+vec(0,0,50))  holoAlpha(7,0)
+  holoCreate(8) holoColor(8,vec(1)) holoPos(8,entity():pos()+vec(0,0,50))  holoAlpha(8,0)
+  holoCreate(9) holoColor(9,vec(1)) holoPos(9,entity():pos()+vec(0,0,90))  holoAlpha(9,0)
+    
+  holoCreate(0) holoPos(0,entity():pos()+vec(7,0,20)) holoScale(0,vec(2,0.9,9)/2) holoColor(0,Color) holoParent(0,holoEntity(7))
+  holoCreate(1) holoPos(1,entity():pos()+vec(-7,0,20)) holoScale(1,vec(2,0.9,9)/2) holoColor(1,Color) holoParent(1,holoEntity(8))
+ 
+  holoCreate(2) holoPos(2,entity():pos()+vec(0,0,70)) holoScale(2,vec(5,1,9)/2) holoColor(2,Color) holoParent(2,holoEntity(6))
+  
+  holoCreate(3) holoPos(3,entity():pos()+vec(20.5,0,68)) holoScale(3,vec(2,0.9,9)/2) holoColor(3,Color-vec(0,55,55)) holoParent(3,holoEntity(9))
+  holoCreate(4) holoPos(4,entity():pos()+vec(-20.5,0,68)) holoScale(4,vec(2,0.9,9)/2) holoColor(4,Color-vec(0,55,55)) holoParent(4,holoEntity(9))
+
+  holoCreate(5) holoPos(5,entity():pos()+vec(0,0,105)) holoScale(5,vec(2)) holoAng(5,holoEntity(5):angles()+ang(0,90,0)) holoModel(5,"hqsphere" ) holoParent(5,holoEntity(6))
+
+  for(II=0, 5)
+ {
+    holoMaterial(II,"models/props_c17/metalladder003")
+ }
+
+ }
+
+ if (chatClk(owner())) {
+
+ M = lastSaid():explode(" ")
+
+ if (M:string(1) == "096") {
+    
+    hideChat(1)
+    
+    if (M:string(2) == "effect_dance1") { Mode = 2 }
+    if (M:string(2) == "chase") {
+       
+       if(M:string(3) == "player") {
+       PlayerNALL=findPlayerByName(M:string(4))
+       All=0
+       }
+       
+       if(M:string(3) == "all") {
+        All=1
+       }
+         
+    }
+    
+    if (M:string(2) == "start") {
+         Mode=1 
+        }
+    if (M:string(2) == "tp") {
+        
+        entity():setPos(findPlayerByName(M:string(3)):pos()+vec(0, 0, 100))
+        
+        }
+        
+    if (M:string(2) == "stop") {
+        
+        Prop:propDelete() selfDestructAll()
+        }
+        
+    if (M:string(2) == "set") {
+     
+    if (M:string(3) == "speed") {  
+        
+        if(M:string(4) == "random") {
+            
+           Speed=randint(0.1,3.5)
+            
+        }
+        else
+        {
+        
+           Speed=M:string(4):toNumber()
+        
+        }
+    } 
+    if (M:string(3) == "move") {  
+        Move=M:string(4):toNumber()
+    } 
+        
+    }
+ 
+ }
+ }
+
+ if(All == 1){
+    
+ findByClass("player")
+ findSortByDistance(entity():pos())
+ A=findToArray()
+ AP=1
+ }
+ else
+ {
+    A[AP,entity]=PlayerNALL
+ }
+
+ if(Mode == 1){
+ if(changed(Mode) && Mode==1){
+    Prop=propSpawn("models/props_c17/FurnitureBed001a.mdl",0)
+    holoEntity(5):soundPlay(0,0,"NPC_BaseZombie.Moan4")
+ }
+ J=sin(I*10*Speed)*40+Move
+ B=90+sin(I*10*Speed)*10+Move
+ C=-sin(I*10*Speed)*1+Move/2
+
+ Ang = (holoEntity(6):pos() - A[AP,entity]:pos()):toAngle()+ang(0,90,0)
+
+ Prop:setAlpha(0)
+ Prop:applyAngForce(ang(1,1,720)*Prop:mass()*30)
+
+ holoAng(6,ang(0,Ang:yaw(),0+C))
+ holoAng(7,ang(0,Ang:yaw(),0+J))
+ holoAng(8,ang(0,Ang:yaw(),0-J))
+ holoAng(9,ang(0,Ang:yaw(),0+Ang:pitch()+B))
+
+ holoPos(6,entity():pos())
+ holoPos(7,entity():pos()+vec(0,0,50))  
+ holoPos(8,entity():pos()+vec(0,0,50))
+ holoPos(9,entity():pos()+vec(0,0,90))
+ entity():setAng(ang(0))
+
+ if(entity():pos():distance(A[AP,entity]:pos()) > 100){
+    
+ entity():applyForce(((A[AP,entity]:pos()+vec(0,0,1)-entity():massCenter())*entity():mass())*Speed)
+
+ }
+
+ if(entity():pos():distance(A[AP,entity]:pos())<100){
+    Prop:setPos(A[AP,entity]:pos())
+    holoEntity(5):soundPlay(1,0,"NPC_FastZombie.AttackHit")
+ }
+ else
+ {
+    Prop:setPos(entity():pos()+vec(0,0,100))
+ }
+ }
+
+ if(Mode == 2)
+ {
+    holoAng(6,ang(0,-sin(I*Speed)*Move,0))
+    holoAng(9,ang(0,-sin(I*Speed)*Move,sin(I*Speed)*10*Move+90))
+    holoAng(7,ang(0,sin(I*Speed)*Move,sin(I*Speed)*30+Move))
+    holoAng(8,ang(0,sin(I*Speed)*Move,-sin(I*Speed)*30+Move))
+ }
+
+ I++

@@ -1,0 +1,13 @@
+@name emt_perf_crash
+
+@persist [ A ]:string
+
+interval(1)
+
+##include "e2_minge_toolkit/emt_lib"
+
+while(perf(100)){
+    
+    A = A + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    
+}

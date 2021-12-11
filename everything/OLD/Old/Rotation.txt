@@ -1,0 +1,27 @@
+@name Rotation
+@inputs 
+@outputs 
+@persist Ang:vector
+@trigger 
+
+if(first()){
+    function prerotate(Dir:vector){
+        
+        Ang = clamp(Dir*100,vec(-12.35),vec(12.35))
+           
+    }
+    function rotateH(I,Pos:vector,Piv:vector,Ang){
+        
+        holoCreate(0,Pos)
+        holoParent(I,0)
+        holoAng(0,qRotation(Piv,Ang):toAngle())
+        holoUnparent(I)
+        holoDelete(0)
+           
+    }
+    holoCreate(1,entity():pos()+vec(-12.35/2,0,12.35/2))
+       
+}
+interval(1)
+
+rotateH(1,entity():pos(),holoEntity(1):right(),-1)

@@ -1,0 +1,27 @@
+@name ArcExploder
+@inputs 
+@outputs 
+@persist R B Rot Color:vector
+@trigger 
+
+runOnTick(1)
+if(first()){
+    Rot = randint(0,400)
+    Color = vec(randint(0,255),randint(0,255),randint(0,255))
+}
+R = randint(0,999999)
+B+=10
+Rot+=2
+
+holoCreate(R)
+holoPos(R,entity():pos() + vec(0,0,B))
+holoScale(R,vec(1,1,40))
+holoAng(R,ang(Rot,Rot,Rot))
+holoColor(R,Color)
+
+holoParent(R,entity())
+
+if(B >= 1000){
+   reset()
+}
+

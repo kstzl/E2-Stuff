@@ -1,0 +1,38 @@
+@name Cleverbot
+@inputs 
+@outputs 
+@persist AntiSpam OldMSG:string
+@trigger 
+
+runOnChat(1)
+runOnHTTP(1)
+interval(1)
+
+#Cleverbot Api key:
+ApiKey = "CC3rrpRh38rRfcvzFSc1cynU2-A"
+
+if(chatClk()) {
+    
+    httpRequest("http://www.cleverbot.com/getreply?key=" + ApiKey + "&input=" + lastSaid() + "&cs=76nxdxIJ02AAA&callback=ProcessReply")
+
+}
+
+if(httpData()){
+    
+    T1 = httpData():explode(",")[47, string]
+    T2 = T1:explode(":")[2, string]
+    T3 = T2:replace("\"","")
+    
+    A = array()
+    A:pushVector(vec(0,200,255))
+    A:pushString("[BOT]KeCraft")
+    A:pushVector(vec(255))
+    A:pushString(": " + T3)
+    
+if(T3 != OldMSG) {
+    chatPrint(A)
+}
+    
+    OldMSG = T3
+}
+

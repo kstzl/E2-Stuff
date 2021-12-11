@@ -1,0 +1,30 @@
+@name Hoverboard_SETANG
+@inputs W A S D RG:entity RD:entity
+@outputs 
+@persist
+@trigger 
+
+runOnTick(1)
+
+if(W == 1){
+
+RG:applyAngForce(ang(0,160,0))
+RD:applyAngForce(ang(0,-160,0))
+}
+
+elseif(A == 1){
+
+RG:applyAngForce(ang(0,160,0))
+RD:applyAngForce(ang(0,160,0))
+}
+elseif(S == 1){
+
+RG:applyAngForce(ang(0,-160,0))
+RD:applyAngForce(ang(0,160,0))
+}
+elseif(D == 1){
+    
+RG:applyAngForce(ang(0,-160,0))
+RD:applyAngForce(ang(0,-160,0))
+}
+

@@ -1,0 +1,16 @@
+@name PseudoPathFinding
+@persist [ Target ]:entity [ I ]:number [ Pos ]:array
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    
+    Target = owner()    
+}
+
+Pos[I, vector] = Target:pos()
+I += 1
+
+holoPos(1, Pos[I - 25, vector])

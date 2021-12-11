@@ -1,0 +1,139 @@
+@name Wool Mix Up v1.5
+@inputs 
+@outputs 
+@persist Wait Wait2 H H2 H3 H4 H5 X Y Prop:entity Song:array PropA:array ColorA:array RDC:vector RDC2:vector SGame PinMusic Alpha Diff
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){ 
+    
+    Scale=5
+    Alpha=255
+    holoCreate(-1)
+    holoPos(-1,entity():pos()+vec(5*20*3.5,5*20,150)) 
+    holoScale(-1,vec(Scale))
+    holoModel(-1,"hqsphere")
+    
+    holoCreate(-2) 
+    holoScale(-2,vec(3)) holoPos(-2,entity():pos()+vec(5*30,5*30,100))
+    holoAlpha(-2,0)
+    
+    hint("Jeu par k3. Version 1.5",6)
+    hint("Preparation du jeu..",3)
+    timer("spray",5000)
+    timer("Start_game",9000)
+    
+    Song[1,string]="song31"
+    Song[2,string]="song16"
+    Song[3,string]="song1"
+    Song[4,string]="song3"
+    Song[5,string]="song12_long"
+    
+    holoEntity(-1):soundPlay(-1,0,Song[randint(1,5),string])
+    
+  }
+
+ Wait++
+
+ if(Wait >= 25){ Wait=0
+ if(H < 9){
+ 
+ H++   
+
+ holoCreate(H) 
+ holoPos(H,entity():pos()+vec(X*20,Y*20,100)) 
+ holoScale(H,vec(0.5,0.5,1)) 
+ holoAlpha(H,1)
+ holoEntity(H):soundPlay(0,2,"SolidMetal.ImpactHard")
+
+ Prop=propSpawn("models/hunter/plates/plate2x2.mdl",1) Prop:setPos(holoEntity(H):pos()) PropA[H,entity] = Prop
+ Prop:setMaterial("phoenix_storms/stripes") 
+
+ if(X < 15){ X+=5 }
+ if(X >= 15){ X=0 Y+=5 }
+
+ }
+ }
+
+ if(clk("Start_game")){ SGame=1 hint("Jeu pret !",3)}
+ if(clk("spray"))
+ {
+ holoEntity(-1):soundPlay(1,2,"SprayCan.Paint")
+ while(H2 < H)
+ {
+  H2+=1
+  RDC=vec(randint(0,255),randint(0,255),randint(0,255))
+  PropA[H2,entity]:setColor(RDC)
+  PropA[H2,entity]:setMaterial("models/debug/debugwhite")
+  PropA[H2,entity]:parentTo(holoEntity(-2))
+  ColorA[H2,vector] = RDC  
+    
+ }      
+ }
+
+ if(SGame == 1)
+ {
+    if(PinMusic < 4){
+    Wait2++
+    if(Wait2 == 30-Diff){ Wait2 = 0 PinMusic++ holoEntity(-1):soundPlay(2,3,"eli_lab.elevator_ding") if(PinMusic == 4){ soundPitch(2,130) } RDC2=ColorA[randint(1,H),vector] Wait2=0 holoColor(-1,RDC2) if(PinMusic > 4){ SGame=0 } }
+ }
+ }
+ if(PinMusic == 4)
+ {
+  if(Alpha > 1)
+   {
+    Alpha-=1+Diff
+   }  
+ }
+
+ holoAlpha(-1,Alpha)
+
+ if(changed(Alpha) && Alpha <= 1)
+ {
+  soundPitch(-1,70)
+  while(H3 < H)
+  {
+    H3++
+    if(PropA[H3,entity]:getColor() != RDC2){ PropA[H3,entity]:propNotSolid(1) PropA[H3,entity]:setAlpha(20) holoEntity(-1):soundPlay(3+H3,3,"Glass.Break") } 
+  }  
+  timer("reset",2500)
+  }
+
+ if(clk("reset"))
+  {
+    soundPitch(-1,100)
+    while(H4 < H)
+  {
+    H4++
+    PropA[H4,entity]:propNotSolid(0) PropA[H4,entity]:setAlpha(255)
+  }  
+  PinMusic=0
+  Wait2=0
+  H1=0
+  H2=0
+  H3=0
+  H4=0
+  H5=0
+  Alpha=255
+  Diff+=0.2
+  Wait3=0
+  timer("restart",300)
+ }
+ if(clk("restart"))
+ { 
+  SGame=1 
+ 
+  holoEntity(-1):soundPlay(1,2,"SprayCan.Paint")
+  while(H2 < H)
+  {
+  H2+=1
+  RDC=vec(randint(0,255),randint(0,255),randint(0,255))
+  PropA[H2,entity]:setColor(RDC)
+  PropA[H2,entity]:setMaterial("models/debug/debugwhite")
+  PropA[H2,entity]:parentTo(holoEntity(-2))
+  ColorA[H2,vector] = RDC  
+    
+  }    
+  H2=0
+  }

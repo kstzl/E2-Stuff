@@ -1,0 +1,53 @@
+@name Magnet
+@inputs 
+@outputs 
+@persist MagnetMode A:array I Distance
+@model models/hunter/blocks/cube025x025x025.mdl
+
+ runOnTick(1)
+
+ if(first()){
+    
+    #1 = magnet > prop
+    #2 = prop > magnet ( attirer )
+    #3 = prop > magnet ( repousser )
+    
+    MagnetMode = 2
+    Distance= 500
+ }
+ 
+ 
+ findByClass("prop_*")
+ findSortByDistance(entity():pos())
+ A=findToArray()
+ I=0
+
+ if(first()){ holoCreate(1) holoAng(1,entity():angles()) holoParent(1,entity()) holoAlpha(1,20)
+ holoScale(1,vec(1.1)) holoEntity(1):soundPlay(1,999,"train_forcefield") holoMaterial(1,"models/alyx/emptool_glow") }
+
+
+ if(MagnetMode == 1){ entity():setColor(vec(0,255,0))
+    
+  if(find():pos():distance(entity():pos()) <= Distance){
+ entity():applyForce(((find():pos()+vec(0,0,0)-entity():massCenter())*entity():mass()*0.9))
+ }
+ }
+
+ 
+ if(MagnetMode == 2){ entity():setColor(vec(0,0,255))
+ while(I < A:count()){
+       I++
+       if(A[I,entity]:pos():distance(entity():pos()) <= Distance){
+       A[I,entity]:applyForce(((entity():pos()+vec(0,0,0)-A[I,entity]:massCenter())*A[I,entity]:mass()*Distance/4)/A[I,entity]:pos():distance(entity():pos()))
+       }
+ }
+ }
+
+ if(MagnetMode == 3){
+ while(I < A:count()){ entity():setColor(vec(255,0,0))
+       I++
+       if(A[I,entity]:pos():distance(entity():pos()) <= Distance){
+       A[I,entity]:applyForce((-(entity():pos()+vec(0,0,0)-A[I,entity]:massCenter())*A[I,entity]:mass()*Distance/4)/A[I,entity]:pos():distance(entity():pos()))
+       }
+ }
+ }

@@ -1,0 +1,45 @@
+@name helicopter v.1
+@inputs 
+@outputs Speed
+@persist [E,User]:entity W A S D F Shift Space M1 M2 Speed EArr:array C P
+@trigger 
+
+runOnTick(1)
+
+E = entity():isWeldedTo()
+E:setMass(50000)
+User = E:driver()
+Earr = array(E,User,entity())
+W = User:keyPressed("up")
+A = User:keyPressed("left")
+S = User:keyPressed("down")
+D = User:keyPressed("right")
+F = User:keySprint()
+Shift = User:keySprint()
+Space = User:keyJump()
+M1 = User:keyAttack1()
+M2 = User:keyAttack2()
+Speed = E:vel():length()
+E:applyForce(-E:vel()*E:mass()/2)
+
+rangerFilter(E)
+rangerHitWater(1)
+RanC = rangerOffset(50,E:pos()+E:boxCenter(),vec(0,0,-1))
+E:applyForce(vec(0,0,1)*E:mass()*(50-RanC:distance()))
+
+E:applyForce((W-S)*E:forward()*200*E:mass())
+E:applyForce((Space-F)*E:up()*200*E:mass())
+E:applyForce((A-D)*Shift*-E:right()*200*E:mass())
+
+E:applyTorque((vec((S-W)*15-E:angles():roll(),(D-A)*15-E:angles():pitch(),(A-D)*!Shift*20)*5-E:angVelVector())*E:mass())
+#if(E:driver() != owner()){ E:killPod() }
+
+
+
+
+
+
+
+
+
+

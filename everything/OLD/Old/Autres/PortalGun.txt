@@ -1,0 +1,212 @@
+@name PortalGun
+@persist NB NB2 Vel Rot P P2 PA PAA PB PBB Ang:angle Et:entity Ang2:angle Et2:entity Portal Portal2 Force
+
+runOnTick(1)
+
+if(first()){
+    holoCreate(1)
+    holoAlpha(1,0)    
+    holoEntity(1):soundPlay(0,0,"Buttons.snd3")
+
+holoCreate(2)
+holoAlpha(2,0)
+
+holoCreate(3)
+holoAlpha(3,0)
+}
+
+if(owner():keyAttack1()){
+    
+    Ang = owner():aimEntity():angles()
+    Et = owner():aimEntity()
+    
+    holoDelete(NB)
+    NB = randint(0,9999)
+    holoCreate(NB)
+    holoModel(NB,"cylinder")
+    holoScale(NB,vec(5,5,0.1))
+    holoPos(NB,owner():aimPos())
+    holoColor(NB,vec(0,0,255))
+    
+    holoDelete(P)
+    P = randint(0,9999)
+    holoCreate(P)
+    holoModel(P,"hqtube")
+    holoScale(P,vec(6.5,6.5,0.1))
+    holoPos(P,owner():aimPos())
+    
+    holoDelete(PA)
+    PA = randint(0,9999)
+    holoCreate(PA)
+    holoModel(PA,"hqtube")
+    holoScale(PA,vec(6.5,6.5,1.1))
+    holoPos(PA,owner():aimPos())
+    holoMaterial(PA,"models/props_combine/portalball001_sheet")
+    holoColor(PA,vec(0,0,255))
+    
+     holoDelete(PAA)
+    PAA = randint(0,9999)
+    holoCreate(PAA)
+    holoModel(PAA,"hqtube")
+    holoScale(PAA,vec(6.5,6.5,1.1))
+    holoPos(PAA,owner():aimPos())
+    holoMaterial(PAA,"models/props_combine/portalball001_sheet")
+    holoColor(PAA,vec(0,0,255))
+
+    holoEntity(2):setTrails(50,0,1,"trails/physbeam",vec(0,0,255),255)
+    holoPos(2,owner():pos())
+    timer("fb",200)
+    
+}
+if(owner():keyAttack2()){
+    
+    Ang2 = owner():aimEntity():angles()
+    Et2 = owner():aimEntity()
+    
+    holoDelete(NB2)
+    NB2 = randint(0,9999)
+    holoCreate(NB2)
+    holoModel(NB2,"cylinder")
+    holoScale(NB2,vec(5,5,0.1))
+    holoPos(NB2,owner():aimPos())
+    holoColor(NB2,vec(255,100,0))
+    holoAng(NB2,Ang)
+    
+    holoDelete(P2)
+    P2 = randint(0,9999)
+    holoCreate(P2)
+    holoModel(P2,"hqtube")
+    holoScale(P2,vec(6.5,6.5,0.1))
+    holoPos(P2,owner():aimPos())
+    holoAng(P2,Ang)
+    
+    holoDelete(PB)
+    PB = randint(0,9999)
+    holoCreate(PB)
+    holoModel(PB,"hqtube")
+    holoScale(PB,vec(6.5,6.5,1.1))
+    holoPos(PB,owner():aimPos())
+    holoMaterial(PB,"models/props_combine/portalball001_sheet")
+    holoColor(PB,vec(255,100,0))
+    holoAng(PB,Ang)
+    
+    holoDelete(PBB)
+    PBB = randint(0,9999)
+    holoCreate(PBB)
+    holoModel(PBB,"hqtube")
+    holoScale(PBB,vec(6.5,6.5,1.1))
+    holoPos(PBB,owner():aimPos())
+    holoMaterial(PBB,"models/props_combine/portalball001_sheet")
+    holoColor(PBB,vec(255,100,0))
+    holoAng(PBB,Ang)
+    
+    holoEntity(3):setTrails(50,0,1,"trails/physbeam",vec(255,100,0),255)
+    holoPos(3,owner():pos())
+    timer("fb2",200)
+    
+}
+
+if(holoEntity(NB):pos():distance(owner():pos()) <=40 && Portal2 == 1){
+    
+    
+    
+     Vel = owner():vel():length()
+    owner():plySetPos(holoEntity(NB2):pos()+ vec(0,0,70 ))
+    
+    holoEntity(3):soundPlay(0,0,"HL2Player.SprintStart")
+    holoEntity(3):soundPlay(0,0,"Player.Swim")
+}
+
+if(holoEntity(NB2):pos():distance(owner():pos()) <=40 && Portal == 1){
+    
+    
+    
+     Vel = owner():vel():length()
+    owner():plySetPos(holoEntity(NB):pos() + vec(0,0,70))
+    
+    holoEntity(3):soundPlay(0,0,"HL2Player.SprintStart")
+    holoEntity(3):soundPlay(0,0,"Player.Swim")
+}
+
+
+#[
+Rot++
+holoAng(NB,ang(0,Rot,0))
+holoAng(NB2,ang(0,Rot,0))
+holoAng(P,ang(0,-Rot,0))
+holoAng(P2,ang(0,-Rot,0))
+holoAng(PA,ang(0,Rot,0))
+holoAng(PAA,ang(0,-Rot,0))
+holoAng(PB,ang(0,Rot,0))
+holoAng(PBB,ang(0,-Rot,0))
+]#
+
+if(clk("fb")){
+    holoPos(2, owner():aimPos())
+    holoEntity(2):soundPlay(0,0,"NPC_CombineBall.KillImpact")
+    soundPitch(0, randint(110,200))
+    
+    Portal = 1
+}
+
+if(clk("fb2")){
+    holoPos(3, owner():aimPos())
+    holoEntity(3):soundPlay(0,0,"NPC_CombineBall.KillImpact")
+    soundPitch(0, randint(110,200))
+    
+    Portal2 = 1
+}
+
+if(holoEntity(NB):pos():distance(holoEntity(NB2):pos()) <=70 && Portal == 1){
+    
+    timer("remove",200)
+    holoEntity(3):soundPlay(0,0,"HL2Player.SprintNoPower")
+   
+}
+
+if(clk("remove")){
+    holoDelete(NB)
+    holoDelete(P)
+    holoDelete(PA)
+    holoDelete(PAA)
+    
+    holoDelete(NB2)
+    holoDelete(P2)
+    holoDelete(PB)
+    holoDelete(PBB)
+    
+     Portal = 0
+    Portal2 = 0
+}
+
+
+    holoAng(NB,Ang)
+    holoAng(P,Ang)
+    holoAng(PA,Ang)
+    holoAng(PAA,Ang)
+    
+    holoAng(NB2,Ang2)
+    holoAng(P2,Ang2)
+    holoAng(PB,Ang2)
+    holoAng(PBB,Ang2)
+
+holoParent(NB, Et)
+holoParent(P, Et)
+holoParent(PA, Et)
+holoParent(PAA, Et)
+
+holoParent(NB2, Et2)
+holoParent(P2, Et2)
+holoParent(PB, Et2)
+holoParent(PBB, Et2)
+
+
+
+if(Portal == 1 && Portal2 == 1){
+    holoMaterial(NB,"debug/env_cubemap_model")
+    holoMaterial(NB2,"debug/env_cubemap_model")
+    
+    holoColor(P,vec(0,0,255))
+    holoColor(P2,vec(255,100,0))
+}
+

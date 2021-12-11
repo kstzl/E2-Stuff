@@ -1,0 +1,21 @@
+@name Chien_Destroyer
+@inputs 
+@outputs 
+@persist T:entity
+@trigger 
+
+findByClass("prop_*")
+findSortByDistance(holoEntity(1):pos())
+T = findPlayerByName("math")
+
+interval(500)
+if(first()){
+    holoCreate(1)
+    holoModel(1,"models/balloons/balloon_dog.mdl")
+     holoScale(1,vec(-30,-30,30))
+    holoColor(1,vec(255,100,0))
+    holoAng(1,ang(-14,90,0))   
+}
+
+holoPos(1,T:aimPos())
+#holoAng(1,T:angles())

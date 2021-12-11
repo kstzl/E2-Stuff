@@ -1,0 +1,21 @@
+@name 
+@inputs 
+@outputs 
+@persist T:entity E:entity
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+    T = findPlayerByName("QTK")
+    E = entity():isWeldedTo()
+    E:setAlpha(0)
+    
+    entity():setAlpha(0)
+    holoCreate(1)
+    holoAlpha(1,0)
+    
+}
+
+holoPos(1,T:pos())
+E:setPos(holoEntity(1):pos())

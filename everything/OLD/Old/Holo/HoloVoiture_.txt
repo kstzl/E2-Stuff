@@ -1,0 +1,36 @@
+@name HoloVoiture 
+@inputs
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+
+
+###############
+# Create Holo #
+###############
+
+holoCreate(1)
+holoCreate(2)
+
+###############
+#   Holo Pos  #
+###############
+
+holoPos(1, entity():toWorld(vec(0,0,1)))
+holoPos(2, entity():toWorld(vec(6,0,2)))
+
+###############
+# Holo Scale  #
+###############
+
+holoScale(1, vec(3,4,0.1))
+holoScale(2, vec(0.6,2.8,0.1))
+
+###############
+# Holo Color  #
+###############
+
+holoColor(1, vec(0,0,0))
+holoColor(2, vec(255,255,255))

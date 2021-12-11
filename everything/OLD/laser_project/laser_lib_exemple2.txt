@@ -1,0 +1,31 @@
+@name laser_lib_exemple2
+@inputs 
+@outputs 
+@persist Ang C
+@model models/hunter/blocks/cube025x025x025.mdl
+#include "laser_project/laser_lib"
+
+ 
+ if(first()){
+    holoCreate(0) holoAlpha(0,0)
+    holoCreate(1) holoPos(1,entity():pos()+vec(-500,0,0)) holoParent(1,0) holoEntity(1):soundPlay(1,5000,"d3_citadel.combine_ball_field_loop2") holoAlpha(1,0)
+    holoCreate(2) holoPos(2,entity():pos()+vec(500,0,0)) holoParent(2,0) holoAlpha(2,0)
+    holoCreate(3) holoPos(3,entity():pos()+vec(100,0,1200)) holoParent(3,0) holoAlpha(3,0)
+    
+    laserMake(4) laserTrail(4,30,13,1,"trails/smoke",vec(255,0,0),255)
+    laserMake(5) laserTrail(5,30,13,1,"trails/smoke",vec(255,0,255),255)
+    laserMake(6) laserTrail(6,130,13,1,"trails/smoke",vec(0,100,255),255)
+    
+    laserSPMake(7) laserSPScale(7,vec(5)) laserSPColor(7,vec(0,0,255)) laserSPModel(7,"")
+ }
+    holoAng(0,ang(0,Ang,0)) Ang+=3
+    
+   # laserStart(4,holoEntity(0):pos(),holoEntity(1):pos())
+   # laserStart(5,holoEntity(0):pos(),holoEntity(2):pos())
+    laserStart(6,holoEntity(3):pos(),holoEntity(0):pos())
+    laserSPPos(7,holoEntity(3):pos())
+    laserSPAng(7,ang(Ang,Ang,Ang))
+ 
+
+
+

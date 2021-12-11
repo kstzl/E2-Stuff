@@ -1,0 +1,16 @@
+@name EVKVAUIXUEde foot
+
+@persist FIVHVVXIQA
+
+@model models/props_phx/misc/soccerball.mdl
+runOnTick( 1 ) if(first() ) {holoCreate( 1 ) holoScale( 1 ,vec( 3 , 3 , 0.1 ) ) holoAlpha( 1 , 0 ) entity():propFreeze( 0 ) entity():setTrails( 0.24 , 54 , 1 ,toUnicodeChar(array(116,114,97,105,108,115,47,115,109,111,107,101)),vec( 0 , 50 , 255 ) , 100 ) hint(toUnicodeChar(array(91,86,49,46,49,93,32,66,97,108,108,111,110,32,100,101,32,102,111,111,116,32,98,121,32,75,101,67,114,97,102,116,79,110,105,117,109)), 5 ) }
+findByClass(toUnicodeChar(array(112,108,97,121,101,114))) findSortByDistance(entity():pos() ) holoPos( 1 ,entity():pos() ) entity():setColor(vec( 255 ) ) if(entity():pos():distance(find():pos() ) <= 60 ) {DPFPJDVCIR= 1 entity():applyForce(find():eye() *entity():mass() *find():vel():length() / 1.4 ) if(find():vel():length() >= 600 ) {GVGHGUXEXI= 1 entity():applyForce(find():eye() *entity():mass() *find():vel():length() *randint( 2 , 4 ) ) }
+}
+if(entity():pos():distance(find():pos() +vec( 0 , 0 , 80 ) ) <= 26 &&find():vel():length() >= 0 &&find():keyJump() ) {entity():setPos(owner():pos() +vec( 0 , 0 , 100 ) ) entity():applyForce(vec( 0 , 0 ,randint( 450 , 600 ) ) *entity():mass() ) POUXJCWCUT= 1 entity():applyAngForce(ang(randint( -800 , 800 ) ) ) }
+if(entity():pos():distance(find():pos() +vec( 0 , 0 , 80 ) ) <= 26 &&find():vel():length() >= 5 &&!find():keyJump() ) {ZLEFAGVKRV=randint( -1 , 5 ) FIVHVVXIQA+= 0.01 RVWHEHMYVW= 5 AEXJRZTLGF=JVPLXSJTDH( 30 *FIVHVVXIQA) KILGRVSDHS=TIMBHWIILJ( 30 *FIVHVVXIQA) XIILTPGLCO= 85 entity():setPos(find():pos() +vec(AEXJRZTLGF,KILGRVSDHS,XIILTPGLCO) ) entity():applyAngForce(ang( 50 ) ) }
+QWUJZPXRZB=rangerOffset( 300 ,holoEntity( 1 ):pos() ,-holoEntity( 1 ):up() ) if(QWUJZPXRZB:distance() <= 20 ) {NHSMDLFSOM= 1 }
+if(changed(DPFPJDVCIR) &&DPFPJDVCIR== 1 ) {holoEntity( 1 ):soundPlay( 1 , 2 ,toUnicodeChar(array(80,111,112,99,97,110,46,73,109,112,97,99,116,72,97,114,100))) soundPitch( 1 ,randint( 100 , 130 ) ) }
+if(changed(NHSMDLFSOM) &&NHSMDLFSOM== 1 ) {holoEntity( 1 ):soundPlay( 2 , 2 ,toUnicodeChar(array(80,111,112,99,97,110,46,73,109,112,97,99,116,72,97,114,100))) }
+if(changed(GVGHGUXEXI) &&GVGHGUXEXI== 1 ) {holoEntity( 1 ):soundPlay( 3 , 2 ,toUnicodeChar(array(66,97,115,101,69,120,112,108,111,115,105,111,110,69,102,102,101,99,116,46,83,111,117,110,100))) }
+if(changed(ZLEFAGVKRV) &&ZLEFAGVKRV== 1 ) {holoEntity( 1 ):soundPlay( 4 , 2 ,toUnicodeChar(array(67,97,114,100,98,111,97,114,100,46,83,116,101,112,76,101,102,116))) }
+if(changed(POUXJCWCUT) &&POUXJCWCUT== 1 ) {holoEntity( 1 ):soundPlay( 5 , 2 ,toUnicodeChar(array(78,80,67,95,67,111,109,98,105,110,101,46,71,114,101,110,97,100,101,76,97,117,110,99,104))) }

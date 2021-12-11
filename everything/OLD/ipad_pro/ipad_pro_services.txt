@@ -1,0 +1,197 @@
+@name ipad_pro_services
+
+@inputs [ Keyboard Trigger SoundEmitter ]:wirelink
+@inputs [ Os_E2 ]:entity
+@inputs [ FlashLevel ]:number
+
+@outputs [ Test PrinterCount PrinterCountVip Citoyens Polices Gangsters Mercenaires Autres ]:number
+@outputs [ Heure Minutes Secondes HMS Jour Mois Annee Date ]:string
+@outputs [ Players ]:array
+@outputs [ LightColor ]:vector
+
+@persist [ KeyboardUse ]:number
+@persist [ KeyboardText ]:string
+@persist [ Entities Plys ]:array
+
+#[
+
+
+  _ _____          _   _____              _____                 _                    
+ (_)  __ \        | | |  __ \            / ____|               (_)                   
+  _| |__) |_ _  __| | | |__) | __ ___   | (___   ___ _ ____   ___  ___ ___  ___      
+ | |  ___/ _` |/ _` | |  ___/ '__/ _ \   \___ \ / _ \ '__\ \ / / |/ __/ _ \/ __|     
+ | | |  | (_| | (_| | | |   | | | (_) |  ____) |  __/ |   \ V /| | (_|  __/\__ \     
+ |_|_|   \__,_|\__,_|_|_|   |_|__\___/_ |_____/ \___|_|____\_/ |_|\___\___||___/     
+ |  _ \        | |/ /___ \ / ____|  __ \| || | |  ____|__   __||  __ \| |    | |     
+ | |_) |_   _  | ' /  __) | |    | |__) | || |_| |__     | | (_) |  | | |    | |     
+ |  _ <| | | | |  <  |__ <| |    |  _  /|__   _|  __|    | |   | |  | | |    | |     
+ | |_) | |_| | | . \ ___) | |____| | \ \   | | | |       | |_ _| |__| | |____| |____ 
+ |____/ \__, | |_|\_\____/ \_____|_|  \_\  |_| |_|       |_(_|_)_____/|______|______|
+         __/ |                                                                       
+        |___/                                                                        
+
+
+
+  ___   ___ ___   ___  
+ |__ \ / _ \__ \ / _ \ 
+    ) | | | | ) | | | |
+   / /| | | |/ /| | | |
+  / /_| |_| / /_| |_| |
+ |____|\___/____|\___/ 
+                       
+                       
+
+
+
+]#
+
+
+
+
+
+
+
+interval(1)
+
+function play_song(SoundName_:string){
+    
+        SoundEmitter:setNumber("A", 1)
+        SoundEmitter:setString("SampleName", SoundName_)
+        
+}
+function stop_song(){
+    
+    SoundEmitter:setNumber("A", 0)
+
+}
+    
+if(first()){
+
+}
+
+KeyboardUse = Keyboard:number("In Use")
+KeyboardText = Keyboard:string("Text")
+
+if(changed(KeyboardUse) && KeyboardUse == 0 && KeyboardText != "" ){
+    
+    dsSendDirect("keyboard", Os_E2, KeyboardText)
+       
+}
+
+if(dsClk("play_song")){
+    
+    play_song(dsGetString())
+    
+}
+if(dsClk("stop_song")){
+    
+    stop_song()
+    
+}
+
+
+if(dsClk("sound")){
+    
+    local Sfx = dsGetString()
+    
+    if(dsGetString() == "welcome"){ Sfx = "k_lab.intro_barney_kleiner" }
+    elseif(dsGetString() == "error"){ Sfx = "Buttons.snd10" }
+    
+    
+    entity():soundPlay(0, 5, Sfx)
+    
+}
+
+Entities = Trigger:array("Entities")
+Players = array()
+PrinterCount = 0
+PrinterCountVip = 0
+Citoyens = 0
+Polices = 0
+Gangsters = 0
+Mercenaires = 0
+Autres = 0
+
+for(I = 0, Entities:count()){
+    
+    Ent = Entities[I, entity]
+    
+    if(Ent:type() == "player"){
+        
+        Players:pushEntity(Ent)
+        
+        if(Ent:nxJob() == "citizen"){
+            
+            Citoyens++
+            
+        }
+        elseif(Ent:nxJob() == "cp"){
+            
+            Polices++
+            
+        }
+        elseif(Ent:nxJob() == "gangster"){
+            
+            Gangsters++
+            
+        }
+        elseif(Ent:nxJob() == "merc"){
+            
+            Mercenaires++
+            
+        }
+        else
+        {
+            Autres++
+        }
+        
+    }
+    elseif(Ent:type() == "money_printer"){
+        
+        if(Ent:getSkin() == 0){
+            
+            PrinterCount++
+            
+        }
+        else
+        {
+            PrinterCountVip++
+        }
+            
+    }
+    
+}
+
+Heure = time("hour"):toString()
+Minutes = time("min"):toString()
+Secondes = time("sec"):toString()
+
+if(Heure:toNumber() < 10){ Heure = "0" + Heure }
+if(Minutes:toNumber() < 10){ Minutes = "0" + Minutes }
+if(Secondes:toNumber() < 10){ Secondes = "0" + Secondes }
+
+HMS = Heure + ":" + Minutes
+
+local Moiss = array()
+
+Moiss[1, string] = "Janvier"
+Moiss[2, string] = "Fevrier"
+Moiss[3, string] = "Mars"
+Moiss[4, string] = "Avril"
+Moiss[5, string] = "Mai"
+Moiss[6, string] = "Juin"
+Moiss[7, string] = "Juillet"
+Moiss[8, string] = "Aout"
+Moiss[9, string] = "Septembre"
+Moiss[10, string] = "Octobre"
+Moiss[11, string] = "Novembre"
+Moiss[12, string] = "Decembre"
+
+Jour = time("day"):toString()
+Mois = Moiss[time("month"), string]
+Annee = time("year"):toString()
+
+Date = Jour + " " + Mois + " " + Annee
+
+FlashLevel = 0
+LightColor = vec(FlashLevel)

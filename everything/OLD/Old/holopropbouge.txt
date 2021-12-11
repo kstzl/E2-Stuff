@@ -1,0 +1,63 @@
+@name HoloPropBouge
+@persist [ H T ]:number [ O ]:entity [ Holo ]:table
+
+interval(1)
+
+if(first()){
+    
+    #include "e2_minge_toolkit/emt_lib"
+    
+    O = owner()
+    
+}
+
+if(changed(O:keyAttack2()) && O:keyAttack2() == 1){
+    
+    Ent = O:aimEntity()
+    
+    holoCreate(H)
+    holoModel(H, Ent:model())
+    holoColor(H, Ent:getColor())
+    holoMaterial(H, Ent:getMaterial())
+    holoEntity(H):soundPlay(H, 0, "Default.ScrapeSmooth")
+    
+    Holo[H, table] = table(Ent)
+
+    H += 1
+    
+}
+
+for(I = 0, H){
+    
+    Pos = Holo[I, table][1, entity]:pos()
+    
+    if(randint(0, 10) == 0){
+        
+        local Phys = Holo[I, table][1, entity]:propPhysicalMaterial()
+        local Sfx = ""
+        
+        if(Phys:find("plastic")){
+            
+            Sfx = "Plastic_Box.ImpactHard"
+            
+        }
+        else
+        {
+            Sfx = "SolidMetal.ImpactHard"
+        }
+        
+        holoEntity(I):soundPlay(I, 0, Sfx)
+        Ang = Holo[I, table][1, entity]:angles() + ang(randint(-5, 5), randint(-5, 5), randint(-5, 5))
+    }
+    else
+    {
+        Ang = Holo[I, table][1, entity]:angles()
+    }
+    
+    holoPos(I, Pos)
+    holoAng(I, Ang)
+    holoScale(I, vec(1.05))
+    
+}
+
+T += 1

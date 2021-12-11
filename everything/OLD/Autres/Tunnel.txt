@@ -1,0 +1,59 @@
+@name 
+@inputs 
+@outputs 
+@persist Force R
+@trigger 
+
+runOnTick(1)
+if(first()){
+    
+        holoCreate(1)
+        holoModel(1,"cone")
+        holoScale(1,vec(4,4,9.1))
+        holoColor(1,vec(0,0,200))
+      # holoMaterial(3,"debug/env_cubemap_model")
+    
+        holoCreate(2)
+        holoModel(2,"hqcylinder")
+        holoScale(2,vec(10,10,900))
+        holoColor(2,vec(0,0,200))
+        holoAlpha(2,100)
+        holoParent(2,1)
+}
+
+if(owner():keyAttack1()){
+    
+        Ang = owner():aimNormal():toAngle()+ang(90,0,0)
+        Pos = owner():aimPos()
+        
+        holoPos(1,Pos)
+        holoAng(1,Ang)
+}
+
+if(holoEntity(2):pos():distance(owner():pos()) <=50){
+    R++
+ owner():plyApplyForce(holoEntity(1):up()*R)
+print(R)
+}
+
+Rand = randint(0,9999)
+        holoCreate(Rand)
+        holoModel(Rand,"hqcylinder")
+        holoScale(Rand,vec(10,10,900))
+        holoColor(Rand,vec(0,0,200))
+        holoAlpha(Rand,100)
+        holoParent(Rand,1)
+        holoAng(Rand,Ang)
+holoPos(Rand,vec(0,0,R))
+
+
+
+
+
+
+
+
+
+
+
+

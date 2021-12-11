@@ -1,0 +1,19 @@
+@name Explosion
+@inputs A
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+    
+holoCreate(1)
+}
+
+holoPos(1,findPlayerByName("funny"):pos())
+
+    Prop = propSpawn("models/props_c17/oildrum001_explosive.mdl",1)
+    Prop:setPos(holoEntity(1):pos())
+    Prop:propBreak()
+

@@ -1,0 +1,14 @@
+@name HydroProgressif
+@inputs A
+@outputs Hydro
+@persist 
+@trigger 
+
+if(A == 1){
+interval(100)
+Hydro += 100
+}
+else
+{
+    Hydro = 0
+}

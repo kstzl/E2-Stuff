@@ -1,0 +1,9 @@
+@name Barriere_Radar
+@inputs A
+@outputs Barriere_Ouverte Barriere_Ferme
+@persist 
+
+interval(1)
+
+Barriere_Ferme = A
+Barriere_Ouverte = !A

@@ -1,0 +1,206 @@
+@name lol_pc
+
+@persist [ I RotSpeed Shake DevMode SwitchState ]
+@persist [ Target ]:entity
+@persist [ TPos RPos ]:vector
+@persist [ S M ]:table
+
+@model models/hunter/blocks/cube05x05x05.mdl
+
+#Code By K3CR4FT.:DLL, 2020.
+
+interval(1)
+
+if(first()){
+    
+    DevMode = 0
+    
+    S:pushString("citadel.al_betterhurry")
+    S:pushString("citadel.al_struggle08")
+    S:pushString("citadel.al_bitofit")
+    S:pushString("citadel.al_darkfusionreactor")
+    S:pushString("citadel.al_wonderwhere")
+    S:pushString("citadel.al_thegravgun04")
+    S:pushString("citadel.al_thatshim")
+    S:pushString("citadel.al_elevator")
+    S:pushString("citadel.al_keepgoing")
+    S:pushString("citadel.al_yes")
+    S:pushString("citadel.gman_exit04")
+    S:pushString("citadel.br_laugh01")
+    S:pushString("eli_lab.al_laugh01")
+    S:pushString("npc_barney.ba_laugh04")
+    
+    S:pushString("eli_lab.gravgun_door_open")
+    S:pushString("eli_lab.gravgun_door_open")
+    S:pushString("Buttons.snd1")
+    S:pushString("Buttons.snd2")
+    S:pushString("Buttons.snd3")
+    S:pushString("Buttons.snd5")
+    S:pushString("Buttons.snd6")
+    S:pushString("Buttons.snd8")
+    S:pushString("Buttons.snd9")
+    
+    S:pushString("ambient.electrical_zap_1")
+    S:pushString("ambient.electrical_zap_2")
+    S:pushString("ambient.electrical_zap_3")
+    S:pushString("ambient.electrical_zap_5")
+    S:pushString("ambient.electrical_zap_6")
+    S:pushString("ambient.electrical_zap_7")
+    S:pushString("ambient.electrical_zap_8")
+    S:pushString("ambient.electrical_zap_9")
+    
+    M:pushString("models/alyx/emptool_glow")
+    M:pushString("models/XQM/BoxFull_diffuse")
+    M:pushString("models/combine_advisor/mask")
+    M:pushString("models/effects/portalrift_sheet")
+    M:pushString("models/props_combine/portalball001_sheet")
+    M:pushString("models/props_combine/stasisfield_beam")
+    M:pushString("models/rendertarget")
+    M:pushString("models/shadertest/shader3")
+    M:pushString("phoenix_storms/stripes")
+    M:pushString("models/props_lab/security_screens")
+    
+    if(!DevMode){
+        
+        timer("speak", 100)   
+        timer("material", 100)
+        timer("switch", 100)
+           
+    }
+    
+    entity():setAlpha(0)
+    
+    holoCreate(0)
+    holoAlpha(0, 0)
+    #holoParent(0, entity())
+    
+    holoCreate(1)
+    holoModel(1, "models/props_lab/monitor02.mdl")
+    holoScale(1, vec(2))
+    holoParent(1, 0)
+    
+    holoCreate(2)
+    holoPos(2, holoEntity(0):pos() - vec(-5, 0, 5))
+    holoParent(2, 0)
+    holoAlpha(2, 0)
+    
+    holoCreate(3)
+    holoModel(3, "models/props_wasteland/light_spotlight01_lamp.mdl")
+    holoPos(3, holoEntity(2):pos())
+    holoParent(3, 2)
+    
+    holoCreate(4)
+    holoPos(4, holoEntity(0):pos() + vec(0, 0, 40))
+    holoParent(4, holoEntity(0))
+    holoAlpha(4, 0)
+    
+    holoCreate(5)
+    holoModel(5, "models/props_phx/misc/propeller3x_small.mdl")
+    holoPos(5, holoEntity(4):pos())
+    holoParent(5, 4)
+    holoScale(5, vec(1, 1, 1.5))
+    
+    holoCreate(6)
+    holoPos(6, holoEntity(1):pos() + vec(20.8, 0, 28))
+    holoAng(6, holoEntity(1):angles() + ang(-8, 0, 0))
+    holoScale(6, vec(0.3, 2.8, 2.5))
+    holoParent(6, 1)
+    
+    holoCreate(7)
+    holoModel(7, "models/props_c17/light_cagelight02_on.mdl")
+    holoScale(7, vec(2))
+    holoPos(7, holoEntity(1):pos() + vec(-10, 15, 30))
+    holoAng(7, holoEntity(1):angles() + ang(0, 0, 90))
+    holoParent(7, 1)
+    
+    holoCreate(8)
+    holoModel(8, "models/props_c17/light_cagelight02_on.mdl")
+    holoScale(8, vec(2))
+    holoPos(8, holoEntity(1):pos() + vec(-10, -15, 30))
+    holoAng(8, holoEntity(1):angles() + ang(0, 0, -90))
+    holoParent(8, 1)
+    
+    holoEntity(5):soundPlay(0, 0, "Town.d1_town_01_spin_loop")
+    
+}
+
+if(clk("switch")){
+    
+    SwitchState = !SwitchState
+    
+    if(SwitchState){
+        
+        holoColor(7, vec(255, 100, 0))
+        holoColor(8, vec(255))
+        
+    }
+    else
+    {
+        
+        holoColor(7, vec(255))
+        holoColor(8, vec(255, 100, 0))
+        
+    }
+    timer("switch", 500)
+    
+}
+
+if(clk("material")){
+
+    holoMaterial(6, M[randint(1, M:count()), string])
+        
+    timer("material", randint(1, 100))
+    
+}
+
+if(clk("speak")){
+    
+    holoEntity(1):soundPlay(1, 0, S[randint(1, S:count()), string])
+    
+    timer("speak", randint(500, 2000))
+    
+    if(randint(0, 10) == 0){
+        
+        P = propSpawn("models/props_c17/oildrum001_explosive.mdl", 1)
+        P:setAlpha(0)
+        P:setPos(holoEntity(0):pos())
+        P:propBreak()
+        
+        Shake = randint(1, 5)
+        
+    }
+    
+}
+
+soundPitch(1, randint(30, 150))
+
+
+findByClass("player")
+findSortByDistance(holoEntity(3):pos())
+Target = find()
+I++
+RotSpeed = 1 + Target:pos():distance(holoEntity(0):pos())/2
+Shake += (0 - Shake) / 30
+
+
+soundPitch(0, RotSpeed)
+
+if(Target:pos():distance(holoEntity(0):pos()) > 250){
+    
+    TPos = Target:pos()
+    
+}
+
+RPos = vec(0, 0, 50 + sin(I * 3) * 15)
+
+if(!DevMode){
+    
+    holoPos(0, holoEntity(0):pos() + ( TPos + RPos - holoEntity(0):pos() ) / 25 )
+    
+    holoAng(0, ( holoEntity(2):pos() - Target:pos()):toAngle() - ang(-40, 180, sin(I) * 5))
+    holoAng(2, ( holoEntity(2):pos() - Target:pos()):toAngle() - ang(180, sin(I * 1) * 35, 0))
+    holoAng(0, holoEntity(0):angles() + ang(0, I * Shake, 0) )
+    holoAng(4, ang(0, holoEntity(4):angles():yaw() + RotSpeed*0.1, 0))
+    
+}
+

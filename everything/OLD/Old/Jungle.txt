@@ -1,0 +1,50 @@
+@name Jungle
+@persist [ H Max ] [ Model ]:array
+
+runOnTick(1)
+
+if(first()){
+    
+    entity():setName("SetAng Stearing")
+     
+    Max = 500
+    
+    Model[0, string] = "models/props_foliage/tree_cliff_01a.mdl"
+    Model[1, string] = "models/props_foliage/oak_tree01.mdl"
+    Model[2, string] = "models/props_foliage/tree_poplar_01.mdl"
+    Model[3, string] = "models/props/de_dust/du_palm_tree01_skybx.mdl"
+    Model[4, string] = "models/props/de_inferno/tree_large.mdl"
+    Model[5, string] = "models/props/cs_militia/tree_large_militia.mdl"
+    Model[6, string] = "models/props/cs_militia/trees2.mdl"
+    Model[7, string] = "models/props/de_prodigy/prodgrassa.mdl"
+    Model[8, string] = "models/props/cs_assault/streetsign01.mdl"
+    Model[9, string] = "models/props_c17/playgroundslide01.mdl"
+    Model[10, string] = "models/props_c17/playground_swingset01.mdl"
+    Model[11, string] = "models/props_c17/statue_horse.mdl"
+    Model[12, string] = "models/props_c17/playground_jungle_gym01b.mdl"
+    
+    timer("spawn", 0)
+    
+}
+
+if(clk("spawn")){
+    
+    Rd = randint(0, Model:count())
+    
+    holoCreate(H)
+    holoPos(H, entity():pos() + vec(randint(-3000, 3000), randint(-3000, 3000), 0) )
+    holoModel(H, Model[Rd, string])
+    holoAng(H, ang(0, randint(0, 180), 0))
+    
+    if(H < Max){
+        
+        timer("spawn", 1)
+        H += 1
+        
+    }
+    else
+    {
+        H += 1
+    }
+    
+}

@@ -1,0 +1,39 @@
+@name 
+@inputs 
+@outputs 
+@persist Running Timer Sound RD RD2
+@trigger 
+
+runOnTick(1)
+
+
+if(first()){
+    
+    RD = randint(-15,40)
+    RD2 = randint(-15,40)
+    
+    holoCreate(1)
+    holoModel(1,"models/odessa.mdl")
+    
+    Running = 1
+    holoEntity(1):soundPlay(1,1,"allakbar2.mp3")
+    
+    Prop = propSpawn("models/dynamite/dynamite.mdl",0)
+}
+
+if(Running == 1){
+    Timer+=0.5
+    holoPos(1,entity():pos()+vec(Timer*6,0,0))
+
+}
+
+if(Timer >= 39.7){
+    propDeleteAll()
+}
+if(Timer >= 40){
+
+Prop = propSpawn("models/props_c17/oildrum001_explosive.mdl",1)
+Prop:propBreak()
+selfDestructAll()
+
+}

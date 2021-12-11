@@ -1,0 +1,19 @@
+@name TUTO_PARTICULES
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+
+runOnTick(1)
+
+    particleCreate()
+    particleSetMaterial("particle/smokesprites_0006")
+    particleSetColor(vec(255))
+    particleSetPosition(entity():toWorld(vec(randint(-100, 100), randint(-100, 100), randint(-100, 100))))
+    particleSetVelocity(entity():up()*25)
+    particleSetStartSize(100)
+    particleSetEndSize(50)
+    particleCollision(1)
+    particleBounce(1)
+    particleSetDuration(1)

@@ -1,0 +1,15 @@
+@name BoiteVitesse
+@inputs MOINS PLUS
+@outputs V
+@persist 
+@trigger 
+
+if(PLUS == 1){
+    V = 100
+}
+if(MOINS == 1){
+    V -= 100
+}
+if(V < 1){
+    V = 100
+}

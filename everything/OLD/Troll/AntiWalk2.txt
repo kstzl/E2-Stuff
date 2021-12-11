@@ -1,0 +1,53 @@
+@name AntiWalk2
+@inputs 
+@outputs 
+@persist T:entity E:entity R Vel C I
+@trigger 
+
+# By k3 2016
+
+interval(0)
+
+if(first()){
+    
+    T=findPlayerByName("ben")
+    
+    E = entity():isWeldedTo()
+    E:setAlpha(0)
+    
+    entity():setAlpha(0)
+    
+    holoCreate(1)
+    holoCreate(2)
+    
+    holoModel(1,"hqsphere")
+    holoModel(2,"hqsphere")
+    
+    holoScale(1,-vec(1.2,1.2,1.2)*1)
+    holoScale(2,-vec(1.2,1.2,1.2)*1)
+    holoMaterial(2,"models/alyx/emptool_glow")
+    holoAlpha(2,40)
+    
+
+   holoEntity(1):setTrails(20,1,1,"trails/physbeam",vec(255,255,255),255)
+   holoEntity(1):soundPlay(0,0,"NPC_CombineBall.HoldingInPhysCannon") soundVolume(0,0.2)
+   holoEntity(1):soundPlay(1,0,"d3_citadel.combine_ball_field_loop3")
+
+    
+}
+
+holoPos(1,T:pos())
+holoPos(2,T:pos())
+
+holoAng(1,ang(R,R,R))
+holoAng(2,ang(R,R,R))
+R++
+
+E:setPos(T:pos()+vec(randint(-15,15),randint(-15,15),randint(0,15)))
+E:applyAngForce(ang(1,1,720)*E:mass()*30)
+
+Vel = T:vel():length()
+holoColor(1,vec(0,Vel/2,Vel))
+
+
+#FOR TROLL

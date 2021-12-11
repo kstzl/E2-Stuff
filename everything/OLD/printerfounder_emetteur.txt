@@ -1,0 +1,125 @@
+@name PrinterFounder_Emetteur
+@inputs [ Ents ]:array
+@outputs [ Indicator ]:number
+@persist [ Points ]:table [ Printers ]:array [ S DetectSomething ]:number [ ActualPoint ]:string
+
+interval(1)
+
+#[
+
+
+  _____      _       _              ______                    _           
+ |  __ \    (_)     | |            |  ____|                  | |          
+ | |__) | __ _ _ __ | |_ ___ _ __  | |__ ___  _   _ _ __   __| | ___ _ __ 
+ |  ___/ '__| | '_ \| __/ _ \ '__| |  __/ _ \| | | | '_ \ / _` |/ _ \ '__|
+ | |   | |  | | | | | ||  __/ |    | | | (_) | |_| | | | | (_| |  __/ |   
+ |_|   |_|  |_|_| |_|\__\___|_|    |_|  \___/ \__,_|_| |_|\__,_|\___|_|   
+                      
+                 By K3CR4FT.:DLL / Khapta Zenda
+                 Version 1.0 ( 2020 )
+                            
+]#
+
+function string find_point(Pos:vector){
+    
+    OldDist = 0
+    Final = ""
+    
+    for(I = 0, Points:count()){
+        
+        P = Points[I, table]
+        
+        Dist = Pos:distance(P[2, vector])
+
+        if(Dist < OldDist || I == 0){
+            OldDist = Dist
+            Final = P[1, string]
+        }
+        
+    }
+    
+    return Final
+    
+}
+
+if(first() || dupefinished()){
+    
+    dsJoinGroup("general")
+    
+    S = 512 / 2
+    
+    Points[0, table] = table("Parking Cobs GM", vec(-4541.762207, -1658.232300, 0.031250))
+    Points[1, table] = table("Cobs GM", vec(-5313.268555, -370.765167, 0.031250))
+    Points[2, table] = table("Banque", vec(-3542.643311, -3274.849854, 0.031250))
+    Points[3, table] = table("Hopital", vec(165.500916, -5890.753418, 64.031250))
+    Points[4, table] = table("Restaurant", vec(-3572.895264, -7367.651367, 16.031250))
+    Points[5, table] = table("Comissariat", vec(-4285.990234, -5969.306152, 96.031250))
+    Points[6, table] = table("Cyber-Cafe fontaine", vec(-8864.304688, -8195.652344, 16.031250))
+    Points[7, table] = table("Petit Magasin", vec(-8266.722656, -3900.210205, 8.031250))
+    Points[8, table] = table("Grand Magasin", vec(-8128.646484, -3070.523682, 8.031250))
+    Points[9, table] = table("Club Catalyst", vec(-8688.650391, -866.817200, -511.968750))
+    Points[10, table] = table("Grand Magasin 2", vec(-8376.559570, 91.490746, 8.031250))
+    Points[11, table] = table("Magasin 239", vec(-8332.005859, 994.723755, 8.031250))
+    Points[12, table] = table("Usine (petit coin)", vec(-6367.857422, 7072.913574, 0.031250))
+    Points[13, table] = table("Usine", vec(-5292.122070, 6785.596191, 0.031250))
+    Points[14, table] = table("Station Essence Peripherique", vec(-14520.231445, 2663.502686, 392.031250))
+    Points[15, table] = table("Garage Peripherique", vec(-13915.753906, 12340.333008, 512.031250))
+    Points[16, table] = table("Usine Quartier Industriel", vec(-10856.924805, 7953.686035, 16.031250))
+    Points[17, table] = table("HLM Quartier Residentiel 325", vec(376.736725, 8047.670898, 616.031250))
+    Points[18, table] = table("HLM Quartier Residential 326", vec(-1412.803223, 9403.373047, 616.031250))
+    Points[19, table] = table("Parking Littoral", vec(12171.195312, -11781.722656, 320.031250))
+    Points[20, table] = table("Chalet Littoral", vec(11814.031250, -8796.271484, 352.031250))
+    Points[21, table] = table("Chalet Littoral 2", vec(12525.612305, -5539.914062, 352.031250))
+    Points[22, table] = table("Grotte Littoral", vec(13202.252930, -82.043915, 205.736008))
+    Points[23, table] = table("", vec())
+    Points[24, table] = table("", vec())
+    Points[25, table] = table("", vec())
+    Points[26, table] = table("", vec())
+    
+    ActualPoint = find_point(entity():pos())
+    
+    print("[NX PrintFounder EMETTEUR] 1 emetteur initialise sur : " + ActualPoint)
+    dsSend("emetteur_init", "general", ActualPoint)
+    
+    timer("flash", 0)
+    timer("search", 0)
+    
+}
+
+if(clk("flash")){
+    
+    Indicator = 1 timer("deflash", 300 - (150 * DetectSomething)) 
+    
+}
+if(clk("deflash")){
+    
+    Indicator = 0 timer("flash", 1000 - (500 * DetectSomething))
+    
+}
+
+if(dsClk("recepteur_check")){
+    
+    PrinterCount = 1
+    PrinterCountVip = 0
+    
+    foreach(K, Ent:entity = Ents){
+    
+        if(Ent:type() == "money_printer"){
+            
+            if(Ent:getSkin() == 0){
+                
+                PrinterCount++
+                
+            }
+            else
+            {
+                PrinterCountVip++
+            }
+                
+        }
+    
+    }
+    
+    dsSend("emetteur_check", "general", table(ActualPoint, PrinterCount, PrinterCountVip))
+
+}

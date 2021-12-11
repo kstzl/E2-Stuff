@@ -1,0 +1,17 @@
+@name ApplyForce
+@inputs A 
+@outputs Force
+@persist 
+@trigger 
+
+    runOnTick(1)
+    
+    Force = 99999
+    
+  E = entity():isWeldedTo()
+
+Vector = vec(0,0,1)
+
+E:applyForce(Vector*Force)
+
+

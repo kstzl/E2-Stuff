@@ -1,0 +1,84 @@
+@name animation_project 3
+#include "animation_lib"
+
+Code =
+    "
+    Object floor;
+    Object floor2;
+    Object npc;
+    Object prop1;
+    Object box;
+    Object pivot;
+    Object button;
+    Object door1;
+    Object pivot2;
+    
+    ObjectParent box pivot;
+    ObjectParent door1 pivot2;
+    
+    ObjectModel npc models/Kleiner.mdl;
+    ObjectModel floor models/hunter/plates/plate3x3.mdl;
+    ObjectModel floor2 models/hunter/plates/plate3x3.mdl;
+    ObjectModel prop1 models/props_junk/TrafficCone001a.mdl;
+    ObjectModel box models/props_junk/wood_crate001a.mdl;
+    ObjectModel button models/dav0r/buttons/button.mdl;
+    ObjectModel door1 models/props_lab/blastdoor001c.mdl;
+
+    ObjectScale floor 2 2 1;
+    ObjectScale floor2 2 2 1;
+    ObjectScale button 5 5 2;
+    
+    ObjectLocalPos npc -100 0 0;
+    ObjectLocalPos floor2 400 0 0;
+    ObjectLocalPos button 430 0 0;
+    ObjectLocalPos prop1 15 35 20;
+    ObjectLocalPos pivot 100 0 20;
+    ObjectLocalPos pivot2 -30 140 0;
+    ObjectLocalPos door1 60 140 0;
+    
+    ObjectAng door1 0 90 0;
+    
+    ObjectAnim npc lineidle01;
+    
+    Pause 1500;
+    
+    ObjectAnim npc pace_all;
+    ObjectMove npc forward 10;
+    
+    Pause 1100;
+    
+    ObjectAnim npc throw1;
+    ObjectMoveStop npc;
+    
+    Pause 500;
+    
+    ObjectMove pivot forward 15;
+    ObjectRotate box 5 5 5;
+    Sfx box Boulder.ImpactHard;
+    
+    Pause 1500;
+    
+    ObjectMoveStop pivot;
+    ObjectRotateStop box;
+    Sfx button Buttons.snd3;
+    
+    Pause 1000;
+    
+    Sfx door1 Doors.Move10;
+    ObjectRotate pivot2 -3 0 0;
+    
+    Pause 2800;
+    
+    ObjectRotateStop pivot2;
+    Sfx door1 Doors.FullOpen10;
+    
+    Pause 2800;
+    
+    ObjectRotate pivot2 3 0 0;
+    Sfx door1 DoSpark;
+
+    "
+
+if(first()){
+    al_play(Code)
+}

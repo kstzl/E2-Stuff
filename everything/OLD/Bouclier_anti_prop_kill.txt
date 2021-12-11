@@ -1,0 +1,43 @@
+@name Bouclier anti prop kill
+@inputs 
+@outputs 
+@persist Prop:entity 
+@trigger 
+
+ runOnTick(1)
+ 
+ #By k3
+
+ findByClass("prop_*")
+ findExcludeEntity(Prop)
+ findSortByDistance(owner():pos())
+
+ if(first()){
+
+ Prop=propSpawn("models/hunter/tubes/tube4x4x6.mdl",1) 
+ Prop:setAlpha(0)
+
+ holoCreate(0)
+ holoModel(0,"hqsphere")
+ holoMaterial(0,"models/XQM/lightlinesRed_tool")
+ holoAlpha(0,100)
+ holoScale(0,vec(4))
+ holoPos(0,Prop:pos())
+ holoParent(0,Prop)
+
+ hint("By k3 (bouclier anti prop kill) v1.1",5)
+
+ }
+ 
+ if(find():pos():distance(owner():pos()) <= 650 && find():vel():length() >= 600 && find():owner() != owner()){ Prop:setPos(find():pos()+vec(0,0,-5)) Sound=1 }else
+ {
+    Prop:setPos(owner():pos()+vec(0,0,500))
+    Explode=1
+    timer("freeze",100)
+ }
+
+ if(clk("freeze")){ Prop:propFreeze(1) }
+ if(changed(Explode) && Explode == 1){ Prop2=propSpawn("models/props_c17/oildrum001_explosive.mdl",0) Prop2:setPos(find():owner():pos()) Prop2:propBreak() }
+ 
+   Prop:setAng(ang(randint(-390,390)))
+   Prop:setAlpha(0)

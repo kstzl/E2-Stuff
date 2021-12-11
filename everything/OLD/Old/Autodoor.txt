@@ -1,0 +1,19 @@
+@name Autodoor
+@persist [Door Entity]:entity
+
+runOnTick(1)
+
+if(first()){
+    
+    Door = propSpawn("models/hunter/blocks/cube1x2x025.mdl", 0)
+    Door:setAlpha(150)
+    
+    holoCreate(0)
+    holoPos(0, Door:pos())
+    holoAng(0, Door:angles())
+    holoParent(0, Door)
+    
+    holoCreate(1)
+    holoModel(1, "models/hunter/blocks/cube1x2x025.mdl")
+    
+}

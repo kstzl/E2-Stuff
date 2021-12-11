@@ -1,0 +1,27 @@
+@name ColorProps
+@inputs 
+@outputs 
+@persist Color:vector Speed:number
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    Speed = 125
+    
+}
+
+findIncludePlayerProps(owner())
+findByClass("prop_*")
+A = findToArray()
+
+for(I = 0, A:count()){
+    
+    Color=hsv2rgb( ( (I * 25) + curtime()*Speed)%360 , 1, 1)
+    
+    Prop = A[I, entity]
+    
+    Prop:setColor(Color)
+    
+}

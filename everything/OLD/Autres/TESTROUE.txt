@@ -1,0 +1,14 @@
+@name TESTROUE
+@inputs Bt Bt2
+@outputs Wheel Wheel2
+@persist 
+@trigger 
+
+if(Bt == 1){
+    Wheel == 1
+    soundPlay(1,0,"Town.d1_town_03_tram_motor_start")
+}
+elseif(Bt2 == 1){
+    Wheel == 1
+    soundPlay(1,0,"Town.d1_town_03_tram_motor_start")
+}

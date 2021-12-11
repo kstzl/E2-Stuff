@@ -1,0 +1,23 @@
+@name PodActive1
+@inputs PodActive
+@outputs Lum:vector B Vel Aim:vector
+@persist 
+@trigger 
+
+
+if(PodActive == 1){
+Lum = vec(255,255,255)
+entity():soundPlay(0,0,"ATV_engine_start")
+
+}
+else{
+Lum = vec(0,0,0)
+B = 1
+entity():soundPlay(0,0,"coast.thumper_shutdown")
+}
+
+#entity():soundPlay(0,0,"Town.d1_town_03_tram_motor_start")
+#entity():soundPlay(0,0,"coast.thumper_shutdown")
+
+ 
+ Aim = owner():aimPos()+vec(0,0,20)

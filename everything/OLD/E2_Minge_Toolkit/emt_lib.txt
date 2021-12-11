@@ -1,0 +1,245 @@
+@name emt_lib
+
+#EMT Variables
+@persist [ EMT_VERSION ]:string
+@persist [ E2_OLD_NAME E2_NEW_NAME ]:string
+@persist [ E2_SPAWNED_PROPS ]:table
+@persist [ E2_ENDED ]:number
+
+#Config Variables
+@persist [ EMT_HIDE_E2 ]:string
+@persist [ EMT_CHANGE_E2_NAME ]:string
+@persist [ EMT_URGENCE_KEY ]:string
+
+#[
+
+ Expression2
+  ______ __  __ _______   _      _____ ____  
+ |  ____|  \/  |__   __| | |    |_   _|  _ \ 
+ | |__  | \  / |  | |    | |      | | | |_) |
+ |  __| | |\/| |  | |    | |      | | |  _ < 
+ | |____| |  | |  | |    | |____ _| |_| |_) |
+ |______|_|  |_|  |_|    |______|_____|____/ 
+                                             
+
+  ______ ___    __  __ _                    _______          _ _    _ _   
+ |  ____|__ \  |  \/  (_)                  |__   __|        | | |  (_) |  
+ | |__     ) | | \  / |_ _ __   __ _  ___     | | ___   ___ | | | ___| |_ 
+ |  __|   / /  | |\/| | | '_ \ / _` |/ _ \    | |/ _ \ / _ \| | |/ / | __|
+ | |____ / /_  | |  | | | | | | (_| |  __/    | | (_) | (_) | |   <| | |_ 
+ |______|____| |_|  |_|_|_| |_|\__, |\___|    |_|\___/ \___/|_|_|\_\_|\__|
+                                __/ |                                     
+                               |___/                                      
+                                                                                                                                                                       
+ By K3CR4FT.:DLL ; 2020
+                                       
+]#
+
+runOnLast(1)
+runOnKeys(owner(), 1)
+
+EMT_VERSION = "1.0.0"
+
+EMT_HIDE_E2 = "1"
+EMT_CHANGE_E2_NAME = "1"
+EMT_URGENCE_KEY = "i" 
+
+function emt_print(Type:string, Message:string){
+    
+    if(Type == "info"){
+        
+        printColor(vec(0, 255, 0), "[ EMT ] " + Message)
+        
+    }
+    elseif(Type == "warning"){
+        
+        printColor(vec(255, 255, 0), "[ EMT ] " + Message)
+        
+    }
+    elseif(Type == "error"){
+        
+        printColor(vec(255, 100, 100), "[ EMT ] " + Message)
+        
+    }
+    
+    
+}
+
+function e2_print(Type:string, Message:string){
+    
+    if(Type == "info"){
+        
+        printColor(vec(150, 255, 150), "[ " + E2_OLD_NAME + " ] " + Message)
+        
+    }
+    elseif(Type == "warning"){
+        
+        printColor(vec(255, 255, 150), "[ " + E2_OLD_NAME + " ] " + Message)
+        
+    }
+    elseif(Type == "error"){
+        
+        printColor(vec(255, 150, 150), "[ " + E2_OLD_NAME + " ] " + Message)
+        
+    }
+    
+    
+}
+
+function entity:requestHide(){
+    
+    #ifdef entity:propDraw(number)
+    
+        This:propDraw(0)
+        
+        if(This == entity()){
+            emt_print("info", "Hiding entity with propDraw()")
+        }
+    
+    #else
+    
+        #ifdef entity:setAlpha(number)
+        
+            This:setAlpha(0)
+            
+            if(This == entity()){
+                emt_print("info", "Hiding entity with setAlpha()")
+            }
+        
+        #else
+        
+            emt_print("error", "Cant hide entity")
+        
+        #endif
+    
+    #endif
+    
+}
+
+function requestNameChange(){
+    
+    E2_OLD_NAME = entity():getName()
+    
+    RandomNames = array(
+    
+        "E2 Car",
+        "E2 SetAng Stearing",
+        "E2 Hoverboard",
+        "E2 MotorBike",
+        "car suspension",
+        "e2 spider mech",
+        "raytracing",
+        "shield",
+        "e2 disco light"
+    
+    )
+    
+    E2_NEW_NAME = RandomNames[randint(1, RandomNames:count()), string]
+    
+    entity():setName(E2_NEW_NAME)
+    
+    emt_print("info", "'" + E2_OLD_NAME + "' changed to '" + E2_NEW_NAME + "'")
+    
+}
+
+function entity requestPropSpawn(PropModel:string){
+    
+    E2_NEW_PROP = noentity()
+    
+    #ifdef propSpawn(string, number)
+    
+        E2_NEW_PROP = propSpawn(PropModel, 1)
+        
+        E2_SPAWNED_PROPS:pushTable(table(
+        
+            "Ent" = E2_NEW_PROP 
+        
+        ))
+ 
+    #endif
+    
+    if(!E2_NEW_PROP){
+        
+        emt_print("error", "Prop cant be spawned (propcore not activated)")
+        
+    }
+    
+    return E2_NEW_PROP
+    
+}
+
+function entity:setPosAndKill(Pos:vector){
+
+    #ifdef entity:setPos(vector)
+    
+        This:propFreeze(0)
+        This:setPos(Pos)
+        This:applyAngForce(ang(9700) * This:mass())
+    
+    #else
+        
+        emt_print("error", "Cant setPos (propcore not activated)")
+        
+    #endif
+
+}
+
+function end_e2(Cause:string){
+    
+    if(!E2_ENDED){
+        
+        E2_ENDED = 1
+        
+        emt_print("warning", "Removing E2 '" + E2_OLD_NAME + "' :")
+        emt_print("warning", Cause)
+        
+        E2_PROPS_TO_REMOVE = table()
+        
+        for(I = 1, E2_SPAWNED_PROPS:count()){
+            
+            E2_ACTUAL_PROP = E2_SPAWNED_PROPS[I, table]
+            
+            if(E2_ACTUAL_PROP["Ent", entity] != noentity()){
+                
+                E2_PROPS_TO_REMOVE:pushTable(E2_ACTUAL_PROP)
+                
+            }
+            
+            
+        }
+        
+        if(E2_PROPS_TO_REMOVE:count() > 0){
+        
+            emt_print("warning", "  -> Removing " + E2_PROPS_TO_REMOVE:count() + " prop(s) spawned by e2.")
+            
+            for(I = 1, E2_PROPS_TO_REMOVE:count()){
+                
+                E2_ACTUAL_PROP = E2_PROPS_TO_REMOVE[I, table]
+                
+                E2_ACTUAL_PROP:propDelete()
+                
+            }
+            
+        }
+        
+        emt_print("warning", "  -> e2 removed (" + E2_OLD_NAME + ")")
+        
+        selfDestructAll()
+        
+    }
+    
+}
+
+if(owner():keyPressed(EMT_URGENCE_KEY)){ end_e2("urgence key press") }
+if(last()){ end_e2("e2 removed") }
+if(first() || duped()){
+    
+    emt_print("info", "By K3CR4FT.:DLL ; 2020")
+    emt_print("info", "Version : " + EMT_VERSION)
+    
+    if(EMT_HIDE_E2){ entity():requestHide() }
+    if(EMT_CHANGE_E2_NAME){ requestNameChange() }
+    
+    owner():soundPlay(0, 0, "k_lab.intro_barney_kleiner")
+    
+}

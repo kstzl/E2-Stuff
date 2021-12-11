@@ -1,0 +1,26 @@
+@name Jump gun
+@inputs 
+@outputs 
+@persist P:entity
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    P = propSpawn("models/hunter/misc/shell2x2a.mdl", 1)
+    
+    P:setAlpha(0)
+    
+    entity():setAlpha(0)
+}
+
+if(changed(owner():keyAttack2()) && owner():keyAttack2() == 1){
+    
+    findByClass("player")
+    findSortByDistance(owner():aimPos())
+    Target = find()
+    
+    P:setPos(Target:pos() - vec(0, 0, 5))
+    
+}

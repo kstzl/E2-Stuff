@@ -1,0 +1,56 @@
+@name ProBuilder
+@persist [ H Type ]:number [ O ]:entity [ RoundedPos ]:vector Z Clamp
+#include "fastlib"
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoModel(1, "models/hunter/plates/plate2x2.mdl")
+    
+    O = owner()
+    H = 2
+    
+}
+
+Z = (Type==1)*49
+RoundedPos = fRound(O:aimPos(), 95)
+
+holoPos(1, RoundedPos + vec(0, 0, 25 + Z) - (holoEntity(1):up() * Z))
+
+if(Type == 1){
+        
+    Ang = holoEntity(1):angTo(O:pos())
+    Yaw = fRound(Ang:yaw(), 90)
+    Ang = Ang:setYaw(Yaw):setPitch(90)
+    
+    holoAng(1, Ang)
+    holoMaterial(1, "models/props/de_nuke/nukconcretewalla")
+        
+}
+else
+{
+    holoAng(1, ang(0))
+    holoMaterial(1, "phoenix_storms/pack2/train_floor")
+}
+
+
+if(changed(O:keyAttack2()) && O:keyAttack2() == 1){
+    
+    Prop = propSpawn(holoEntity(1):model(), 1)
+    Prop:setPos(holoEntity(1):pos())
+    Prop:setAng(holoEntity(1):angles())
+    Prop:setMaterial(holoEntity(1):getMaterial())
+
+    Prop:sfx("Airboat_impact_hard", 1)
+    
+    H += 1
+    
+}
+
+if(changed(O:keyUse()) && O:keyUse() == 1){
+    
+    Type = !Type
+
+}

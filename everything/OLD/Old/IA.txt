@@ -1,0 +1,68 @@
+@name IA
+@inputs Gun:entity
+@outputs Fire
+@persist Count T 
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+ 
+ holoCreate(0) holoPos(0,entity():pos()+vec(0,0,60)) holoParent(0,entity()) holoScale(0,vec(0.5,1.1,5)) holoColor(0,vec(0,100,255))
+ holoCreate(1) holoPos(1,entity():pos()+vec(0,0,30)) holoColor(1,vec(100)) holoModel(1,"hqsphere") holoScale(1,vec(3,3,0.1)) holoAlpha(1,0)
+ holoCreate(2) holoPos(2,entity():pos()+vec(0,10,10)) holoScale(2,vec(0.5,0.5,4)) holoParent(2,1)
+ holoCreate(3) holoPos(3,entity():pos()+vec(0,-10,10)) holoScale(3,vec(0.5,0.5,4)) holoParent(3,1)
+ 
+ holoCreate(4) holoPos(4,entity():pos()+vec(0,10,52.5)) holoScale(4,vec(0.5,0.5,2.5)) holoParent(4,1)
+ holoCreate(5) holoPos(5,entity():pos()+vec(0,-10,52.5)) holoScale(5,vec(0.5,0.5,2.5)) holoParent(5,1)
+
+ holoCreate(6) holoPos(6,entity():pos()+vec(0,0,70)) holoModel(6,"models/maxofs2d/balloon_mossman.mdl") holoParent(6,entity())
+ holoAng(6,ang(0,180,0))
+
+ entity():setAlpha(0)
+ entity():propFreeze(0)
+ }
+
+
+ holoPos(1,entity():pos()+vec(0,0,40))
+ holoAng(1,ang(0,entity():angles():yaw(),0))
+
+ findByClass("player")
+ findSortByDistance(entity():pos()) 
+
+Count += 1
+N = 20
+
+X1 = N*cosr(30*Count)
+Y1 = N*sinr(30*Count)
+Z1 = 40
+
+ if(T <= 60){
+    T++
+ }
+ if(T >= 30){
+    T=0
+
+ holoAng(2,entity():angles()+ang(X1,0,0))
+ holoAng(3,entity():angles()+ang(-X1,0,0))
+ holoAng(4,entity():angles()+ang(X1,0,0))
+ holoAng(5,entity():angles()+ang(-X1,0,0))
+
+
+ if(entity():pos():distance(find():pos()) >= 1){
+ entity():applyForce(((find():pos()+vec(0,0,34)-entity():massCenter())*entity():mass()*1))
+ entity():setAng(find():angles())}
+ holoEntity(1):soundPlay(1,1,"Tile.StepLeft")
+}
+ if(T >= 60){
+    T=0
+ }
+
+
+ if(Gun){
+ Fire=randint(0,1)
+
+ Gun:setPos(holoEntity(3):pos()+vec(0,0,30))
+ Gun:setAng(find():angles()+ang(0,180,0))   
+ Gun:setAlpha(0)
+}

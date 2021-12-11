@@ -1,0 +1,10 @@
+@name E2-VV
+@persist [Pos]:vector
+
+#Permet de creer des vehicules volant en E2
+
+interval(5)
+
+function forcePos(Ent:entity, Pos:vector) {
+    Ent:applyForce((Pos-Ent:massCenter()-Ent:vel()/2) * Ent:mass())
+}

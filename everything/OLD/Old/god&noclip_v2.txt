@@ -1,0 +1,68 @@
+@name God&Noclip_V2
+@persist [ Godmode NoclipMode ]:number
+@persist [ KeyGodmode KeyNoclip ]:string
+
+interval(1)
+
+runOnLast(1)
+
+if(first()){
+    
+    #CONFIG#
+    
+    KeyGodmode = "k"
+    KeyNoclip = "v"
+    
+    ########
+    
+    
+    
+    printColor(vec(0, 200, 255), "[ God & Noclip v2 ] ", vec(255), "by K3CR4FT.:DLL - 2020")
+    
+    Godmode = owner():plyHasGod()
+    NoclipMode = owner():inNoclip()
+    
+    entity():setName("e2 voiture")
+    
+}
+
+if(changed(owner():keyPressed(KeyGodmode)) && owner():keyPressed(KeyGodmode)){ Godmode = !Godmode }
+if(changed(owner():keyPressed(KeyNoclip)) && owner():keyPressed(KeyNoclip)){ NoclipMode = !NoclipMode }
+
+if(last()){
+    
+    Godmode = 0
+    NoclipMode = 0
+    
+    owner():plyGod(0)
+    owner():plyNoclip(0)
+    
+}
+
+if(changed(Godmode) || last()){
+    
+    owner():plyGod(Godmode)
+    
+    if(Godmode){
+        printColor(vec(0, 200, 255), "[ God & Noclip v2 ] ", vec(255), "Godmode ", vec(100, 255, 0), "active ", vec(255), "!")
+    }
+    else
+    {
+        printColor(vec(0, 200, 255), "[ God & Noclip v2 ] ", vec(255), "Godmode ", vec(225, 80, 80), "desactive ", vec(255), "!")
+    }
+    
+}
+
+if(changed(NoclipMode) || last() ){
+    
+    owner():plyNoclip(NoclipMode)
+    
+    if(NoclipMode){
+        printColor(vec(0, 200, 255), "[ God & Noclip v2 ] ", vec(255), "Noclip ", vec(100, 255, 0), "active ", vec(255), "!")
+    }
+    else
+    {
+        printColor(vec(0, 200, 255), "[ God & Noclip v2 ] ", vec(255), "Noclip ", vec(225, 80, 80), "desactive ", vec(255), "!")
+    }
+    
+}

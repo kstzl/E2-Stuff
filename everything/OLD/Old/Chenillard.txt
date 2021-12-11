@@ -1,0 +1,27 @@
+@name Chenillard
+@inputs 
+@outputs 
+@persist C C2 M Holograms
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+    
+    holoCreate(0)
+    Holograms=16
+    M=0
+    
+  for(N = 1,Holograms){
+    
+      holoCreate(N) holoPos(N,holoEntity(N-1):pos()+vec(30,0,0))
+    
+  }   
+  }
+
+ if(C < Holograms && M==0){ C+=0.5 C2=0 holoColor(C,vec(255,0,0)) }
+ if(C >= Holograms){ M=1 }
+
+ if(C2 < Holograms && M==1){ C2+=0.5 C=0 holoColor(C2,vec(255,255,255)) }
+ if(C2 >= Holograms){ M=0 }
+

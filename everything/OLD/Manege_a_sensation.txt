@@ -1,0 +1,26 @@
+@name Manege a sensation
+@inputs E:entity
+@outputs 
+@persist Ang Count
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+    
+ holoCreate(1,entity():pos()+vec(0,0,300),vec(10,10,300),ang(),vec(255),"hqcylinder") 
+ holoCreate(2,entity():pos()+vec(0,0,900),vec(10,10,300),ang(),vec(255),"hqcylinder") 
+ holoCreate(3,entity():pos()+vec(0,0,1190),vec(10,10,10),ang(),vec(255),"hqcube") 
+ holoCreate(4,entity():pos()+vec(0,-300,1150),vec(5,105,5),ang(),vec(255),"hqcube") holoParent(4,3)
+ holoCreate(5,entity():pos()+vec(0,-700,1150),vec(35,10,35),ang(),vec(255),"hqcube") holoParent(5,4)
+    
+ }
+
+if(E){
+    
+ X1 = 250*cosr(1*Count)
+ holoAng(3,ang(Ang,X1*5,X1)/10)
+               Ang+=0.05
+               Count+=0.05
+}
+ E:setPos(holoEntity(5):pos()+vec(0,0,350))

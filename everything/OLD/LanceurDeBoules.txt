@@ -1,0 +1,44 @@
+@name LanceurDeBoules
+@inputs 
+@outputs 
+@persist NB Pos:vector Eye:vector P:entity Force
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+
+NB=0  
+Force=900
+}
+
+Pos = owner():pos()+vec(0,0,100) 
+
+if(owner():keyAttack2()){
+Push=1
+}
+
+if(changed(Push) && Push == 1){
+
+holoCreate(NB)
+holoPos(NB,Pos)
+holoEntity(NB):soundPlay(1,100,"Weapon_RPG.Single")
+holoScale(NB,vec(3,3,3))
+holoAlpha(NB,0)
+
+P=propSpawn("models/props_phx/ww2bomb.mdl",0)
+P:setTrails(1,3,1,"trails/smoke",vec(0,0,255),255)
+P:setPos(Pos)
+
+Eye=owner():eye()
+P:applyForce(Eye*P:mass()*Force*300)
+
+}
+
+if(owner():keyPressed("z")){
+    holoDeleteAll()
+    propDeleteAll()
+}
+holoPos(NB,P:pos())
+
+

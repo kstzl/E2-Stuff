@@ -1,0 +1,35 @@
+@name Egp-Bar
+@inputs Egp:wirelink
+@persist Text:array I
+
+interval(1)
+
+if(first()){
+    
+    Egp:egpText(1, "Bar", vec2(0))
+    
+    Text[0, string] = "Bar"
+    Text[1, string] = "Tabac"
+    Text[2, string] = "Pas"
+    Text[3, string] = "Cher"
+    
+    timer("s", 0)
+}
+
+if(clk("s")){
+    
+    I += 1
+    
+    if(I > Text:count()){
+        
+        I = 0
+        
+    }
+    
+    timer("s", 2000)
+    
+}
+
+Egp:egpSetText(1, Text[I, string])
+Egp:egpFont(1, "arial", 100)
+Egp:egpPos(1, vec2(256/2 + 50, 256/2 + 50))

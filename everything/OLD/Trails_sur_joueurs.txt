@@ -1,0 +1,23 @@
+@name Trails sur joueurs
+@inputs 
+@outputs 
+@persist I I2 A:array
+@trigger 
+
+A=players()
+
+while(I < A:count()){ I++ 
+    
+holoCreate(I)
+holoEntity(I):setTrails(130,10,999999999999999999999,"trails/laser",vec(255,0,0),255)
+holoEntity(I):soundPlay(0,0,"Canals.d1_canals_01_combine_shield_touch_loop1")
+holoAlpha(I,0)
+
+timer("2",300)
+}
+
+while(I2 < I && clk("2")){ I2++   
+
+holoPos(I2,A[I2,entity]:pos())
+holoParent(I2,A[I2,entity])
+}

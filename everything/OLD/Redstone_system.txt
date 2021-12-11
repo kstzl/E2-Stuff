@@ -1,0 +1,28 @@
+@name Redstone system
+@inputs 
+@outputs 
+@persist RD A:array I U
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+ entity():setColor(vec(255,0,0)) holoCreate(1) holoColor(1,vec(255,0,0)) holoScale(1,vec(1.5))
+ }
+ if(changed(owner():keyAttack2()) && owner():keyAttack2()){ P=propSpawn("models/hunter/blocks/cube025x025x025.mdl",1) P:setPos(round((owner():aimPos()+owner():aimNormal())/35.6)*35.6) }
+ 
+
+ findByModel("models/hunter/blocks/cube025x025x025.mdl")
+ A=findToArray()
+ I=0
+
+ RD=randint(0,A:count())
+
+ while(I < A:count()){
+       I++
+    
+     if(A[1,entity]:pos():distance(entity():pos()) <= 230){ A[1,entity]:setColor(vec(255,0,0)) }else{ A[1,entity]:setColor(vec(255)) }
+     if(A[RD,entity]:pos():distance(A[RD-1,entity]:pos()) <= 230 && A[RD-1,entity]:getColor() == vec(255,0,0)){
+     A[RD,entity]:setColor(vec(255,0,0)) }else{ A[RD,entity]:setColor(vec(255)) S=1 }
+    
+ }

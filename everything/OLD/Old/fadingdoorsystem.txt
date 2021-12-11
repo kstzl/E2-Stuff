@@ -1,0 +1,48 @@
+@name FadingDoorSystem
+@inputs [ Detector ]:entity
+@outputs [ Output ]:number
+@persist [ Player ]:entity [ Color ]:vector [ Dist ]:number
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(0)
+    
+    holoCreate(1)
+}
+
+holoPos(0, Detector:pos())
+holoAng(0, ( Player:pos() - holoEntity(0):pos() ):toAngle() )
+
+holoColor(0, Color)
+holoColor(1, Color)
+
+holoPos(1, holoEntity(0):pos() + ( Player:pos() - holoEntity(0):pos() ) / 2 )
+holoAng(1, ( Player:pos() - holoEntity(1):pos() ):toAngle() + ang(0, 0, 0) )
+holoScaleUnits(1, vec(Dist, 1, 1))
+
+Detector:setAlpha(0)
+
+findByClass("player")
+findSortByDistance(Detector:pos())
+Player = find()
+Dist = Detector:pos():distance(Player:pos())
+
+if(Dist < 150){
+    
+    Output = (Player == owner())
+    
+    if(Player == owner()){
+        
+        Color = vec(0, 255, 0)
+        
+    }
+    else
+    {
+        Color = vec(255, 0, 0)
+    }
+    
+}
+
+

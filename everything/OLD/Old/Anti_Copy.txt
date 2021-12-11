@@ -1,0 +1,6 @@
+@name Anti Copy
+@persist O1 I1
+#Anti Copy E2
+#Envoie 1 random chiffre a l'E2
+#L'E2 renvoie le chiffre
+

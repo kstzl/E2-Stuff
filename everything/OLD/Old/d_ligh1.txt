@@ -1,0 +1,16 @@
+@name d_ligh1
+
+@persist
+
+if(first() || dupefinished()){
+    
+    interval(1)
+    
+    dsJoinGroup("daslight")
+}
+
+if(dsClk("daslight_console_check")){
+    
+    print("yo")
+    
+}

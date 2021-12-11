@@ -1,0 +1,32 @@
+@name TourelleAUTO
+@inputs Gun:entity
+@outputs Fire
+@persist Pos:vector
+@trigger 
+@model models/props_phx/construct/metal_plate1.mdl
+
+ runOnTick(1)
+
+ if(first()){
+ 
+ holoCreate(1)
+ holoEntity(1):soundPlay(1,999999,"Weapon_Gauss.ChargeLoop")
+ }
+
+ if(Gun){
+ Fire=randint(1,1)
+
+ Gun:setPos(entity():pos()+vec(0,0,3))
+ Gun:setAng(holoEntity(1):angles())  
+ 
+}
+
+
+ findByClass("player")
+ findExcludePlayer(owner())
+ findSortByDistance(entity():pos())
+
+ entity():applyForce(((find():pos()+vec(0,0,40)-entity():massCenter())*entity():mass()*1.6))
+ entity():setAng(find():angles()+ang(0,180,0))
+ holoPos(1,entity():pos()+vec(0,0,7))
+ holoAng(1,find():angles()+ang(0,180,0))

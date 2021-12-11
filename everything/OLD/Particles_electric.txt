@@ -1,0 +1,15 @@
+@name Particles_electric
+@inputs 
+@outputs 
+@persist C S X Y Z
+@trigger 
+
+ interval(1)
+
+ if(C < 15){ C++ }
+ if(C >= 15){ holoCreate(1) X=randint(-5,5 ) Y=randint(-5,5) Z=randint(1,5) S=1 C=0 }
+
+ S-=0.1
+
+ holoPos(1,holoEntity(1):pos()+vec(X,Y,Z))
+ holoScale(1,vec(S))

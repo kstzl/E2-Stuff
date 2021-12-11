@@ -1,0 +1,43 @@
+@name Jump gun
+@inputs 
+@outputs 
+@persist P:entity Pos:vector Alpha Scale
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    P = propSpawn("models/hunter/misc/shell2x2a.mdl", 1)
+    P:setAlpha(0)
+    
+    holoCreate(0)
+    holoModel(0, "hqcylinder")
+    holoAng(0, ang(0))
+    
+}
+
+if(changed(owner():keyAttack2()) && owner():keyAttack2() == 1){
+    
+    findByClass("player")
+    findSortByDistance(owner():aimPos())
+    Target = find()
+    
+    Pos = Target:pos() - vec(0, 0, 15)
+    Alpha = 255
+    Scale = 0
+    
+    holoPos(0, Pos)
+    holoEntity(0):soundPlay(0, 0, "Metal_SeafloorCar.BulletImpact")
+    
+}
+
+Alpha += (0 - Alpha) / 5
+Scale += (15 - Scale) / 5
+
+holoScale(0, vec(Scale, Scale, 0.1))
+holoAlpha(0, Alpha)
+
+
+P:setPos(Pos - vec(0, 0, randint(5, 15)))
+P:propFreeze(1)

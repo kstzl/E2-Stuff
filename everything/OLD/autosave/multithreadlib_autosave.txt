@@ -1,0 +1,38 @@
+@name MultiThreadLib
+
+interval(1)
+
+function number thread(Millis_:number){
+    
+    TimerName = Millis_:toString()
+    
+    if(clk(TimerName)){
+        return 1
+    }
+    else
+    {
+        timer(TimerName, Millis_)
+        return 0
+    }
+    
+}
+
+if(first()){
+    
+    holoCreate(1)
+    holoCreate(2)
+    
+    holoPos(2, entity():toWorld(vec(100, 0, 0)))
+    
+}
+
+if(thread(500)){
+    
+    holoPos(1, holoEntity(1):toWorld(vec(0, 0, 5)))
+    
+}
+if(thread(1000)){
+    
+    holoPos(2, holoEntity(2):toWorld(vec(0, 0, 5)))
+    
+}

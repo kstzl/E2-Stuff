@@ -1,0 +1,30 @@
+@name d_template
+
+@persist [ MachineInfo ]:table
+
+function daslight_register(Param_:string, Content_:string){
+    
+    Param_ = Param_:lower()
+    
+    MachineInfo:pushTable(table(Param_, Content_))
+    
+}
+
+if(first() || dupefinished()){
+    
+    interval(1)
+    dsJoinGroup("daslight")
+    
+    #-- Machine Info --
+    
+    daslight_register("Name", "New Machine")
+    
+    
+    
+}
+
+if(dsClk("daslight_console_check")){
+    
+    dsSend("new_machine", "daslight", MachineInfo)
+ 
+}

@@ -1,0 +1,177 @@
+@name Balle_kill
+@inputs 
+@outputs 
+@persist Scale Prop:entity Prop2:entity Prop3:entity Aim:entity W W2 J J2 J3 L Pitch Ang Vol2 Color:vector PushPos:vector
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+    
+    Scale=2.6
+    W2=0
+    Color = vec(100,0,255)
+    
+    Prop = propSpawn("models/XQM/Rails/gumball_1.mdl",0)
+    Prop:setPos(owner():pos()+vec(10,0,10))
+    Prop:setAlpha(0)
+    
+   # entity():setPos(vec(0,0,-4000))
+    
+    holoCreate(1)
+    holoModel(1,"hqsphere")
+    holoScale(1,vec(Scale,Scale,Scale))
+    holoPos(1,Prop:pos())
+    holoParent(1,Prop)
+    holoColor(1,Color)
+    
+}
+
+if(owner():keyAttack2() && holoEntity(1):pos():distance(owner():pos()) >= 1){
+     
+    if(holoEntity(1):pos():distance(owner():pos()) >= 300 && W<=1){
+    Prop:applyForce(((owner():pos()+vec(0,0,9)-Prop:massCenter())*1-Prop:vel())*Prop:mass())
+    Sound=1 if(changed(Sound) && Sound == 1){
+        }
+    }
+    
+}
+
+if(owner():keyAttack1()){
+    
+ Aim=owner():aimEntity()
+ if(Aim:type() == "player"){
+ Push=1
+ }
+else
+{
+    W=0
+    Aim=noentity()
+}
+}
+if(changed(Push) && Push == 1){
+    
+ holoEntity(1):soundPlay(2,2,"Buttons.snd2")
+ W+=1
+    
+}
+if(tickClk() && W==1){
+    
+      Prop:applyForce(((Aim:pos()+vec(0,0,9)-Prop:massCenter())*10-Prop:vel())*Prop:mass())
+    
+    }
+
+if(owner():keyPressed("r")){
+    
+    Add=1
+    
+}
+    if(changed(Add) && Add==1){
+    W2+=1
+    }
+
+if(W2 == 2){W2=0 Prop:setPos(owner():pos()+vec(10,10,10)) }
+
+if(W2 == 1){
+ Sound = 1   
+ PushPos=holoEntity(1):pos()+vec(0,0,55)
+ Prop:propNotSolid(1)
+
+ if(Pitch <= 160){
+    Pitch+=3
+
+ }
+
+
+
+               ###############################
+               #            SHIELD           #
+               ###############################
+
+
+
+ Prop2:setPos(owner():pos()+vec(0,0,95))
+ Prop2:setAng(ang(0,0,0))
+ Prop:setPos(owner():pos()+vec(0,0,130))
+}
+else{ if(Pitch >= 0){ Pitch-=3  } Prop:removeTrails() Prop2:propDelete() holoDelete(2) PushPos=owner():pos()+vec(0,0,130) Prop:propNotSolid(0)} 
+if(changed(Sound) && Sound == 1){
+    
+ Prop:setTrails(3,1,1,"trails/smoke",Color,255)
+ Prop2=propSpawn("models/hunter/tubes/tube4x4x4.mdl",1)    
+ Prop2:setAlpha(0)
+
+ holoCreate(2)
+ holoScale(2,vec(5,5,15))
+ holoModel(2,"hqsphere")
+ holoColor(2,Color)
+ holoMaterial(2,"Models/effects/comball_tape")
+
+ holoEntity(1):soundPlay(3,3000,"train_forcefield")   
+} 
+
+
+               ###############################
+               #            JUMP             #
+               ###############################
+
+ if(owner():keyJump()){   
+    JumpPush=1
+ }
+ if(changed(JumpPush) && JumpPush && 1){
+    J3+=1
+    holoEntity(4):soundPlay(5,3,"Buttons.snd9")
+    holoEntity(4):soundPlay(6,99999999999,"Weapon_MegaPhysCannon.HoldSound")
+    
+    if(J3 == 1){ J2 = 1 }
+    if(J3 == 2){ J3 = 0 }
+     
+}
+
+if(changed(J2) && J2 == 1){
+       
+       Prop3=propSpawn("models/hunter/plates/plate1x1.mdl",1)
+       Prop3:setColor(Color)
+       Prop3:setMaterial("sprops/trans/wheels/wheel_d_rim2")
+       Prop3:propGravity(0)
+       Prop3:setMass(5000)
+    
+       
+       
+}
+
+               ###############################
+               #          PROP PUSH          #
+               ###############################
+    
+if(owner():keyPressed("MOUSE_MIDDLE")){
+
+if(L <= 5){
+    L++
+}
+if(L >= 5){
+    L=0
+   P=propSpawn("models/props_c17/furnitureStove001a.mdl",0)
+   P:setTrails(35,3,1,"trails/smoke",Color,255)
+   P:setPos(PushPos)
+   P:applyForce(owner():eye()*P:mass()*50^3)
+    
+}
+}
+
+    soundPitch(3,Pitch)
+    holoPos(2,owner():pos()+vec(0,0,30))
+    Prop:setAlpha(0)
+    J=1 if(changed(J) && J == 1){ holoCreate(4) holoColor(4,Color) holoAlpha(4,1)}
+    holoPos(4,owner():pos())
+    
+    if(tickClk() && J3 == 1){
+    Prop3:applyForce(vec(0,0,3000000000)*Prop:mass()*900000^4)
+    Prop3:setPos(owner():pos()-vec(0,0,3))
+    Prop3:setAng(ang(0,Ang,0))
+    Ang+=5
+
+    if(Vol2 <= 1){ Vol2+=0.1 }
+    }
+    if(Vol2 >= 0 && J3 == 0){ Vol2-=0.1 }
+    soundVolume(6,Vol2)

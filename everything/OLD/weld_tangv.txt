@@ -1,0 +1,15 @@
+@name weld tangv
+@inputs 
+@outputs 
+@persist A:array
+@trigger 
+
+findByClass("prop_*")
+findIncludePlayerProps(owner())
+A = findToArray()
+
+for(I = 0, A:count()){
+    
+    weld(A[I,entity], A[I-1,entity])
+    
+}

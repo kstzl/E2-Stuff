@@ -1,0 +1,18 @@
+@name Voiture
+@inputs 
+@outputs 
+@persist Pos:vector E:entity
+@trigger 
+
+if(first())
+{
+    E = entity():isWeldedTo()
+    runOnTick(1)
+}
+
+Pos=owner():aimPos()- owner():pos()
+
+if(owner():keyJump())
+{
+   E:applyForce(Pos+$Pos*0.05 )
+}

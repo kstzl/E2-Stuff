@@ -1,0 +1,65 @@
+@name ChatBot
+@inputs 
+@outputs 
+@persist Wait InfoArray:array
+@trigger 
+
+runOnChat(1)
+interval(10)
+
+#Pro ChatBot by k3 v1.0
+#Fonctions:
+
+function say(Text:string) {
+    
+    A = array()
+    A:pushVector(vec(0,200,255))
+    A:pushString("[ChatBot]")
+    A:pushVector(vec(255))
+    A:pushString(" " + Text)
+    
+    chatPrint(A)
+
+}
+
+#Arrays:
+InfoArray[1, string] = "'-bot help <page>' affiche l'aide."
+InfoArray[2, string] = "'-bot kill <joueur>' tue un joueur."
+InfoArray[3, string] = ""
+InfoArray[4, string] = ""
+InfoArray[5, string] = "-Page 1/2-"
+
+if (first()) { Wait = 1450 say("ChatBot par k3 v1.0, Que puis-je faire pour vous ?") }
+
+if (chatClk()) {
+
+    Last = lastSaid()
+    M = Last:explode(" ")
+    
+    if (M:string(1) == "-bot") {
+        
+        if (M:string(2) == "help") {
+        
+            for(I = 0, InfoArray:count() - 5 * (M:string(3):toNumber() - 1)) {
+                
+                say(InfoArray[I, string])
+
+            }
+        
+        }
+        
+        if (M:string(2) == "kill") {
+            
+            Prop = propSpawn("models/props_c17/oildrum001_explosive.mdl", 0)
+            Prop:setPos(findPlayerByName(M:string(3)):pos())
+            Prop:propBreak()
+            
+        }
+    
+    }
+
+}
+
+if (Wait >= 1500) { Wait = 0 say("Pour savoir toutes mes commandes tapez '-bot help <page>' ") } Wait += 1
+
+

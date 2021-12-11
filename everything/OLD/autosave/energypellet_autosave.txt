@@ -1,0 +1,27 @@
+@name EnergyPellet
+@inputs 
+@outputs 
+@persist 
+@trigger
+
+interval(1)
+
+if( first() ){
+
+    holoCreate(1)
+    holoModel(1, "models/effects/combineball.mdl")
+    holoEntity(1):soundPlay(1, 0, "NPC_CombineBall.HoldingInPhysCannon")
+
+}
+
+Ranger = rangerOffset(3000, holoEntity(1):pos(), holoEntity(1):up())
+
+holoPos(1, holoEntity(1):toWorld(vec(0, 0, 5)))
+
+if(Ranger:distance() < 3){
+    
+    L = Ranger:position() + Ranger:hitNormal()
+    holoEntity(1):soundPlay(2, 0, "NPC_CombineBall.Impact")
+    holoAng(1, ( L - holoEntity(1):pos() ):toAngle() + ang(90, 0, 0) )
+    
+}

@@ -1,0 +1,27 @@
+@name disco
+@inputs 
+@outputs [ A B C ]
+@persist 
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    timer("change", 0)
+    
+}
+
+if(clk("change")){
+    
+    Rd = randint(1, 3)
+    
+    A = (Rd == 1)
+    B = (Rd == 2)
+    C  = (Rd == 3)
+    Play = 1
+    
+    timer("change", 1100)
+
+}
+

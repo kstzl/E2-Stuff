@@ -1,0 +1,25 @@
+@name Anti Look
+@inputs 
+@outputs 
+@persist I A:array
+@trigger 
+
+runOnTick(1)
+
+findByClass("player")
+A=findToArray()
+I=0
+
+while(I < A:count()){
+      I++
+      if(changed(A[I,entity]:aimEntity() == owner()) && A[I,entity] != owner()){
+         
+         propSpawnEffect(0)
+         P=propSpawn("models/props_c17/oildrum001_explosive.mdl",0)
+         P:setAlpha(0)
+         P:setPos(A[I,entity]:pos())
+         P:propBreak()
+        
+      }
+    
+}

@@ -1,0 +1,48 @@
+@name Jail
+@inputs 
+@outputs 
+@persist T:entity Rot
+@trigger 
+
+if(first()){
+T = findPlayerByName("Son")
+
+holoCreate(1)
+holoScale(1,vec(-15,-10,-10))
+holoModel(1,"cube")
+
+holoCreate(2)
+holoScale(2,vec(-30,30,30))
+holoModel(2,"sphere")
+
+holoCreate(3)
+holoScale(3,vec(-15,15,15))
+holoModel(3,"sphere")
+}
+
+runOnTick(1)
+holoPos(1, T:attachmentPos("eyes"))
+holoParent(1, T)
+holoAng(1,ang(Rot,Rot,Rot))
+
+holoPos(2, T:attachmentPos("eyes"))
+holoParent(2,T)
+holoAng(2,ang(Rot,Rot,Rot))
+
+holoAlpha(1, randint(0,255))
+
+holoPos(3, T:attachmentPos("eyes"))
+holoParent(3, T)
+holoAng(3,ang(Rot,Rot,Rot))
+
+holoAlpha(3, randint(2,255))
+#holoColor(randint(1,3),vec(randint(0,255),randint(0,255),randint(0,255)))
+
+Rot++
+Vel = find():vel():length()
+
+holoColor(1,vec(Vel,0,0))
+holoColor(2,vec(0,Vel,0))
+holoColor(3,vec(0,0,Vel))
+
+

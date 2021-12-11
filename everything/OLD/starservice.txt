@@ -1,0 +1,5 @@
+@name StarService
+@persist [ H E Running End ]:number [ Ends ]:array [ Chair ]:entity
+
+interval(1)
+

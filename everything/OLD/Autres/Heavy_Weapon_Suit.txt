@@ -1,0 +1,291 @@
+@name Heavy Weapon Suit
+@inputs [SeatLink GunLink PressureGuageLink PressureNeedleLink GrabberLink]:wirelink W A S D Space Mouse1 Mouse2 Alt Shift [Bullets Shells Melons]:array
+@inputs Dam_Type:string Dam_Force:vector Dam_Victim:entity Dam_Pos:vector
+@outputs [C_pos C_dir]:vector C_parent:entity Smoke SpawnBullet SpawnShell SpawnMelon ShootEffect
+@outputs Dam_Enable Kill Angle Grab GrabStrength
+@persist [Prop Seat Gun PressureGuage PressureNeedle Grabber]:entity Driver:entity BodyDirection:vector Count Init Jumping HeightMod JumpDir OnGround
+@persist JumpPowering JumpPower JumpAir LShells LBullets LMelons LShotTime Health Jetpack JetPower DisableWalking
+@trigger Space Bullets Shells Mouse1 Dam_Force Alt Shift
+
+if( first() | duped() ){
+    Health = 100
+    timer("init",4000)
+    exit()
+}elseif( ( clk("init") | dupefinished() ) )
+{
+    Dam_Enable = 1
+    Prop = entity():isWeldedTo(1)
+    Prop:setMass(20000)
+    runOnTick(1)
+    
+    rangerReset()
+    rangerPersist(1)
+    rangerHitEntities(0)
+    
+    Seat = SeatLink:entity()
+    Gun = GunLink:entity()
+    PressureNeedle = PressureNeedleLink:entity()
+    PressureGuage = PressureGuageLink:entity()
+    Grabber = GrabberLink:entity()
+    Init = 0
+    HeightMod = 0
+    JetPower = 0
+    Jetpack = 0
+    LShotTime = 0
+    JumpPowering = 0
+    GrabMode = 0
+    
+    # Set the initial left foot position
+    LFootPos = Prop:massCenter()-vec(0,0,75)
+    
+    # Set the filter entities
+    Ranger = rangerOffset(200,Prop:massCenter(),-Prop:forward())
+    while( Ranger:hit() & Ranger:entity() )
+    {
+        rangerFilter( Ranger:entity() )
+        Ranger = rangerOffset(200,Prop:massCenter(),-Prop:forward())
+    }
+    
+    # Set the camera up
+    C_pos = Seat:massCenter()+Seat:up()*22
+    C_dir = Seat:right()
+    C_parent = Seat
+    
+}
+
+if( clk("engine") )
+{
+    if( Init )
+    {
+        if( Jetpack )
+        {
+            Prop:soundPlay(3,0,"ambient/machines/pump_loop_1.wav")
+            soundVolume(3,100)
+            timer("engine",10000)
+        }else{
+            Prop:soundPlay(3,4080,"npc/ministrider/hunter_angry1.wav")
+            soundVolume(3,0.5)
+            timer("engine",4080)
+        }
+    }
+}elseif( clk("thump") )
+{
+    Prop:soundPlay(1,500,"npc/advisor/advisor_blast6.wav")
+}elseif( clk("smokeOff") )
+{
+    Smoke = 0
+}elseif( clk("leapJump") )
+{
+    # Leap into the air sound
+    HeightMod = -15
+    Prop:soundPlay(5, 654, "npc/dog/dog_pneumatic2.wav")
+    Smoke = 1
+    timer("leapFinish",600)
+}elseif( clk("leapFinish") )
+{
+    # Bang sound as he leaps
+    Smoke = 0
+    HeightMod = 0
+    Prop:soundPlay(5, 654, "npc/env_headcrabcanister/launch.wav")
+    Jetpack = 1
+    OnGround = 0
+}elseif( clk("toggleJetpack") )
+{
+    # Leap into the air sound
+    
+    # Toggle jetpack
+    Jetpack = !Jetpack
+}elseif( clk("hintControls1") )
+{
+    Seat:hintDriver("-- GENERAL CONTROLS ---",7)
+    Seat:hintDriver("Mouse1: Fire watermelon",7)
+    Seat:hintDriver("Mouse2: Fire propane",7)
+    Seat:hintDriver("Shift: Toggles grabber",7)
+    Seat:hintDriver("(Pressure guage inicates health)",7)
+    timer("hintControls2",7000)
+}elseif( clk("hintControls2") )
+{
+    Seat:hintDriver("-- GROUND CONTROLS ---",7)
+    Seat:hintDriver("W,A,S,D: Walk around",7)
+    Seat:hintDriver("Space: Press or hold to jump",7)
+    Seat:hintDriver("Alt: Toggles jetpack",7)
+    timer("hintControls3",7000)
+}elseif( clk("hintControls3") )
+{
+    Seat:hintDriver("-- JETPACK CONTROLS ---",7)
+    Seat:hintDriver("W,A,S,D: Controls pitch and roll",7)
+    Seat:hintDriver("Space: Increase thrust",7)
+    Seat:hintDriver("Mouse: Controls yaw",7)
+}elseif( clk("physgunOn") )
+{
+    if( Grab )
+    {
+        Grabber:soundPlay( 8, 0, "ambient/machines/body_drag_01.wav" )
+        timer("physgunOn",8918)
+    }else{
+        soundStop( 8 )
+    }
+}elseif( clk("enableWalking") )
+{
+    DisableWalking = 0
+}
+
+Count = Count + 1
+
+###########################################
+### New driver initialization
+###########################################
+if( !Init & Seat:driver() )
+{
+    # Initialization code to run when someone gets in the seat
+    GrabStrength = 100000
+    Init = 1
+    Driver = Seat:driver()
+    BodyDirection = vec(Driver:eye():dot(Seat:right()),Driver:eye():dot(-Seat:forward()),Driver:eye():dot(Seat:up()))
+    Prop:soundPlay(0,2000,"npc/manhack/gib.wav")
+    JumpPowering = 0
+    JumpPower = 0
+    JumpAir = 0
+    GrabMode = 0
+    
+    # Display controls
+    Seat:hintDriver("Heavy Weapon Suit v1",7)
+    Seat:hintDriver("by Paper Clip",7)
+    timer("hintControls1",7000)
+    
+    timer("engine",1000)
+}elseif( !Seat:driver() )
+{
+    # Code for when someone is not in the seat
+    if( Init == 1 )
+    {
+        soundPlay(0,0,"npc/dog/dog_straining3.wav")
+    }
+    Init = 0
+    Driver = noentity()
+}
+
+###########################################
+### Health and damage detection
+###########################################
+if( Health <= 0 ) { exit() }
+
+if( ~Dam_Force )
+{
+    # This could be damage to the suit, check the details
+    if( ( Dam_Type == "Crush" | Dam_Type == "Explosive" ) & Dam_Victim )
+    {
+        # Check if the damage is being dealt near us
+        if( (Dam_Pos-Prop:massCenter()):length() < 500 )
+        {
+            # Reduce health
+            if( OnGround )
+            {
+                Health = Health - 20
+            }else{
+                Health = Health - 50
+            }
+            
+            # Check if we are dead
+            if( Health <= 0 )
+            {
+                # Play death sound
+                soundPurge()
+                Prop:soundPlay(15,2400,"npc/dog/dog_destroy_door1.wav")
+                Kill = 1
+                Smoke = 1
+            }else{
+                # Play hurt sound
+                Prop:soundPlay(15,2400,"npc/dog/dog_disappointed.wav")
+                soundPitch(15,130)
+                Smoke = 1
+                timer("smokeOff",200)
+            }
+        }
+    }
+    
+}
+
+###########################################
+### Health guage
+###########################################
+
+# Calculate the desired health yaw
+DesAngle = -(Health/100*(130+110)-130) # Full health -> -110, No health -> 130
+Angle = atan(PressureNeedle:forward():dot( PressureGuage:up() ), PressureNeedle:forward():dot( PressureGuage:right() ) )+DesAngle
+PressureNeedle:applyAngForce(ang(0,5*Angle - PressureNeedle:angVel():yaw()*0.5,0))
+
+###########################################
+### Control grabber
+###########################################
+if( ~Shift & Shift )
+{
+    # Toggle grab mode
+    if( Grab )
+    {
+        # Deactivate the grab
+        Grab = 0
+        soundStop( 8 )
+        Grabber:soundPlay(8,0,"weapons/slam/mine_mode.wav")
+        
+    }else{
+        Grab = 0
+        # Perform a ranger check to see if we are grabbing an entity
+		rangerHitEntities(1)
+        Ranger = rangerOffset(5000,Grabber:massCenter()+Grabber:up(  )*10,Grabber:up())
+		rangerHitEntities(0)
+    
+        if( Ranger:entity() )
+        {
+            # We are about to grab an entity, good
+            Grab = 1
+            
+            # Play a sound
+            Grabber:soundPlay(8,0,"ambient/machines/p1_drag_intro_01.wav")
+            timer("physgunOn",4551)
+        }else{
+            # We cannot grab the world
+            Grab = 0
+            
+            # Play a sound
+            Grabber:soundPlay(8,0,"weapons/slam/mine_mode.wav")
+        }
+    }
+}
+
+
+###########################################
+### Control gun firing and shell ejection
+###########################################
+if( (Mouse1 | Mouse2) & curtime() > LShotTime + 0.5 )
+{
+    if( Mouse1 )
+    {
+        SpawnMelon = 1
+        LShotTime = curtime()
+    }else{
+        SpawnBullet = 1
+        LShotTime = curtime() + 0.3
+    }
+    SpawnShell = 1
+    ShootEffect = 5
+    
+}
+
+if( ShootEffect > 0 )
+{
+    ShootEffect = ShootEffect - 1
+}
+
+if( Melons:count() > LMelons )
+{
+    SpawnMelon = 0
+    Melons[1,entity]:applyForce(Melons[1,entity]:right()*50000)
+    Melons[1,entity]:setTrails(40,20,5,"trails/smoke",vec(150,150,150),250)
+}
+LMelons = Melons:count()
+
+if( Shells:count() > LShells )
+{
+    #Prop:soundPlay(5,0,"weapons/mortar/mortar_
+}

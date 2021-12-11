@@ -1,0 +1,23 @@
+@name E2_FINDER
+@inputs 
+@outputs 
+@persist 
+@trigger
+
+if( first() ){
+    
+    findByClass("gmod_wire_expression2")
+    E2s = findToArray()
+
+    print(E2s:count() + " E2(s) found(s) :")
+    
+    foreach(K, E2:entity = E2s){
+        
+        E2Owner = E2:owner():name()
+        E2Name = E2:getName()
+        E2Ops = E2:ops()
+        
+        print("'" + E2Name + "' by " + E2Owner + " (" + E2Ops + " ops)")
+        
+    }
+}

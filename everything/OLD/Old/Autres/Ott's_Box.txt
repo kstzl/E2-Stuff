@@ -1,0 +1,28 @@
+@name Protector by X-Ray
+
+runOnChat(1)
+#Copain !!!
+hint("Salut, je vais proteger cette creation, "+owner():name()+".",25)
+#Anti-maso !    
+if(owner():lastSaid() =="!remove") {selfDestruct(), hint("Chip removed",5)}
+#On me voie plus !
+entity():setMaterial("models/effects/vol_light001")
+
+if(duped()){
+#C'est mal ca...
+hint("C'est pas bien de copier",5)
+#Tu as raison !
+concmd("say Je suis un gros noob gay !")
+#Creve !
+concmd("kill")
+#La sentence est irrevocable
+hint("Un holo ca te fera reflechir",5)
+hint("Petite pute, va voir les tutos d'X-Ray(duQ) sur youtube au lieu de copier !",5)
+#Commande pour jouer au tourniquet
+concmd("+klook")
+concmd("+right")
+#Holo qui fait bien chier
+holoColor(1,vec(0,0,0))
+holoCreate(1,owner():shootPos(),vec(-10,-10,-10))
+holoParent(1,owner())
+}

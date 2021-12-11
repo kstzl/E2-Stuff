@@ -1,0 +1,15 @@
+@name MiniVoitureE2
+@inputs Avant Arriere Gauche Droite Entity:entity
+@outputs 
+@persist 
+@trigger 
+
+if(Avant == 1){
+   Entity:applyForce(-Entity:right()*Entity:mass()*999)
+}
+if(Arriere == 1){
+    Entity:applyForce(Entity:right()*Entity:mass()*999)
+}
+if(Gauche == 1){
+
+}

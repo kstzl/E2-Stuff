@@ -1,0 +1,9 @@
+@name Bomb
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+    interval(100)
+propSpawn("models/props_phx/ball.mdl",1)
+

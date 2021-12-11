@@ -1,0 +1,20 @@
+@name ang shit
+@inputs 
+@outputs 
+@persist T:entity Ang
+@trigger 
+
+runOnTick(1)
+
+ if(first()){ T=findPlayerByName("kec") holoCreate(1) holoAlpha(1,0) holoPos(1,T:pos()) holoParent(1,T)}
+
+              if(Ang < 90){
+              T:plySetAng(ang(Ang,Ang,Ang))
+              Ang+=0.1
+              holoEntity(1):soundPlay(1,3,"Egg.Crack")
+              soundPitch(1,Ang)
+              }
+              if(Ang >= 90){ Ang=0 reset() }
+
+              
+ 

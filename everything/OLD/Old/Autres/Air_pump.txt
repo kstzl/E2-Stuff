@@ -1,0 +1,15 @@
+@name Air pump
+@inputs A
+@outputs Al Et
+@persist 
+@trigger 
+
+if(A == 1){
+    Al == 1
+    Et == 0
+}
+else
+{
+Al == 0
+Et == 1
+}

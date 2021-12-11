@@ -1,0 +1,6 @@
+@name Trapped2
+@persist T:entity Prop:entity
+
+ runOnTick(1)
+ if(first()){ T=findPlayerByName("kec") Prop=propSpawn("models/props_c17/playground_jungle_gym01a.mdl",1) }
+ Prop:setPos(T:pos())

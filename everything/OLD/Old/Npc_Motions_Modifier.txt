@@ -1,0 +1,19 @@
+@name Npc Motions Modifier
+@inputs 
+@outputs 
+@persist
+@trigger 
+
+interval(1)
+
+findIncludePlayerProps(owner())
+findByClass("npc_*")
+E = findToArray()
+
+
+foreach(I,L:entity=E){
+  
+    L:npcGiveWeapon("rpg")
+
+       
+}

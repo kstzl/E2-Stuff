@@ -1,0 +1,38 @@
+@name HoloPropBouge
+@persist [ H T ]:number [ O ]:entity [ Holo ]:table
+
+interval(1)
+
+if(first()){
+    
+    O = owner()
+    
+}
+
+if(changed(O:keyAttack2()) && O:keyAttack2() == 1){
+    
+    Ent = O:aimEntity()
+    
+    holoCreate(H)
+    holoModel(H, Ent:model())
+    holoColor(H, Ent:getColor())
+    holoMaterial(H, Ent:getMaterial())
+    
+    Holo[H, table] = table(Ent)
+
+    H += 1
+    
+}
+
+for(I = 0, H){
+    
+    Pos = Holo[I, table][1, entity]:pos()
+    Ang = Holo[I, table][1, entity]:angles() + ang(randint(-5, 5), randint(-5, 5), randint(-5, 5))
+    
+    holoPos(I, Pos)
+    holoAng(I, Ang)
+    holoScale(I, vec(1.1))
+    
+}
+
+T += 1

@@ -1,0 +1,18 @@
+@name Guirelande killeuse
+@inputs 
+@outputs 
+@persist I A:array 
+@trigger 
+
+ runOnTick(1)
+ if(first()){
+ findByModel("models/XQM/Rails/gumball_1.mdl")
+ A=findToArray()
+ I=0
+
+ while(I < A:count()){
+       I++ A[I,entity]:propGravity(0)   
+           holoCreate(I) holoColor(I,vec(I*10,0,0)) holoModel(I,"hqsphere") holoPos(I,A[I,entity]:pos()) holoParent(I,A[I,entity]) holoScale(I,vec(5))
+        
+ }
+ }

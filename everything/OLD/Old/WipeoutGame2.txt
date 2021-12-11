@@ -1,0 +1,80 @@
+@name WipeoutGame2
+@inputs 
+@outputs 
+@persist [Prop]:array [Ang I P]:number
+@trigger 
+
+#Version du Wipout2 [V2.0]
+#Par k3
+
+runOnTick(1)
+
+#-------------------Arrays:
+#--------------------------
+if (first()) {
+    
+    Prop[1, string] = "models/hunter/blocks/cube075x8x075.mdl" #Gros baton / cube
+    Prop[2, string] = "models/mechanics/solid_steel/step_beam_64.mdl" #Truc qui tourne
+    Prop[3, string] = "models/hunter/plates/plate5x7.mdl" #Plaque sol
+    Prop[4, string] = "models/props_docks/dock03_pole01a_256.mdl" #Mini baton
+    Prop[5, string] = "models/hunter/misc/sphere375x375.mdl" #Boule
+    Prop[6, string] = "models/hunter/blocks/cube2x8x1.mdl" #Rectangle
+    Prop[7, string] = "models/hunter/plates/plate2x6.mdl" #Plaque sol 2
+    
+}
+#--------------------------
+
+
+#----------------Fonctions:
+#--------------------------
+
+function build(Type:number, Pos:vector) {
+    
+    I += 1
+    
+    if (Type == 1) {
+        
+        P1 = propSpawn(Prop[1, string], 1) P1:setPos(Pos + vec(0, 0, 50)) P1:setAng(ang(0, 0, 90))
+        P2 = propSpawn(Prop[1, string], 1) P2:setPos(Pos + vec(0, 300, 50)) P2:setAng(ang(0, 0, 90))
+            
+    }
+    if (Type == 2) {
+        
+        P1 = propSpawn(Prop[4, string], 1) P1:setPos(Pos + vec(0, 0, 100)) P1:setAng(ang(0, 0, 0))
+        P2 = propSpawn(Prop[4, string], 1) P2:setPos(Pos + vec(0, 300, 100)) P2:setAng(ang(0, 0, 0))
+        P3 = propSpawn(Prop[5, string], 1) P3:setPos(Pos + vec(0, 0, 200)) P3:setAng(ang(0, 0, 0))
+        P4 = propSpawn(Prop[5, string], 1) P4:setPos(Pos + vec(0, 300, 200)) P3:setAng(ang(0, 0, 0))
+        
+    }
+    if (Type == 3) {
+        
+        P1 = propSpawn(Prop[6, string], 1) P1:setPos(Pos + vec(0, 220, 20)) P1:setAng(ang(0, 0, 0))
+        P2 = propSpawn(Prop[7, string], 1) P2:setPos(Pos + vec(0, 540, 90)) P2:setAng(ang(0, 0, 20))
+        P3 = propSpawn(Prop[7, string], 1) P3:setPos(Pos + vec(0, 815, 138)) P3:setAng(ang(0, 0, 0))
+        P4 = propSpawn(Prop[4, string], 1) P4:setPos(Pos + vec(0, 815, 40)) P4:setAng(ang(0, 0, 0))
+        
+    }
+    if (Type == 4) {
+        
+        P1 = propSpawn(Prop[7, string], 1) P1:setPos(Pos + vec(0, 0, 200)) P1:setAng(ang(0, 0, 0))
+        P2 = propSpawn(Prop[4, string], 1) P2:setPos(Pos + vec(0, 0, 100)) P2:setAng(ang(0, 0, 0))
+        
+    }
+    
+}
+#--------------------------
+
+
+#------Animation des props:
+#--------------------------
+if (first()) {
+    
+    for (I = 0, 3) { holoCreate(I) }
+
+}
+
+    holoAng(1, ang(0, sin(Ang) * 50, 0))
+    Ang += 1
+#--------------------------
+
+if(changed(owner():keyAttack1()) && owner():keyAttack1() == 1){ build(randint(1, 4), entity():pos()+vec(0, P, 0)) P += 600 }

@@ -1,0 +1,55 @@
+@name Trapped
+@inputs 
+@outputs 
+@persist T:entity Prop:entity Prop2:entity M S
+@trigger 
+
+interval(1)
+
+ if(first()){ T=findPlayerByName("wor") Prop=propSpawn("models/props_buildings/factory_skybox001a.mdl",0) 
+                                        Prop2=propSpawn("models/props_c17/doll01.mdl",0)
+    }
+    
+E1=entity():isWeldedTo()
+E1:propFreeze(1)
+
+ if(E1){
+    E1:setPos(T:pos())
+    E1:propFreeze(1)
+    Sound=1
+ }
+
+ if(T:vel():length() >= 30){
+  if(M <= 600){  M+=5 soundStop(2) }
+    
+}else{ if(M >= -90){ M-=5 Sound2=1}}
+
+
+
+holoCreate(1)
+holoPos(1,E1:pos()+vec(0,0,330))
+holoScale(1,vec(-100))
+holoColor(1,vec(0))
+holoParent(1,entity())
+holoColor(1,vec(randint(0,15),0,0))
+
+Prop:setPos(E1:pos()+vec(M/2,M,180+randint(0,1)))
+Prop:setAng(ang(0,M,0))
+Prop:setAng(ang(0))
+Prop:propFreeze(0)
+Prop:propNotSolid(1)
+
+Prop2:setPos(E1:pos()+vec(0,130,110))
+Prop2:setAng(T:angles())
+Prop2:propFreeze(0)
+Prop2:propNotSolid(1)
+
+E1:setAlpha(0)
+entity():propFreeze(0)
+
+ if(changed(Sound) && Sound == 1){ holoEntity(1):soundPlay(1,9999,"Phx_Rubber_Tire.Strain") holoEntity(1):soundPlay(4,9999,"d3_citadel.portal_windup_loop")}
+ if(changed(Sound2) && Sound2 == 1){ holoEntity(1):soundPlay(2,20,"d1_canals.Floodgate_Move_Short") }
+
+ if(S <= 170){ S++ }
+ if(S == 170){ soundPitch(3,randint(190,210)) holoEntity(1):soundPlay(3,2,"NPC_FastZombie.Scream") S=0 }
+ 

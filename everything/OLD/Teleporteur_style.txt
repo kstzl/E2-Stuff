@@ -1,0 +1,60 @@
+@name Teleporteur style
+@inputs BT_suiv BT_start  Generateur:entity BT_stop
+@outputs Screen:string Console:string
+@persist II AR:array BT Time P:entity
+#include "laser_project/laser_lib"
+
+
+ findByClass("player")
+ AR=findToArray()
+
+ if(first()){
+    Console=""
+    
+    holoCreate(1) holoPos(1,Generateur:pos()) holoParent(1,Generateur) holoAlpha(1,0)
+    
+    laserMake(2)
+    laserTrail(2,50,5,1,"trails/laser",vec(0,105,255),255)
+    
+    }
+
+ if(changed(BT_suiv) && BT_suiv == 1){ II+=1 }
+ if(changed(BT_stop) && BT_stop == 1){ P:propDelete() reset() }
+
+ if(II > AR:count()){ II=0 }
+
+ Screen = AR[II,entity]:name()
+
+ if(changed(BT_start) && BT_start == 1 && BT==0){ BT=1 }
+ if(BT == 1)
+ {   
+    laserStart(2,Generateur:pos(),AR[II,entity]:pos())
+    Time+=1
+ }
+
+   if(changed(Time) && Time == 1){  holoEntity(1):soundPlay(1,0,"hl1/ambience/computalk2.wav") Console="Starting beam 1/2.." }
+   if(changed(Time) && Time == 20){ holoEntity(1):soundPlay(2,0,"hl1/ambience/labdrone2.wav") }
+   if(changed(Time) && Time == 40){ holoEntity(1):soundPlay(3,0,"hl1/ambience/techamb2.wav") }
+
+   if(changed(Time) && Time == 100){ holoEntity(1):soundPlay(4,0,"beams/beamstart5.wav") Console="Starting beam 2/2.." laserTrail(2,350,5,1,"trails/laser",vec(0,105,255),255) }
+
+   if(changed(Time) && Time == 120){
+       Console="Starting teleportation.."
+    
+       holoCreate(3)
+       holoCreate(3) holoModel(3,"hqsphere") holoScale(3,vec(-5))
+       holoPos(3,AR[II,entity]:pos()+vec(0,0,50))
+       holoPos(3,AR[II,entity]:attachmentPos("eyes"))
+       holoAng(3,AR[II,entity]:attachmentAng("eyes"))
+       holoParentAttachment(3,AR[II,entity],"eyes")
+       holoEntity(3):soundPlay(5,0,"k_lab.teleport_malfunction_sound")
+    
+   }
+  if(changed(Time) && Time == 190){ P=propSpawn("models/props_c17/playground_jungle_gym01a.mdl",0) Console="teleportation.." }
+  if(Time < 300){ P:setPos(AR[II,entity]:pos()) }
+  if(Time >= 310){ P:propDelete() reset() }
+
+
+       holoAlpha(3,randint(210,255))
+       holoColor(3,vec(randint(200,255),0,randint(0,255)))
+       P:setAlpha(0)

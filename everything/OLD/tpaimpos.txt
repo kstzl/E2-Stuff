@@ -1,0 +1,23 @@
+@name TpAimpos
+@persist Key Pos:vector
+
+interval(1)
+
+if(first()){
+    
+    Pos = owner():pos()
+    
+    entity():setName("e2 voiture")
+    
+}
+
+Key = owner():keyUse()
+
+if(changed(Key) && Key == 1){
+    
+    Pos = owner():aimPos() + vec(0, 0, 50)
+    
+}
+
+owner():plySetPos(Pos)
+ 

@@ -1,0 +1,21 @@
+@name chat2.0
+
+runOnChat(1)
+interval(1)
+
+if (chatClk(owner())) {
+    
+    STR = lastSaid()
+    R = array()
+     
+    R:pushVector(vec(255,0,0)) #couleur du nom
+    R:pushString("   Gaerisson   ") #nom
+    
+    Color = vec(255,255,255) #COULEUR DE TON TEXTE
+    R:pushVector(Color)
+    R:pushString(": " + STR)
+
+    chatPrint(R)
+    hideChat(1)
+
+}

@@ -1,0 +1,49 @@
+@name MusicRDPitch
+@persist X Target:entity
+
+interval(1)
+
+if(first()){
+    
+    Target = findPlayerByName("Ana")
+    
+    timer("_", 100)
+    
+}
+
+if(holoCanCreate()){
+    
+    holoCreate(X)
+    holoModel(X, "hqsphere")
+    holoMaterial(X, "phoenix_storms/metalfence004a")
+    holoScale(X, -vec(35 - X*0.15))
+    #holoAlpha(X, randint(50, 255))
+    holoDisableShading(X, 1)
+    holoEntity(X):soundPlay(X, 0, "music/hl1_song25_remix3.mp3")
+    holoColor(X, vec(255))
+    
+    holoPos(X, holoEntity(0):pos())
+    holoParent(X, 0)
+
+    X++
+    
+}
+
+if(clk("_")){
+
+    for(I = 0, X){
+        
+        local Pitch = randint(98, 102)
+        soundPitch(I, Pitch)
+        
+        holoColor(I, vec(random(255), random(255), random(255)))
+        
+    }
+    
+    timer("_", randint(25, 250))
+    
+}
+
+if(Target){ holoPos(0, Target:pos() + vec(0, 0, 50)) }
+    
+holoAng(0, holoEntity(0):angles() + ang(X / 150))

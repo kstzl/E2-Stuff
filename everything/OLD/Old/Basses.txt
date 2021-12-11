@@ -1,0 +1,45 @@
+@name Basses
+@inputs 
+@outputs 
+@persist Count A Force N P:entity
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+ Force=900
+ N=2
+
+ holoCreate(1) holoModel(1,"models/bull/various/speaker.mdl") 
+
+ holoPos(1,owner():pos()+vec(0,0,50))
+ holoPos(1,owner():attachmentPos("eyes"))
+ holoAng(1,owner():attachmentAng("eyes"))
+ holoParentAttachment(1,owner(),"eyes")
+
+ holoScale(1,vec(14))
+    
+ }
+
+ if(changed(owner():keyAttack2()) && owner():keyAttack2() == 1){
+
+    timer("size",10)
+    
+    N+=1
+    holoCreate(N)
+    
+    propSpawnEffect(0)
+    P=propSpawn(holoEntity(1):model(),0) P:setPos(owner():pos()+vec(0,0,50))
+    P:applyForce(owner():eye()*P:mass()*Force^7)
+    P:setMass(50000)
+    holoModel(N,holoEntity(1):model()) holoPos(N,P:pos()) holoParent(N,P) holoScale(N,vec(randint(3,4)))
+    
+    holoEntity(1):soundPlay(1,1,"k_lab.hitcrate")     soundPitch(N,randint(90,110))
+ 
+ }
+
+ if(owner():keyPressed("m")){ PlaySound=1 holoScale(1,vec(randint(15,19))) }else{ soundStop(2) timer("normal",100) }
+ if(changed(PlaySound) && PlaySound == 1){ holoEntity(1):soundPlay(2,0,"song20_submix4") }
+
+ if(clk("size")){ holoScale(1,vec(randint(15,19))) timer("normal",50) }
+ if(clk("normal")){ holoScale(1,vec(14)) }

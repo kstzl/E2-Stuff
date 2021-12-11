@@ -1,0 +1,12 @@
+@name 
+@persist [ Vars ]:table
+
+interval(1)
+
+function entity:setVar(Param_:string, Content_:string){
+    
+}
+
+if(first()){
+    
+}

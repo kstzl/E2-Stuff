@@ -1,0 +1,11 @@
+@name Fusee
+@inputs Active
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+if(Active == 1){
+ soundPitch(0, 100 + entity():vel():length()/10)
+   soundPlay(0,1,"PhysicsCannister.ThrusterLoop")
+}

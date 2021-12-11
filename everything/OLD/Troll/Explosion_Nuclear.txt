@@ -1,0 +1,61 @@
+@name Explosion_Nuclear
+@inputs 
+@outputs 
+@persist A:array I Rot Rand Rand2 Rand3 Time 
+@trigger 
+
+if(first()){
+holoCreate(1)
+holoModel(1,"hqsphere")
+holoPos(1,vec(0,0,-999999))
+}
+
+interval(500)
+
+findByClass("player")
+
+A = findToArray()
+I = randint(1,A:count())
+
+    
+holoCreate(1)
+holoModel(1,"hqsphere")
+Rot++
+holoScale(1,vec(Rot,Rot,Rot))
+Sound = 1
+holoColor(1,vec(Rot*5,100,0))
+
+Rand = randint(0,9999999)
+
+holoCreate(Rand)
+holoPos(Rand,A[I,entity]:pos())
+holoModel(Rand,"hqsphere")
+holoScale(Rand,vec(-50,-50,-50))
+holoColor(Rand,vec(255,0,0))
+holoAlpha(Rand,90)
+
+
+holoCreate(Rand2)
+holoPos(Rand2,A[I,entity]:pos() + vec(Rand,Rot,Rand2))
+holoModel(Rand2,"hqsphere")
+holoScale(Rand2,vec(-50,-50,-50))
+holoColor(Rand2,vec(255,0,0))
+holoAlpha(Rand2,100)
+
+holoCreate(Rand3)
+holoPos(Rand3,entity():pos()+vec(randint(0,255),randint(0,255),randint(0,255)))
+holoModel(Rand3,"hqsphere")
+holoScale(Rand3,vec(-50,-50,-50))
+holoColor(Rand3,vec(255,0,0))
+holoAlpha(Rand3,randint(100,255))
+
+Time++
+
+interval(1)
+ #  Prop = propSpawn("models/hunter/blocks/cube8x8x8.mdl",1)
+
+ #  Prop:setPos(entity():pos()+vec(Rot*50,Rot*50,Rot*50))
+
+if(changed(Sound) & Sound == 1){
+    holoEntity(1):soundPlay(100,100,"d3_citadel.timestop_explosion_2")
+}

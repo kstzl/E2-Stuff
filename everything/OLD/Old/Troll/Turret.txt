@@ -1,0 +1,13 @@
+@name Turret
+@inputs Numb
+@outputs Son
+@persist 
+@trigger 
+
+if(Numb == 13){
+    Son = 1
+}
+else
+{
+    Son = 0
+}

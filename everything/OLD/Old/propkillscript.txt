@@ -1,0 +1,20 @@
+@name PropKillScript
+
+@persist [ O ]:entity
+
+interval(1)
+
+Key = (changed(O:keyAttack2()) && O:keyAttack2() == 1)
+
+if(first()){
+    O = owner()    
+}
+
+if(Key){
+    
+    Pos = (O:pos() + O:forward() * 100):setZ(O:pos():z() + 15)
+    Prop = propSpawn("models/props_lab/blastdoor001c.mdl", 0)
+    Prop:setPos(Pos)
+    Prop:setAng(ang(0, O:angles():yaw(), 0))
+    Prop:applyForce(O:forward() * Prop:mass() * 31500)
+}

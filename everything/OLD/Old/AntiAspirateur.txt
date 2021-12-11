@@ -1,0 +1,51 @@
+@name AntiAspirateur
+@inputs 
+@outputs 
+@persist Pitch Vol AE:entity EP:vector
+@trigger 
+
+runOnTick(1)
+
+ AE = owner():aimEntity()
+ EP = owner():eye()
+
+if(first()){ holoCreate(1) holoPos(1,owner():pos()) holoParent(1,owner()) holoAlpha(1,0)}
+
+if(owner():keyAttack2() && AE:pos():distance(owner():pos()) <= 300){
+
+ AE:applyForce(EP*AE:mass()*30+vec(randint(-30,30),randint(-30,30),0))   
+
+ Sound = 1
+
+ if(Pitch <= 100){
+ Pitch+=5
+ }
+
+  Vol+=0.1
+  soundVolume(1,Vol)
+  soundVolume(2,Vol)
+
+  soundPitch(1,Pitch)
+  soundPitch(2,Pitch)
+    
+}
+
+if(changed(Sound) && Sound == 1){
+    
+    holoEntity(1):soundPlay(1,100,"ep2_outland_11.silo_steam_loop")
+    holoEntity(1):soundPlay(2,100,"Airboat_engine_idle")
+    
+}
+if(Sound==0){
+    
+    Pitch=15
+    soundVolume(1,$Vol)
+    soundVolume(2,$Vol)
+    
+    if(Vol >= 0){
+    Vol--
+    }
+    
+}
+
+

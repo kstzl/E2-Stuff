@@ -1,0 +1,11 @@
+@name Box_Printer_DarkRp
+@inputs [ Triger ]:array [ FriendList_Checked ]:number
+@outputs [ PlayerOutput ]:entity [ FadingDoor ]:number
+@persist
+
+#By K3CR4FT.:DLL 2020
+
+interval(1)
+
+PlayerOutput = Triger[1, entity]
+FadingDoor = FriendList_Checked

@@ -1,0 +1,14 @@
+@name Toilet Security
+@inputs Porte Bouton
+@outputs Ouvrir
+@persist 
+@trigger 
+
+runOnTick(1)
+if(Porte == 1 & Bouton == 1){
+    Ouvrir = 0
+}
+else
+{
+    Ouvrir = 1
+}

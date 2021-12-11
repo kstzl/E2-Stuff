@@ -1,0 +1,35 @@
+@name FonctionBombePos
+@inputs 
+@outputs 
+@persist V:vector Time2 Active
+@trigger 
+
+function createbomb(A){
+
+holoCreate(A)
+holoColor(A,vec(255,0,0)) 
+   
+}
+
+function bombpos(A,V:vector){
+    
+ holoPos(A,V)
+Vector = V
+   
+}
+
+function timebomb(A,N){
+    Time = N
+}
+
+function bombactive(A){
+    
+    Prop = propSpawn("models/props_c17/oildrum001_explosive.mdl",1)
+    Prop:setPos(Vector)
+    Prop:setAlpha(0)
+    Prop:propBreak()
+    holoDelete(A)
+}
+
+createbomb(1)
+bombpos(1,owner():pos())

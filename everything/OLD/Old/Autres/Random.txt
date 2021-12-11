@@ -1,0 +1,15 @@
+@name Random
+@inputs Screams:array A
+@outputs 
+@persist 
+@trigger 
+
+if(A == 1){
+Screams[1, string] = "Portal.GlaDOS.core_drop_3" 
+Screams[2, string] = "Portal.GlaDOS.core_nag_1" 
+Screams[3, string] = "Portal.GlaDOS.core_nag_14" 
+Screams[4, string] = "Portal.GlaDOS.core_nag_15" 
+Screams[5, string] = "Portal.GlaDOS.not_gonna_happen" 
+Screams[6, string] = "Portal.GlaDOS.call_it_a_day"  
+owner():soundPlay(0,0,Screams:string(random(0,6)))
+}

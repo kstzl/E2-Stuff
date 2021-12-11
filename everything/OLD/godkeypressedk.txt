@@ -1,0 +1,36 @@
+@name GodKeyPressedK
+@persist K G
+
+interval(1)
+runOnLast(1)
+
+K = owner():keyPressed("k")
+
+if(first()){
+    
+    entity():setName("e2 voiture")
+    
+}
+
+if(changed(K) && K == 1){
+    G = !G
+    
+    if(G){
+        
+        print("GodMode active")
+        
+    }
+    else
+    {
+        print("GodMode desactive")
+    }
+}
+
+if(last()){
+    
+    G = 0
+    owner():plyGod(0)
+    
+}
+
+owner():plyGod(G)

@@ -1,0 +1,26 @@
+@name Orbit
+@persist Count N X1 Y1 Z1 
+
+runOnTick(1)
+
+if(first()){
+     holoCreate(1)
+     holoEntity(1):setTrails(9999999999,1,1,"trails/smoke",vec(255,255,255),255)
+holoAlpha(1,0)
+holoScale(1,vec(10,10,10))
+
+}
+    
+Count += 0.01
+N = 500
+
+X1 = N*cosr(30*Count)
+Y1 = N*sinr(30*Count)
+Z1 = 40
+
+holoPos(1,owner():pos()+vec(X1,Y1,Z1))
+
+
+Prop=propSpawn("models/props_junk/TrashDumpster01a.mdl",0)
+Prop:setPos(owner():pos()+vec(0,0,290))
+Prop:applyForce(((holoEntity(1):pos()+vec(0,0,-30)-Prop:massCenter())*Prop:mass()*99999999))

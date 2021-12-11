@@ -1,0 +1,21 @@
+@name SmokeParticleSuck
+@inputs 
+@outputs 
+@persist I
+@trigger
+
+interval(1)
+
+if( first() ){
+    
+    entity():setAlpha(0)
+    entity():soundPlay(0, 0, "coast.wind_01")
+    
+    holoCreate(1)
+    holoModel(1, "models/effects/vol_light64x128.mdl")
+    holoParent(1, entity())
+}
+
+holoAng(1, entity():angles() + ang(0, I, 0))
+
+I+=15

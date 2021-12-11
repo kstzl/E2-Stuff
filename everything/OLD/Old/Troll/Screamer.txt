@@ -1,0 +1,28 @@
+@name 
+@inputs 
+@outputs 
+@persist T:entity Taille Plus
+@trigger 
+
+runOnTick(1)
+if(first()){
+    
+Taille = -190
+
+   T =  findPlayerByName("am")
+   holoCreate(1)
+   holoScale(1,vec(Taille,Taille,Taille))
+   holoPos(1,T:pos()) 
+   holoModel(1,"hqsphere")
+   holoEntity(1):soundPlay(1,1,"npc/stalker/go_alert2a.wav")
+   holoMaterial(1,"models/Combine_Helicopter/helicopter_bomb01.mdl")
+    
+}
+
+if(Taille <= -15){
+    Taille+=1
+    Plus++
+    holoScale(1,vec(Taille,Taille,Taille))
+    holoAng(1,ang(Plus,Plus,Plus))
+}
+

@@ -1,0 +1,214 @@
+@name FlameChomp
+
+@persist [ IS MouthOpeness CanThrow RdSpeed RdRadius ]:number
+
+@persist [ Target ]:entity
+
+@persist [ Flames ]:table
+
+@persist [ Ang ]:angle
+
+@persist [ FinalPos ]:vector
+
+#include "OLD/POO_Lib"
+
+interval(1)
+
+if(first()){
+    
+    Target = owner()
+    RdSpeed = randint(-5, 5)
+    RdRadius = randint(150, 250)
+    
+    Rd = randint(0,1)
+    if(Rd){ RdRadius = RdRadius }else{ RdRadius = -RdRadius }
+    
+    holoCreate(0)
+    holoModel(0, "hqsphere")
+    holoScaleUnits(0, vec(50))
+    holoColor(0, vec(25))
+    
+    holoCreate(1)
+    holoModel(1, "hqsphere")
+    holoScaleUnits(1, vec(5))
+    holoColor(1, vec(255))
+    holoPos(1, holoEntity(0):toWorld(vec(20, -10, 10)))
+    holoParent(1, 0)
+    
+    holoCreate(2)
+    holoModel(2, "hqsphere")
+    holoScaleUnits(2, vec(5))
+    holoColor(2, vec(255))
+    holoPos(2, holoEntity(0):toWorld(vec(20, 10, 10)))
+    holoParent(2, 0)
+    
+    holoCreate(3)
+    holoModel(3, "hqcylinder")
+    holoScaleUnits(3, vec(3))
+    holoColor(3, vec(100))
+    holoPos(3, holoEntity(0):toWorld(vec(25, 0, -5)))
+    holoAng(3, holoEntity(0):angles() + ang(90, 0, 0))
+    holoParent(3, 0)
+    
+    holoCreate(4)
+    holoModel(4, "hqcylinder")
+    holoScaleUnits(4, vec(3))
+    holoColor(4, vec(255, 0, 0))
+    holoPos(4, holoEntity(0):toWorld(vec(25, 0, -5)))
+    holoAng(4, holoEntity(0):angles() + ang(90, 0, 0))
+    holoParent(4, 0)
+    
+    holoParent(0, entity())
+    
+    timer("throw", 0)
+    
+    for(I = 0, 3){
+        
+        Index = I + 5
+        PreIndex = Index-1
+        
+        if(I == 0){
+            PreIndex = 0
+        }
+        
+        holoCreate(Index)
+        holoScaleUnits(Index , vec(1))
+        holoModel(Index, "hqsphere")
+        holoColor(Index, vec(255, 100, 0))
+        holoMaterial(Index, "models/alyx/emptool_glow")
+        holoEntity(Index):ignite()
+        
+        Flames:pushTable(table(
+        "Self" = Index,
+        "Target" = PreIndex
+        ))
+        
+    }
+    
+}
+
+if(clk("throw")){
+    
+    if(CanThrow){
+        
+        holoEntity(0):soundPlay(time(), 0, "d1_town.FlameTrapIgnite")
+        soundPitch(0, randint(105, 125))
+        
+        MouthOpeness = 50
+        
+        NewThrow = poo_createObject("throw")
+        NewThrow:poo_setAng("Ang", Ang)
+        NewThrow:poo_setNumber("Lifetime", 0)
+        
+    }
+    
+    timer("throw", randint(1500, 3500))
+    
+}
+
+
+
+MouthOpeness += ( 25 - MouthOpeness ) / 25
+
+IS += RdSpeed
+
+Ang = ( Target:pos() - holoEntity(0):pos() ):toAngle()
+Dist = Target:pos():distance(holoEntity(0):pos())
+
+holoScaleUnits(3, vec(MouthOpeness, MouthOpeness/2, 3))
+holoScaleUnits(4, vec(MouthOpeness/2, (MouthOpeness/2)/2, 4))
+
+holoAng(0, Ang)
+
+if(Dist > RdRadius){
+    FinalPos = Target:pos() + vec(sin(IS) * RdRadius, cos(IS) * RdRadius, abs(sin(IS) * RdRadius))
+}
+    
+holoPos(0, holoEntity(0):pos() + (FinalPos - holoEntity(0):pos() ) / 25)
+
+
+CanThrow = (Dist < RdRadius * 1.25)
+
+for(I = 0, Flames:count()){
+    
+    Index = I
+    
+    Flame = Flames[Index, table]
+    
+    if( holoEntity(Flame["Self", number]):pos():distance( holoEntity(Flame["Target", number]):pos()) > 25){
+        
+        SH = Flame["Self", number]
+        TH = Flame["Target", number]
+        
+        holoPos(SH, holoEntity(SH):pos() + ( holoEntity(TH):pos() - holoEntity(SH):pos() ) / 5 )
+        
+    }
+    
+}
+
+for(I = 0, POO_Objects:count()){
+    
+    Object = POO_Objects[I, table]
+    
+    if(Object:poo_init("throw")){
+        
+        H = Object:poo_objectIndex()
+        
+        holoCreate(H)
+        holoPos(H, holoEntity(3):pos())
+        holoModel(H, "hqsphere")
+        holoColor(H, vec(255, 100, 0))
+        holoDisableShading(H, 1)
+        holoAng(H, Object:poo_getAng("Ang"))
+        holoEntity(H):ignite()
+        
+        
+    }
+    
+    if(Object:poo_loop("throw")){
+        
+        H = Object:poo_objectIndex()
+        
+        if(Object:poo_getEntity("StickEntity")){
+            holoPos(H, Object:poo_getEntity("StickEntity"):pos())
+        }
+        else
+        {
+            
+            for(X = 0, players():count()){
+                
+                Ply = players()[X, entity]
+                
+                if(Ply:pos():distance(holoEntity(H):pos()) < 25){
+                    
+                    holoEntity(H):soundPlay(H, 0, "Flesh.ImpactHard")
+                    
+                    Object:poo_setEntity("StickEntity", Ply)
+                    
+                }
+                
+            }
+            
+            holoPos(H, holoEntity(H):toWorld(vec(5, 0, 0)))
+        }
+        
+        Object:poo_setNumber("Lifetime", Object:poo_getNumber("Lifetime") + 1)
+        
+        if(Object:poo_getNumber("Lifetime") > 300){
+            
+            H = Object:poo_objectIndex()
+            
+            holoEntity(H):extinguish()
+            holoDelete(H)
+            Object:poo_deleteObject()
+            
+        }
+        
+        
+    }
+    
+}
+
+findByClass("player")
+findSortByDistance(holoEntity(0):pos())
+Target = find()

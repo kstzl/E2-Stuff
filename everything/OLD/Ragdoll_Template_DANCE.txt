@@ -1,0 +1,45 @@
+@name Ragdoll Template DANCE
+@inputs
+@outputs 
+@persist [Target Ragdoll]:entity [A]:array [L_hand_id R_hand_id L_foot_id R_foot_id Head_id Ass_id]:bone [I I2 Dist X1 Y1]:number [Spos]:vector
+@trigger 
+
+interval(1)
+
+if(first()){   
+     
+    Ragdoll = entity():isWeldedTo() 
+    Spos = entity():pos() + vec(0, 0, 50)
+    Dist = randint(2, 15)
+    X1 = randint(-15, 15)
+    Y1 = randint(-15, 15)
+    
+    entity():propFreeze(0)
+    entity():setAlpha(0)
+}
+    L_hand_id=Ragdoll:bone(7) 
+    R_hand_id=Ragdoll:bone(5) 
+    L_foot_id=Ragdoll:bone(13) 
+    R_foot_id=Ragdoll:bone(14) 
+    Body_id=Ragdoll:bone(1) 
+    Head_id=Ragdoll:bone(10) 
+    Ass_id=Ragdoll:bone(0)
+
+
+function applyRagdollForce(Bone:bone, Vec:vector, Force:number){
+    Bone:applyForce((Vec-Bone:massCenter()-Bone:vel()/2) * Bone:mass() * Force)
+}
+function applyRagdollAng(Bone:bone, Ang:angle, Force:number){
+    Bone:applyAngForce(Ang*Force)
+}
+
+applyRagdollForce(Body_id, Spos + vec(0, 0, 100), 1)
+applyRagdollForce(L_hand_id, Spos + vec(sin(I*5)*55, sin(I)*55, 90), 1)
+applyRagdollForce(R_hand_id, Spos + vec(sin(I*5)*-55, sin(I)*-55, 90), 1)
+applyRagdollForce(Ass_id, Spos + vec(sin(I)*-15, sin(I)*-15, 0), 1)
+applyRagdollForce(L_foot_id, Spos + vec(sin(I)*55, sin(I)*55, 0), 2)
+applyRagdollForce(R_foot_id, Spos + vec(sin(I)*-55, sin(I)*-55, 0), 2)
+
+Spos += vec(sin(I/Dist)*X1,cos(I/Dist)*Y1,0)
+
+I += 15

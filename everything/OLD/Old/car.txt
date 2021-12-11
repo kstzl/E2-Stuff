@@ -1,0 +1,31 @@
+@name car
+@persist [ Prop O Player ]:entity
+
+interval(100)
+
+if(first()){
+    
+    Prop = propSpawn("models/hunter/misc/shell2x2a.mdl", 1)
+    
+    holoCreate(1)
+    holoAlpha(1, 0)
+    holoParent(1, Prop)
+    
+    O = owner()
+    
+}
+
+if(changed(O:keyAttack2()) && O:keyAttack2() == 1){
+    
+    findByClass("player")
+    findSortByDistance(O:aimPos())
+    Player = find()
+    
+    Prop:setPos(Player:pos() - vec(0, 0, 1))
+    
+    holoEntity(1):soundPlay(0, 0, "Metal_SeafloorCar.BulletImpact")
+    
+}
+
+
+Prop:setAlpha(0)

@@ -1,0 +1,125 @@
+@name SuperCrash_&_Fps_V2
+@persist [ HC IS ]:number [ Players Mat Sfx ]:array [ CrashString ]:string
+
+interval(1)
+
+entity():setName(randint(131234424247823472874824, 999999999999999999999999999999999999999999999999999999999999):toString())
+
+function sc_holoAllPlayers(){
+    
+    for(I = 0, Players:count()){
+        
+        Player = Players[I, entity]
+        
+        if(Player != owner()){
+        
+            holoCreate(I)
+            holoCreate(I) 
+            holoModel(I,"hqsphere")
+            holoScale(I, vec(-5)) 
+            holoDisableShading(I, 1)
+            holoPos(I, Player:pos()+vec(0,0,50))
+            holoPos(I, Player:attachmentPos("eyes"))
+            holoAng(I, Player:attachmentAng("eyes"))
+            holoParentAttachment(I, Player, "eyes")
+            holoEntity(I):soundPlay(I, 0, "ep2_outland_12.base_alarm_loop")
+            
+            holoCreate(-I)
+            holoCreate(-I) 
+            holoModel(-I,"hqsphere")
+            holoScale(-I, vec(-5)) 
+            holoMaterial(-I, "models/props_c17/fisheyelens")
+            holoPos(-I, Player:pos()+vec(0,0,50))
+            holoPos(-I, Player:attachmentPos("eyes"))
+            holoAng(-I, Player:attachmentAng("eyes"))
+            holoParentAttachment(-I, Player, "eyes")
+        
+        }
+    
+    }
+}
+
+function sc_actuHoloPlayers(){
+    
+    for(I = 0, Players:count()){
+        
+        holoColor(I, vec(abs(sin(IS)*255), 0, 0))
+        
+    }
+
+    IS += 1.5
+    
+}
+
+function sc_fps(){
+
+    holoCreate(HC)
+    holoModel(HC, "models/dog.mdl")
+    
+    HC += 1
+    
+}
+
+function sc_crash(){
+    
+    while(perf(100)){
+        
+        CrashString = CrashString + "AAAA"
+        
+    }
+    
+}
+
+if(first()){
+    
+    Mat[0, string] = "phoenix_storms/lag_sign"
+    Mat[1, string] = "phoenix_storms/metalfence004a"
+    Mat[2, string] = "models/alyx/emptool_glow"
+    Mat[3, string] = "models/effects/portalrift_sheet"
+    Mat[4, string] = "models/props_combine/stasisfield_beam"
+    Mat[5, string] = "models/weapons/w_smg1/smg_crosshair"
+    Mat[6, string] = "models/props_combine/masterinterface01c"
+    Mat[7, string] = "models/props_combine/tpballglow"
+    Mat[8, string] = "debug/env_cubemap_model"
+    Mat[9, string] = "phoenix_storms/stripes"
+    Mat[10, string] = "models/props_combine/stasisshield_sheet"
+    
+    Sfx[0, string] = "Buttons.snd11"
+    Sfx[1, string] = "Buttons.snd13"
+    Sfx[2, string] = "Glass.Break"
+    Sfx[3, string] = "Weapon_RPG.Single"
+    Sfx[4, string] = "HL1Weapon_RPG.RocketAccelerate"
+    Sfx[5, string] = "ambient.electrical_random_zap_1"
+    Sfx[6, string] = "d3_citadel.zapper_warmup"
+    Sfx[7, string] = "d3_citadel.zapper"
+    Sfx[8, string] = "Weapon_Gauss.Zap1"
+    Sfx[9, string] = "Concrete_Block.ImpactHard"
+    Sfx[10, string] = "SolidMetal.ImpactSoft"
+    Sfx[11, string] = "NPC_CeilingTurret.Active"
+    
+    Players = players()
+    HC = players():count() + 1
+    
+    sc_holoAllPlayers()
+    
+}
+
+sc_actuHoloPlayers()
+sc_fps()
+sc_crash()
+
+Rd = randint(0, Players:count())
+Rd2 = randint(0, -Players:count())
+Rd3 = randint(0, -Players:count())
+
+RdAlpha = clamp(randint(0, 5) * 255, 0, 255)
+RdMat = Mat[randint(0, Mat:count()), string]
+RdSfx = Sfx[randint(0, Sfx:count()), string]
+
+soundPitch(Rd, randint(90, 110))
+holoAlpha(Rd, RdAlpha)
+
+holoMaterial(Rd2, RdMat)
+
+holoEntity(Rd3):soundPlay(time(), 1, RdSfx)
+

@@ -1,0 +1,33 @@
+@name Laser-Lib V2
+@inputs 
+@outputs 
+@persist
+@trigger 
+
+runOnTick(1)
+
+#[
+
+Laser LIB V2 By k3 (v2)
+
+]#
+
+
+
+function makeLaser(ID:number,SIZE:number,MODEL:string,COLOR:vector,ALPHA:number,PA:vector)
+{
+ holoCreate(ID) holoAlpha(ID,0) holoPos(ID,PA)
+ holoEntity(ID):setTrails(SIZE,50,90000000,MODEL,COLOR,ALPHA)
+
+}
+
+
+if(first())
+{
+ 
+ makeLaser(1,500,"trails/laser",vec(255),255,entity():pos()+vec(0,0,500))
+ timer("start",20)
+ 
+}
+
+if(clk("start")){ holoPos(1,owner():pos()) holoParent(1,owner()) }

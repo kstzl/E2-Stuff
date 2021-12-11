@@ -1,0 +1,43 @@
+@name Locator
+@inputs 
+@outputs 
+@persist C T:entity Prop:entity
+@model models/hunter/blocks/cube05x05x05.mdl
+
+runOnTick(1)
+
+if(first()){
+    
+ Prop=noentity()
+
+holoCreate(1)
+holoAlpha(1,0)
+
+T=findPlayerByName("SPy")
+
+holoEntity(1):setTrails(10,99,0.5,"trails/smoke",vec(255,0,0),255)
+
+holoCreate(2)
+holoPos(2,T:pos())
+holoParent(2,T)
+holoEntity(2):soundPlay(1,9999,"train_forcefield")
+holoAlpha(2,0)
+
+}
+
+
+if(C <= 5){
+    C++
+    holoPos(1,T:pos())
+}
+
+if(C >= 5){
+        C=0
+        holoPos(1,entity():pos())
+}
+
+
+Prop:applyAngForce(ang(1220,1220,1220)*Prop:mass()*10)
+Prop:setAlpha(0)
+
+

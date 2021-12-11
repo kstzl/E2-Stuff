@@ -1,0 +1,13 @@
+@name Prop Shit Freeze
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+ interval(700)
+ P=propSpawn("models/sprops/rectangles/size_3_5/rect_30x42x3.mdl",1)
+ P:setPos(entity():pos()+vec(randint(-5,5),randint(-5,5),randint(1,100)))
+ P:setAlpha(0)
+   weld(P,entity())
+   entity():setAlpha(0)
+ 

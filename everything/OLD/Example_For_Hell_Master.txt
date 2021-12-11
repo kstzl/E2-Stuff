@@ -1,0 +1,29 @@
+@name Example For Hell Master
+@persist C NumberOfHolos
+
+interval(1)
+
+if(first()){
+    
+    NumberOfHolos = 50
+    
+    for(I = 0, NumberOfHolos){
+        
+        holoCreate(I)
+        
+        holoPos(I, entity():toWorld(vec(I * 10, 0, 0)))
+        
+        #holoParent(I, entity())
+        
+    }
+    
+}
+
+for(I2 = 0, NumberOfHolos){
+
+    holoColor(I2, hsv2rgb( I2 / 2 * 10 + C, 1, 1))
+    if(C > 360){ C = 0 }
+}
+
+C += 0.1
+

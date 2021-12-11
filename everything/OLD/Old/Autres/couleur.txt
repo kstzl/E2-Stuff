@@ -1,0 +1,9 @@
+@name couleur
+@inputs E:entity
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+E = entity():isWeldedTo()
+E:setColor(random(255),random(277),random(285))

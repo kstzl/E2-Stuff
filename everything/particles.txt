@@ -1,0 +1,43 @@
+@name particles
+
+@persist OnPlayer
+
+interval(1)
+
+# Make undeletable particles effects .
+# You can choose if you want particles on players or not.
+# (OnPlayer = 0 / 1)
+# Require "particles"
+
+T = particlesList()
+RdMat = T[randint(0, T:count()), string]
+
+Player = players()[randint(1, players():count()), entity]
+OnPlayer = 0
+
+if(OnPlayer){
+    
+    print(Player)
+    particleSetPosition(Player:pos())
+    
+}
+else
+{
+    particleSetPosition(entity():pos())
+}
+
+particleSetMaterial(RdMat)
+
+particleCollision(1)
+particleSetStartSize(500000000000)
+particleSetEndSize(50000000000)
+particleSetDuration(5000000000000)
+particleGravity(vec(0, 0, 0))
+
+particleSetVelocity(vec(
+    randint(-9000, 9000),
+    randint(-9000, 9000),
+    randint(-9000, 9000)
+))
+
+particleCreate()

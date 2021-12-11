@@ -1,0 +1,187 @@
+@name Resonance Cascade
+@inputs 
+@outputs 
+@persist R1 Time P:entity P2:entity Time2 LOCK S II AR:array C
+@trigger 
+#include "laser_project/laser_lib"
+
+ if(first()){
+    
+    #Cercle BAS
+    holoCreate(0) holoModel(0,"hqsphere") holoScale(0,vec(35,35,0.2)) holoMaterial(0,"sprops/textures/sprops_metal2")
+    holoCreate(1) holoModel(1,"hq_tube") holoScale(1,vec(25,25,2.5)) holoMaterial(1,"sprops/textures/sprops_metal2")
+    
+    #Pinces BAS
+    holoCreate(2) holoModel(2,"tetra") holoScale(2,vec(3,3,15)) holoMaterial(2,"sprops/textures/sprops_metal2") holoPos(2,entity():pos()+vec(120,0,80))
+    holoCreate(3) holoModel(3,"tetra") holoScale(3,vec(3,3,15)) holoMaterial(3,"sprops/textures/sprops_metal2") holoPos(3,entity():pos()+vec(-120,0,80))
+    holoCreate(4) holoModel(4,"tetra") holoScale(4,vec(3,3,15)) holoMaterial(4,"sprops/textures/sprops_metal2") holoPos(4,entity():pos()+vec(0,120,80))
+    holoCreate(5) holoModel(5,"tetra") holoScale(5,vec(3,3,15)) holoMaterial(5,"sprops/textures/sprops_metal2") holoPos(5,entity():pos()+vec(0,-120,80))
+   
+    #Piliers HAUT
+    holoCreate(6) holoModel(6,"tetra") holoScale(6,vec(15,15,15)) holoMaterial(6,"sprops/textures/sprops_metal2") holoPos(6,entity():pos()+vec(0,0,280)) holoAng(6,ang(0,0,180))
+    holoCreate(7) holoModel(7,"hexagon") holoScale(7,vec(20,20,20)) holoMaterial(7,"sprops/textures/sprops_metal2") holoPos(7,entity():pos()+vec(0,0,450)) holoAlpha(7,200) holoAng(7,ang(0,0,180))
+    holoCreate(8) holoModel(8,"hq_cubinder") holoScale(8,vec(10,10,20)) holoMaterial(8,"sprops/textures/sprops_metal2") holoPos(8,entity():pos()+vec(0,0,470))
+  
+    #Spheres electriques
+    holoCreate(9) holoModel(9,"sphere2") holoScale(9,vec(4,4,6)) holoMaterial(9,"sprops/textures/sprops_metal2") holoPos(9,entity():pos()+vec(150,120,290)) holoParent(9,7) 
+    holoCreate(10) holoModel(10,"sphere2") holoScale(10,vec(4,4,6)) holoMaterial(10,"sprops/textures/sprops_metal2") holoPos(10,entity():pos()+vec(-150,120,290)) holoParent(10,7)
+    holoCreate(11) holoModel(11,"sphere2") holoScale(11,vec(4,4,6)) holoMaterial(11,"sprops/textures/sprops_metal2") holoPos(11,entity():pos()+vec(0,-150,290)) holoParent(11,7)
+ 
+    #SOUNDS
+    holoEntity(8):soundPlay(-1,0,"citadel.overwatch_45sec_to_teleport")
+    holoEntity(8):soundPlay(1,0,"k_lab.teleport_active")
+    
+    #LASERS
+    
+    laserMake(12)
+    laserTrail(12,60,2,1,"trails/laser",vec(255,255,0),255)
+    
+    laserMake(13)
+    laserTrail(13,60,2,1,"trails/laser",vec(255,255,0),255)
+    
+    laserMake(14)
+    laserTrail(14,60,2,1,"trails/laser",vec(255,255,0),255)
+    
+    laserMake(15)
+    laserTrail(15,90,5,1,"trails/laser",vec(255,255,0),255)
+    
+    laserMake(16)
+    laserTrail(16,30,5,1,"trails/laser",vec(255,255,0),255)
+    
+    laserMake(17)
+    laserTrail(17,30,5,1,"trails/laser",vec(255,255,0),255)
+    
+    laserMake(18)
+    laserTrail(18,30,5,1,"trails/laser",vec(255,255,0),255)
+    
+    laserMake(19)
+    laserTrail(19,530,5,1,"trails/laser",vec(0,255,0),255)
+    
+    laserMake(20)
+    laserTrail(20,530,5,1,"trails/laser",vec(0,255,0),255)
+    
+    laserMake(21)
+    laserTrail(21,530,5,1,"trails/laser",vec(0,255,0),255)
+    
+    laserMake(25)
+    laserTrail(25,530,5,1,"trails/laser",vec(0,255,0),255)
+    
+    laserMake(26)
+    laserTrail(26,530,5,1,"trails/laser",vec(0,255,0),255)
+    
+    laserMake(27)
+    laserTrail(27,530,5,1,"trails/laser",vec(0,255,0),255)
+ }
+
+
+    #SCENES
+    
+    if(R1 < 100){ R1+=0.5 } soundPitch(1,R1)
+    holoAng(8,holoEntity(8):angles()+ang(0,R1/10,0))
+    holoAng(6,holoEntity(6):angles()+ang(0,-R1/20,0))
+    
+    Time+=0.5
+    if(Time >= 150){
+        
+       if(changed(Time) && Time == 150){ holoEntity(7):soundPlay(0,0,"k_lab.teleport_rings_high") }
+       holoAng(7,holoEntity(7):angles()+ang(0,2,0))
+      
+       if(Time >= 180){
+       laserStart(12,holoEntity(9):pos(),holoEntity(7):pos())
+       laserStart(13,holoEntity(10):pos(),holoEntity(7):pos())
+       laserStart(14,holoEntity(11):pos(),holoEntity(7):pos())
+       }
+    
+       if(Time >= 220){
+        laserStart(15,holoEntity(0):pos(),holoEntity(7):pos())
+       } 
+       if(changed(Time) && Time == 220){ holoEntity(7):soundPlay(2,0,"hl1/ambience/labdrone2.wav") }
+    
+       if(Time >= 260){
+          laserStart(16,holoEntity(9):pos(),holoEntity(0):pos())
+          laserStart(17,holoEntity(10):pos(),holoEntity(0):pos())
+          laserStart(18,holoEntity(11):pos(),holoEntity(0):pos())
+        }
+       
+      findByClass("player")   
+      AR=findToArray()
+    
+      if(Time >= 300){
+         Time2+=1
+      }    
+  }
+      
+      if(Time2 >= 100){
+        
+         soundPitch(1,120)
+        
+         holoAng(1,holoEntity(1):angles()+ang(0,1,0))
+         holoAng(2,holoEntity(2):angles()+ang(5,35,5))
+         holoAng(3,holoEntity(3):angles()+ang(5,25,5))
+        
+         holoAng(8,holoEntity(8):angles()+ang(0,50,0))
+         holoAng(9,holoEntity(9):angles()+ang(0,50,0))
+         holoAng(7,holoEntity(7):angles()+ang(0,10,0))
+        
+         holoPos(2,holoEntity(2):pos()-vec(1.1))
+         holoPos(3,holoEntity(3):pos()-vec(1.1))
+         holoPos(4,holoEntity(4):pos()-vec(1.1))
+         holoPos(5,holoEntity(5):pos()-vec(1.1))
+         
+         if(changed(Time2) && Time2 == 100){
+         timer("explosion1",300)
+         }
+        
+         RD=randint(0,35)
+        
+         if(RD == 5){
+         propSpawn("models/props_c17/oildrum001_explosive.mdl",entity():pos()+vec(randint(-300,300),randint(-300,300),randint(0,300)),1):propBreak()
+         }
+        
+         RD2=randint(0,15)
+        if(Time2 >= 200 && RD2==5){
+            
+        holoEntity(7):soundPlay(6,0,"k_lab.teleport_buildup")
+        
+        holoEntity(7):soundPlay(7,0,"ambient.electrical_random_zap_1")
+        
+        laserStart(19,holoEntity(7):pos(),entity():pos()+vec(randint(-1300,1300),randint(-1300,1300),randint(0,1300)))
+        laserStart(20,holoEntity(7):pos(),entity():pos()+vec(randint(-1300,1300),randint(-1300,1300),randint(0,1300)))
+        laserStart(21,holoEntity(7):pos(),entity():pos()+vec(randint(-1300,1300),randint(-1300,1300),randint(0,1300)))
+        laserStart(25,holoEntity(7):pos(),entity():pos()+vec(randint(-1300,1300),randint(-1300,1300),randint(0,1300)))
+        laserStart(26,holoEntity(7):pos(),entity():pos()+vec(randint(-1300,1300),randint(-1300,1300),randint(0,1300)))
+        laserStart(27,holoEntity(7):pos(),entity():pos()+vec(randint(-1300,1300),randint(-1300,1300),randint(0,1300)))
+            
+        }
+        
+        if(Time2 >= 250){
+            if(changed(Time2) && Time2 == 250){ holoEntity(7):soundPlay(5,0,"k_lab.teleport_malfunction_sound") } 
+            
+        }
+        if(Time2 >= 300){
+            
+            # Pour tuer: models/props_c17/FurnitureBed001a.mdl
+            # Pour teleporter: models/props_c17/playground_jungle_gym01a.mdl
+            
+           if(changed(Time2) && Time2 == 300){ P2=propSpawn("models/props_c17/FurnitureBed001a.mdl",0) holoCreate(23) holoEntity(23):soundPlay(8,0,"k_lab.teleport_malfunction_sound") }
+        
+           if(C < 20){ C++ }
+           if(C >= 20){
+           II=randint(1,AR:count()) C=0
+           }
+            
+       holoModel(23,"hqsphere") holoScale(23,vec(-5)) holoColor(23,vec(0))
+       holoPos(23,AR[II,entity]:pos()+vec(0,0,50))
+       holoPos(23,AR[II,entity]:attachmentPos("eyes"))
+       holoAng(23,AR[II,entity]:attachmentAng("eyes"))
+       holoParentAttachment(1,AR[II,entity],"eyes")
+            
+        }
+  
+      }
+      if(clk("explosion1")){ P2=propSpawn("models/props_c17/oildrum001_explosive.mdl",entity():pos(),1) }
+        P2:setAlpha(0)
+        holoAlpha(23,randint(210,255))
+        holoColor(23,vec(randint(200,255),0,randint(0,255)))
+        P2:setPos(AR[II,entity]:pos()+vec(0,0,10))
+        P2:setAng(ang(0))

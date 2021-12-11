@@ -1,0 +1,20 @@
+#By K3CR4FT.:DLL - 2021
+@name TEST
+@persist BASE:entity
+@persist FRAME_INDEX:number FRAMES:table
+interval(1)
+if(first()){
+#Generating Holograms :
+#[ Holo 1 ]# holoCreate(1) holoModel(1, "cube") holoColor(1, vec(255))
+
+#Adding Frames :
+#[ Frame 0 ]# FRAMES:pushTable(table("id" = 1, "pos" = vec(0), "ang" = ang(0), "scale" = vec(1)))
+#[ Frame 1 ]# FRAMES:pushTable(table("id" = 1, "pos" = vec(0, 30, 0), "ang" = ang(0), "scale" = vec(1)))
+}
+#Playing Frames :
+FRAME_INDEX++
+local Frame = FRAMES[FRAME_INDEX % 1, table]
+for(I = 0, 1)
+{
+holoPos(I, BASE:toWorld(Frame["pos", vector]))
+}

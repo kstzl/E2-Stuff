@@ -1,0 +1,113 @@
+@name Zeus' E2
+@inputs 
+@outputs 
+@persist Separation:string HoloCount JailCount Blinded:array Jailed_Player:array Jailed_Prop:array PropP:entity PropPT:entity IJ Wait PushTime PushForce
+@trigger 
+
+#E2 Pour Zeus k3 / Jean-couscous
+
+    runOnTick(1)
+    runOnChat(1)
+
+if(first()) {
+    
+    Separation = "|"
+    PropP = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    PropP:setAlpha(0)
+}
+
+if (chatClk(owner())) {
+
+    M = lastSaid():explode(" ")
+
+if (M:string(1) == "-kill") {
+
+    Prop = propSpawn("models/props_c17/oildrum001_explosive.mdl", 0)
+    Prop:setPos(findPlayerByName(M:string(2)):pos())
+    Prop:propBreak()
+    
+}
+
+if (M:string(1) == "-push") {
+    
+    PushTime = M:string(3):toNumber()
+    PushForce = M:string(4):toNumber()
+    PropPT = findPlayerByName(M:string(2))
+    timer("unpush", PushTime * 1000)
+}
+
+if (M:string(1) == "-blind") {
+    
+    HoloCount += 1
+    Blinded[HoloCount, string] = M:string(2) + Separation + HoloCount
+    
+    holoCreate(HoloCount) holoModel(HoloCount, "hqsphere") holoScale(HoloCount, vec(-6))  holoColor(HoloCount, vec(1))
+    holoPos(HoloCount, findPlayerByName(M:string(2)):pos()+vec(0,0,50))
+    holoPos(HoloCount ,findPlayerByName(M:string(2)):attachmentPos("eyes"))
+    holoAng(HoloCount, findPlayerByName(M:string(2)):attachmentAng("eyes"))
+    holoParentAttachment(HoloCount, findPlayerByName(M:string(2)), "eyes")   
+    
+}
+
+if (M:string(1) == "-unblind") {
+    
+    for (I = 0, Blinded:count()) {
+        
+        M2 = Blinded[I, string]:explode(Separation)
+        
+        if (M2:string(1) == M:string(2)) {
+            
+            holoDelete(M2:string(2):toNumber())
+            
+            Blinded:remove(I)
+            
+        }
+
+    }   
+}
+
+if (M:string(1) == "-jail") {
+    
+     JailCount += 1
+    
+     JA=propSpawn("models/hunter/blocks/cube2x2x2.mdl",1) JA:setPos(findPlayerByName(M:string(2)):pos() + vec(0,0,40)) JA:setAlpha(255)
+     JA:soundPlay(2,2,"Metal_SeafloorCar.BulletImpact") JA:setMaterial("models/props_building_details/Storefront_Template001a_Bars.mdl")
+
+     Jailed_Player[JailCount, string] = M:string(2)
+     Jailed_Prop[JailCount, entity] = JA
+
+}
+
+if (M:string(1) == "-unjail") {
+    
+    for (I = 0, Jailed_Player:count()) {
+        
+        if (Jailed_Player[I, string] == M:string(2)) {
+            
+            Jailed_Prop[I, entity]:propBreak()
+            
+            Jailed_Player:remove(I)
+            Jailed_Prop:remove(I)
+            
+            print(Jailed_Player)
+            
+        }
+
+    }   
+}
+
+}
+
+    PropP:setPos(PropPT:pos())
+    PropP:applyAngForce(ang(220,220,220) * PropP:mass() * PushForce * 3)
+    IJ=randint(1, JailCount)
+    Wait += 1
+
+if (clk("unpush")) { PropPT = noentity() }
+
+if (Wait >= 5) {
+
+    Wait = 0
+    Jailed_Prop[IJ, entity]:setPos(findPlayerByName(Jailed_Player[IJ, string]):pos() + vec(0,0,40))
+
+}

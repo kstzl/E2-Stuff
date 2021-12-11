@@ -1,0 +1,34 @@
+@name VR Glasses
+@inputs Cam:wirelink Pod:wirelink 
+@outputs 
+@persist
+@trigger 
+
+ interval(50)
+ runOnTick(1)
+
+ E=entity():isWeldedTo()
+
+ Cam["Angle",angle] = E:angles()
+
+ Cam["Position",vector] = E:pos()+vec(-10,0,10):rotate(E:angles())
+
+ Cam["Activated",number] = Pod["Active",number]
+
+ Ang = Pod["Entity",entity]:driver():eyeAngles()
+ V = E:toLocal(rotationVector(quat(Ang)/quat(E))+E:pos())
+
+
+ E:setAng(Ang)
+ holoAng(0,Ang)
+ holoPos(1,entity():pos()-vec(0,0,30))
+ 
+ if(first()){
+
+    ##MAP##
+    
+    
+    holoCreate(1) holoScale(1,vec(310,310,310)) holoPos(1,entity():pos()-vec(0,0,30)) holoColor(1,vec(0,100,0)) holoMaterial(1,"debug/env_cubemap_model")
+    holoModel(1,"hqsphere")
+    
+ }

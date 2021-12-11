@@ -1,0 +1,61 @@
+@name HoverScooter
+@persist [ O Seat ]:entity
+
+#HoverScoot par k3 / K3CR4FT.:DLL 
+#2019 
+
+interval(1)
+
+function hs_notify(Text_:string, Type_:string){
+    
+    Sound = ""
+    
+    if(Type_ == "hint"){ Sound = "Buttons.snd16" }
+    if(Type_ == "error"){ Sound = "Buttons.snd10" }
+    
+    if(Sound != ""){
+        O:soundPlay(0, 0, Sound)
+    }
+    
+    print("[HoverScooter] " + Text_)
+    
+}
+
+if(clk("destroy")){
+    
+    selfDestructAll() 
+    
+}
+
+if(first()){
+    
+    #CONFIGURATION#
+    
+    ###############
+    
+    O = owner()
+    Seat = entity():isWeldedTo()
+    
+    if(Seat:model() != "models/nova/airboat_seat.mdl"){ 
+        
+        hs_notify("Erreur, Veuillez poser l'E2 sur le model suivant :", "error") 
+        hs_notify("models/nova/airboat_seat.mdl", "a") 
+        
+        timer("destroy", 1000)
+        
+    }
+    else
+    {
+        hs_notify("Model OK", "hint")     
+    }
+    
+    entity():setAlpha(0)
+    
+    #HOLOS
+    holoCreate(0)
+    holoPos(0, Seat:toWorld(vec(0, 0, -2)))
+    holoAng(0, Seat:angles())
+    holoScale(0, vec(2, 7, 2))
+    holoParent(0, Seat)    
+     
+}

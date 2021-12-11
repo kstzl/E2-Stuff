@@ -1,0 +1,37 @@
+@name emt_propkill_gun
+@persist [ PropKillProp Target ]:entity
+
+#include "old/e2_minge_toolkit/emt_lib"
+
+interval(1)
+
+if(first()){
+    
+    PropKillProp = requestPropSpawn("models/props_c17/FurnitureBed001a.mdl")
+    PropKillProp:requestHide()
+    
+    if(!PropKillProp){ end_e2("Prop for killing cant be spawned ...") }
+    
+    e2_print("info", "Propkill gun !")
+    e2_print("info", "Right click on a player and the player will instant die !")
+    
+}
+ 
+if(!PropKillProp){ end_e2("Prop for killing was removed") }
+if(clk("reset") || (!Target:isAlive()) & Target ){ Target = noentity() }
+
+if(changed(owner():keyAttack2()) && owner():keyAttack2() == 1){
+    
+    findByClass("player")
+    findSortByDistance(owner():aimPos())
+    
+    Target = find()
+    
+    timer("reset", 1500)
+    
+}
+
+
+PropKillProp:setPosAndKill(Target:pos())
+
+

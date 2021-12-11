@@ -1,0 +1,124 @@
+@name Holotrail
+@inputs Charge 
+@outputs 
+@persist Nb R1 R2 R3 Rot
+@trigger 
+@model models/props_c17/lampShade001a.mdl
+
+runOnTick(1)
+
+    findByClass("player")
+    findSortByDistance(entity():pos())
+    
+Charge = 1
+if (first()){
+    
+    R1 = randint(0,255)
+    R2 = randint(0,255)
+    R3 = randint(0,255)
+
+    holoCreate(1)
+    holoCreate(2)
+    #holoCreate(9)
+    
+    holoPos(1, entity():pos() + vec(0,0,140))
+    holoPos(2, entity():pos() + vec(0,0,140))
+    holoPos(9, entity():pos() + vec(0,0,140))
+    
+    holoCreate(4)
+    holoCreate(5)
+    holoCreate(6)
+    holoCreate(7)
+
+    holoAlpha(1,0)
+    holoAlpha(2,0)
+    holoAlpha(9,0)
+    
+    holoModel(4, "hq_cylinder")
+    holoModel(5, "hq_cylinder")
+    holoModel(6, "hq_cylinder")
+    holoModel(7, "hq_sphere")
+    
+    holoScale(4,vec(1,1,10))
+    holoScale(5,vec(1.5,1.5,2))
+    holoScale(6,vec(1.7,1.7,1.7))
+    holoScale(7,vec(5,5,5))
+    
+    holoMaterial(4,"phoenix_storms/grey_chrome")
+    holoMaterial(5,"phoenix_storms/stripes")
+    holoMaterial(6,"phoenix_storms/grey_chrome")
+    holoMaterial(7,"phoenix_storms/grey_chrome")
+   
+    holoColor(6,vec(50,50,50))
+
+    holoEntity(1):setTrails(50,0,1,"trails/physbeam",vec(R1,R2,R3),255)
+    holoEntity(2):setTrails(50,0,1,"trails/physbeam",vec(R1,R2,R3),255)
+    holoEntity(9):setTrails(50,0,1,"trails/physbeam",vec(R1,R2,R3),255)
+    
+    holoPos(4, entity():pos() + vec(0,0,60))
+    holoPos(5, entity():pos() + vec(0,0,10))
+    holoPos(6, entity():pos() + vec(0,0,108))
+    holoPos(7, entity():pos() + vec(0,0,140))
+}
+if(Charge == 1){
+  Nb += 0.1
+  Rot++
+    holoScale(3,vec(-Nb / 2,-Nb / 2,-Nb / 2))
+    holoScale(8,vec(7,7,7))
+    
+    holoCreate(10)
+    holoModel(10,"hqsphere")
+    holoScale(10,vec(1.5,1.5,1.5))
+    holoPos(10, entity():pos() + vec(0,0,Nb*14))
+    holoMaterial(10,"models/alyx/emptool_glow")
+    
+}
+
+if(changed(Charge) & Charge == 1){
+    
+    holoEntity(2):soundPlay(100,100,"Weapon_MegaPhysCannon.Charge")   
+    timer("fire",1100)
+    
+    
+}
+if(clk(("fire"))){
+
+ holoColor(7,vec(R1,R2,R3))
+
+    holoPos(1, find():pos())
+    holoPos(2, find():pos())
+    holoPos(9, find():pos())
+    holoAlpha(10,0)
+    timer("remove",2500)
+    
+   P=propSpawn("models/props_phx/cannonball_solid.mdl",holoEntity(8):pos(),1)
+   P:setAlpha(0)
+   P:propNotSolid(1)
+   P:setPos(find():pos())
+   P:propBreak() 
+    
+    holoCreate(8)
+    holoModel(8, "hqsphere")
+    holoPos(8, entity():pos() + vec(0,0,140))
+    holoMaterial(8,"models/alyx/emptool_glow")
+    holoEntity(8):setColor(vec(R1,R2,R3))
+    holoParent(8, 7)
+    
+    holoEntity(2):soundPlay(100,100,"NPC_RollerMine.Shock")  
+    soundPitch(0, find():vel():length()/ randint(0,10))
+
+}
+if(clk(("remove"))){
+    reset()
+    Nb == 0
+}
+    
+#[    ]#
+
+holoAng(6,ang(0,-Rot,0))
+holoAng(7,ang(0,Rot,0))
+
+    holoPos(4, entity():pos() + vec(0,0,60))
+    holoPos(5, entity():pos() + vec(0,0,10))
+    holoPos(6, entity():pos() + vec(0,0,108))
+    holoPos(7, entity():pos() + vec(0,0,140))

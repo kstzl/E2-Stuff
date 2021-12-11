@@ -1,0 +1,37 @@
+@name Holo_laser
+@inputs 
+@outputs 
+@persist Count C Color:vector N
+@trigger 
+@model models/hunter/blocks/cube025x025x025.mdl
+
+ runOnTick(1)
+
+ if(first() || duped()){
+  Color=vec(0,255,0)
+  N=randint(30,190)
+ holoCreate(1)
+ holoScale(1,vec(0.5,0.5,1000))
+ holoAlpha(1,255)
+ #holoModel(1,"pyramid")
+
+ holoParent(1,entity())
+
+ }
+
+Count += 0.005
+X1 = N*cosr(1*Count)
+Y1 = N*sinr(1*Count)
+Z1 = 40
+
+ if(C < 40){ C++ }
+ if(changed(C) && C >= 30){ holoPos(1,entity():pos()+vec(0,0,-6000)) }
+ if( C >= 40){
+   
+    entity():setAng(ang(10,X1,0))
+    
+ }
+  holoColor(1,Color)
+
+
+

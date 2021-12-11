@@ -1,0 +1,20 @@
+@name Effects
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+interval(1)
+
+if(first()){
+    entity():setName("e2 car (setang stearing)")
+}
+
+Player = players()[randint(1, players():count()), entity]
+
+A = effect()
+A:setOrigin(Player:pos())
+A:setEntity(Player)
+A:setMagnitude(50000)
+A:setRadius(50000)
+A:play("Smoke")

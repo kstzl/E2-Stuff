@@ -1,0 +1,17 @@
+@name Gravity controller 1
+@inputs P M
+@outputs G
+@persist
+@trigger 
+
+if(G < 1){
+    G == 1
+}
+if(P == 1){
+    G = G + 1
+}
+if(M == 1){
+    G = G - 1
+}
+
+

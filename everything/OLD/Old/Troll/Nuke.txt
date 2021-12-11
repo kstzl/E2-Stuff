@@ -1,0 +1,17 @@
+@name Nuke
+@inputs A FinDelay E:entity
+@outputs Delay
+@persist 
+@trigger 
+
+X = randint(0,500)
+Y = randint(0,500)
+Z = randint(0,500)
+
+    E = entity():isWeldedTo()
+
+if(A == 1){
+    runOnTick(1)
+E:applyForce(vec(X,Y,Z))
+propSpawn("models/props_c17/oildrum001_explosive.mdl",1)
+}

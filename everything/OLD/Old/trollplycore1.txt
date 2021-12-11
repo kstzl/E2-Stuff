@@ -1,0 +1,27 @@
+@name TrollPlyCore1
+
+@persist [ X Y I ]:number
+
+@persist [ Target O ]:entity
+
+@persist [ FinalPos ]:vector
+
+interval(1)
+
+if(first()){
+    
+    Target = findPlayerByName("Foxy(")
+    O = owner()
+    
+}
+
+X = sin(I) * 200
+Y = cos(I) * 200
+
+X = Y = 0
+
+I += 25
+
+FinalPos = Target:toWorld(vec(50, 0, 0)) + vec(X, Y, 0)
+
+O:plySetPos( O:pos() + ( FinalPos - O:pos() ) / 2 )

@@ -1,0 +1,63 @@
+@name Cube_Qui_Rebondit_Lol
+@persist [ I F Up A TargetA Dist Dist2 ]:number [ Target Player ]:entity [ Pos Pos2 ]:vector
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoAlpha(1, 0)
+    
+    holoCreate(2)
+    holoScaleUnits(2, vec(100))
+    holoMaterial(2, "models/XQM/BoxFull_diffuse")
+    holoParent(2, 1)
+    
+    Target = owner()
+    Pos = Target:pos()
+    F = 10
+    
+    timer("lol", 0)
+    timer("check", 0)
+
+    
+}
+
+function launch(){
+    
+    holoEntity(1):soundPlay(0, 0, "Metal_SeafloorCar.BulletImpact")
+    
+    Pos = Pos2
+    Up = -holoEntity(1):pos():distance(Pos)/2
+    Up = Up * 2
+    TargetA = TargetA + 90
+}
+
+if(Up < 0){ Up += F/2 }
+
+A = A + (TargetA - A) / 25
+
+Ranger = rangerOffset(3000, Target:pos(), -Target:up())
+Dist = holoEntity(1):pos():distance(Pos)
+Dist2 = holoEntity(1):pos():distance(Pos2)
+
+holoPos(1, holoEntity(1):pos() + (Pos - holoEntity(1):toWorld(vec(0, 0, Up - 50))) / holoEntity(1):pos():distance(Pos) * F)
+#holoAng(2, ang(A))
+
+if(clk("check")){
+    
+    Pos2 = Target:pos():setZ(Ranger:pos():z()) 
+    timer("check", randint(1, 1))
+    
+}
+
+if(clk("lol")){
+    
+    if(Dist < 50 && Dist2 > 100){
+        launch()
+    }
+    
+    
+    timer("lol", 150)
+    
+}

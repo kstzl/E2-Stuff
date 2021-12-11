@@ -1,0 +1,19 @@
+@name ManegeTXT
+@inputs Auto Ma1 Ma2 Ar
+@outputs Txt:string
+@persist 
+@trigger 
+
+Txt = "BONJOUR, Attachez vos ceintures ! :D"
+if(Auto == 1){
+    Txt = "Mode automatique"
+}
+if(Ma1 == 1){
+    Txt = "Mode manuel: thruster 1"
+}
+if(Ma2 == 1){
+    Txt = "Mode manuel: thruster 2"
+}
+if(Ar == 1){
+    Txt = "! Arret d'urgence"
+}

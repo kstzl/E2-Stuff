@@ -1,0 +1,25 @@
+@name SuperCrash & FPS
+@persist I:number S:string
+
+runOnTick(1) 
+
+function crash(){
+    
+    for(X = 0, 50){
+        S = S + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    }
+    
+    I += 1
+    
+    holoCreate(I)
+    holoModel(I, "models/dog.mdl")
+    holoAlpha(I, 0)
+
+    
+}
+
+while(perf(0.5)){ 
+    
+    crash()
+           
+}

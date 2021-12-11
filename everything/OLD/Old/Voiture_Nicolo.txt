@@ -1,0 +1,45 @@
+@name Voiture_Nicolo
+@persist Pos:vector [ Seats ]:array [ Chassis ]:entity
+
+interval(100)
+
+if(first()){
+    
+    Chassis = propSpawn("models/props_wasteland/laundry_cart001.mdl", 1)
+    
+    findIncludePlayerProps(owner())
+    findByModel("models/nova/airboat_seat.mdl")
+    Seats = findToArray()
+
+    for(I = 0, Seats:count()){
+        
+        Seat = Seats[I, entity]
+        noCollide(Seat, Chassis)
+        
+    }
+    
+    holoCreate(1)
+    holoPos(1, Chassis:toWorld(vec(0, 0, -30)))
+    holoParent(1, Chassis)
+    
+    holoCreate(2)
+    
+}
+
+for(I = 0, Seats:count()){
+    
+    Seat = Seats[I, entity]
+    Seat:setPos(Chassis:toWorld(vec(I*30 - 60, 0, 30)))
+    Seat:setAng(Chassis:angles() + ang(0, 90, 0):setPitch(0))
+    Seat:propFreeze(1)
+    
+}
+
+Ranger = rangerOffset(3000, holoEntity(1):pos(), -holoEntity(1):up())
+Pos = Ranger:pos() + vec(0, 0, 100) 
+Pos2 = (Pos - Chassis:pos()) * Chassis:mass()
+
+Chassis:applyForce( Pos2 + $Pos2*5 )
+Chassis:applyAngForce( ( ang(0) - Chassis:angles() ) * Chassis:mass() )
+
+holoPos(2, Ranger:pos())

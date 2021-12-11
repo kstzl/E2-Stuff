@@ -1,0 +1,69 @@
+@name machine_test
+@inputs [ BT_GAS BT_LASER ]:number [ Egp ]:wirelink
+@outputs [ FD_VITRE SE_STOP FD_LASER_1 FD_LASER_2 ARC1 ARC2 ARC3 POWER SHOCK ]:number [ LASER_COL TESLA_COL ]:vector
+@persist Y
+
+interval(1)
+
+if(changed(BT_GAS) && BT_GAS == 1){
+    
+    SE_STOP = 0
+    timer("vitre", 2500)
+    
+}
+if(changed(BT_LASER) && BT_LASER == 1){
+
+    timer("laser1", 250)
+    
+}
+
+if(clk("shock")){
+    
+    if(POWER > 1){ SHOCK = 1 }
+    
+    POWER = 0
+
+    ARC1 = randint(0, 1)
+    ARC2 = randint(0, 1)
+    ARC3 = randint(0, 1)
+
+    Y = 255
+    
+    timer("end_arcs", 500)
+}
+
+if(clk("end_arcs")){
+    
+    ARC1 = 0
+    ARC2 = 0
+    ARC3 = 0
+    SHOCK = 0
+    
+}
+
+if(changed(BT_GAS) && BT_GAS == 0){ SE_STOP = 1 }
+if(changed(BT_LASER) && BT_LASER == 0){ FD_LASER_1 = FD_LASER_2 = 0 }
+
+if(BT_GAS == 0){ FD_VITRE = 0 }
+
+if(clk("vitre")){
+    
+    FD_VITRE = 1 
+
+}
+
+
+POWER += (BT_LASER*0.1) + BT_GAS*random(0.2, 0.5)
+X = 255 * BT_LASER
+if(Y > 1){ Y -= 10 }
+if(Y < 0){ Y = 0 }
+
+LASER_COL = vec(0, X, X)
+TESLA_COL = vec(Y)
+
+if(POWER >= 5){ timer("shock", 0) }
+
+
+if(clk("laser1")){ FD_LASER_1 = 1 timer("laser2", 1000) }
+if(clk("laser2")){ FD_LASER_2 = 1 }
+

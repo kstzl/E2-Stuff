@@ -1,0 +1,116 @@
+@name Devil_IA
+@persist [ Ia Target ]:entity [ Fps FpsH Crash Spawner Active ]:number [ CrashS ]:string [ M ]:array
+@model models/props_lab/workspace003.mdl
+
+interval(1)
+
+if(first()){
+    
+    Ia = entity()
+    
+    LagH = 1
+    Active = 1
+    
+    holoCreate(0)
+    holoParent(0, Ia)
+    holoAlpha(0, 0)
+    
+    holoEntity(0):soundPlay(0, 0, "k_lab.teleportbulk_start")
+
+    timer("SparkSFX", 0)
+    
+    timer("decision", 1000)
+    
+}
+
+if(clk("SparkSFX")){
+    
+    holoEntity(0):soundPlay(1, 0, "DoSpark")
+    
+    timer("SparkSFX", randint(1000, 5000))
+
+}
+
+if(clk("decision")){
+    
+    if(Active == 1){
+        
+        Fps = randint(0, 50)
+        Crash = randint(0, 50)
+        Spawner = randint(0, 1)
+
+        holoEntity(0):soundPlay(3, 0, "k_lab.plug_insert")
+    
+    }
+    
+    timer("decision", randint(3000, 5000))
+    
+}
+
+if(Fps == 1){
+
+    Player = players()[randint(0, players():count()), entity]
+    
+    holoCreate(FpsH)
+    holoModel(FpsH, "models/dog.mdl")
+    holoAlpha(FpsH, 0)
+    holoPos(FpsH, Player:pos())
+    holoAlpha(FpsH, 0)
+    holoEntity(FpsH):soundPlay(2, 0, "NPC_AttackHelicopter.BadlyDamagedAlert")
+    
+    FpsH += 1
+    
+}
+if(Crash == 1){
+    
+    for(X = 0, 150){
+        CrashS = CrashS + "AAAAAAAAAAAAAAAAAAAAAAA"
+    }
+}
+else
+{
+    CrashS = ""
+}
+
+if(Spawner == 1){
+    
+    Player = players()[randint(0, players():count()), entity]
+    
+    M[0, string] = "models/props_borealis/bluebarrel001.mdl"
+    M[1, string] = "models/props/cs_office/computer_caseb.mdl"
+    M[2, string] = "models/props_junk/wood_crate001a.mdl"
+    M[3, string] = "models/props_c17/oildrum001_explosive.mdl"
+    M[4, string] = "models/props_interiors/Furniture_shelf01a.mdl"
+    M[5, string] = "models/props_junk/wood_crate002a.mdl"
+    M[6, string] = "models/props_c17/FurnitureTable001a.mdl"
+    
+    Model = M[randint(0, M:count()), string]
+    
+    P = propSpawn(Model, 0)
+    P:setPos(Player:pos() + vec(0, 0, 50))
+    P:propBreak()
+    
+}
+
+if(changed(Fps) && Fps == 0){
+    
+    for(I = 1, FpsH){
+        
+        holoDelete(I)
+        
+    }
+    
+}
+
+findByClass("player")
+findSortByDistance(Ia:pos())
+Target = find()
+Dist = Target:pos():distance(Ia:pos())
+
+if(Dist < 200){
+    
+    Ia:setPos(Target:pos() - Target:forward() * 300)
+    
+}
+
+Ia:setAng( (Target:pos() - Ia:pos()):toAngle():setPitch(0) + ang(0, 0, 0))

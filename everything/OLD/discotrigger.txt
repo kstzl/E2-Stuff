@@ -1,0 +1,29 @@
+@name discotrigger
+@inputs Ents:array T:wirelink
+
+interval(1)
+
+if(first()){
+    
+    timer("disco", 0)
+    
+}
+
+if(clk("disco")){
+    
+    Prop = Ents[randint(1, Ents:count()), entity]
+    
+    W = Prop:wirelink()
+    W:setNumber("Fade", 1)
+    
+    foreach(K, E:entity = Ents){
+        
+        E:wirelink():setNumber("Fade", 1)
+        
+    }
+    
+
+    
+    timer("disco", 500)
+
+}

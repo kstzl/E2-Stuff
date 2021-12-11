@@ -1,0 +1,9 @@
+@name test telo
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+Target = findPlayerByName("word")
+owner():plySetPos(Target:pos() + vec(0,0,10))
+

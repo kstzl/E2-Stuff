@@ -1,0 +1,39 @@
+@name VANISH
+@inputs 
+@outputs 
+@persist Vanish Prop:entity Material:string 
+@trigger 
+
+ runOnTick(1)
+ runOnChat(1)
+
+ A=owner():lastSaid()
+
+ if(first()){
+    Material="models/effects/comball_glow2"
+ }
+
+ if (chatClk(owner())) {
+     M = lastSaid():explode(" ")
+     if (M:string(1) == "-vanish:yes") { hideChat(1) owner():soundPlay(1,0,"k_lab.teleport_buildup")
+         Vanish=1 hint("You are invisible !",3)
+         Prop=owner():aimEntity()
+         Prop:propNotSolid(1)
+    }
+    if (M:string(1) == "-vanish:no") { hideChat(1)
+         Vanish=0 hint("You are no longer invisible !",3)  
+         Prop=noentity()  
+         Prop:propBreak()
+    }
+ }
+
+    if(Vanish == 1){
+     owner():weapon():setAlpha(0)
+     owner():setMaterial(Material)
+     Prop:setPos(owner():pos()+vec(0,0,25))
+     Prop:setAng(ang(0)+ang(0,owner():eye():toAngle():yaw(),0))
+    }
+    if(Vanish == 0){
+     owner():weapon():setAlpha(255)
+     owner():setMaterial("")
+    }

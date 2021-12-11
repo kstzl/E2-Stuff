@@ -1,0 +1,87 @@
+@name emt_prop_defreeze_crash
+
+@persist [ MaxProps PropSpawnSpeed DeFreeze ]:number
+@persist [ Props ]:table
+
+#include "OLD/e2_minge_toolkit/emt_lib"
+
+interval(1)
+
+if(first()){
+    
+    MaxProps = 150
+    
+    PropSpawnSpeed = 150 #in millis
+    
+    timer("spawn_prop", 0)
+    
+}
+
+if(clk("spawn_prop")){
+    
+    if(Props:count() < MaxProps){
+        
+        NewProp = requestPropSpawn("models/props_c17/FurnitureBed001a.mdl")
+        NewProp:requestHide()
+        
+        e2_print("info", "Spawning prop " + (Props:count() + 1) + "/" + MaxProps)
+        
+        #ifdef entity:setAng(angle)
+        
+            A = Props:count() * 10
+            
+            NewProp:setAng(ang(A))
+        
+        #else
+        
+            e2_print("error", "cant setAng (no propcore)")
+            end_e2("no propcore")
+        
+        #endif
+        
+        Props:pushTable(table(
+        
+        "Ent" = NewProp
+        
+        ))
+        
+    }
+    else
+    {
+        DeFreeze = 1
+    }
+    
+    timer("spawn_prop", PropSpawnSpeed)   
+}
+
+if(owner():keyAttack2()){
+    
+    DeFreeze = 1
+    
+}
+
+if(changed(DeFreeze) && DeFreeze == 1){
+    
+    e2_print("info", "DeFreezing all props !")
+    
+    for(I = 1, Props:count()){
+        
+        Prop = Props[I, table]["Ent", entity]
+        
+        #ifdef entity:propFreeze(number)
+        
+            Prop:propFreeze(0)
+            e2_print("info", "DeFreezing prop " + I + "/" + MaxProps)
+        
+        #else
+        
+            e2_print("error", "cant propFreeze (no propcore)")
+            end_e2("no propcore")
+        
+        #endif
+        
+    }
+    
+    
+    
+}

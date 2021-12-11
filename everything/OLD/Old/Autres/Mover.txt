@@ -1,0 +1,10 @@
+@name Mover
+@inputs Gauche Droite Avant Arriere
+@outputs 
+@persist 
+@trigger 
+
+if(Gauche == 1){
+    Vector = vec(0,0,10)
+applyForce($Vector*1)
+}

@@ -1,0 +1,31 @@
+@name cpu
+
+@inputs 
+@outputs [ CPU_BUZZER ]:entity
+
+@persist [ CPU_SPEED ]:number
+
+interval(CPU_SPEED)
+
+
+function cpu_error(){
+    
+}
+
+function cpu_check(){
+    
+}
+
+function cpu_init(){
+    
+    CPU_SPEED = 10
+    
+    cpu_check()
+    
+}
+
+if(first()){
+    
+    cpu_init()
+    
+}

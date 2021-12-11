@@ -1,0 +1,44 @@
+@name PropTroll
+@inputs 
+@outputs 
+@persist [ Ent Prop ]:entity
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    Prop = propSpawn("models/props_wasteland/laundry_washer003.mdl", 0)
+    Prop:propDraw(0)
+    Prop:setAlpha(0)
+    
+    entity():setName("holograms")
+    
+}
+
+if( changed(owner():keyAttack1()) && owner():keyAttack1() == 1){
+
+    owner():soundPlay(0, 0, "Buttons.snd10")
+    Ent = noentity()
+          
+}
+
+if(owner():aimEntity():type() != "" && owner():aimEntity() != Prop){
+    
+    if(owner():keyAttack2()){
+        
+        owner():soundPlay(0, 0, "Buttons.snd3")
+        Ent = owner():aimEntity()
+        
+    }
+    
+}
+
+R = 45
+
+X = randint(-R, R)
+Y = randint(-R, R)
+Z = randint(-R, R)
+
+Prop:setPos(Ent:pos() + vec(X, Y, Z))
+Prop:applyAngForce(ang(91900) * Prop:mass())

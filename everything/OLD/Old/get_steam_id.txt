@@ -1,0 +1,8 @@
+@name get steam id
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+print(owner():aimEntity():steamID())

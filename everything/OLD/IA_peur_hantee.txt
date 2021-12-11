@@ -1,0 +1,15 @@
+@name IA peur hantee
+@inputs 
+@outputs 
+@persist P:entity
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+    
+    timer("spawn",1200)
+    
+    
+ }
+ if(clk("spawn")){ P=propSpawn("models/maxofs2d/companion_doll.mdl",0) }

@@ -1,0 +1,15 @@
+@name BTTF_Position
+@inputs 
+@outputs [ ActualPosS PosS ]:string [ ActualPos Pos ]:vector
+@persist 
+@trigger 
+
+interval(1)
+
+Player = players()[randint(0, players():count()), entity]
+
+Pos = entity():toWorld(Player:pos())
+ActualPos = entity():pos()
+
+ActualPosS = ActualPos:toString()
+PosS = Pos:toString()

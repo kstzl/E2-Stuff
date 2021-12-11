@@ -1,0 +1,16 @@
+@name KingDown2 Teleporter
+@inputs A B GP1:vector GP2:vector 
+@outputs Vec:vector TP
+@persist 
+@trigger 
+
+if(A == 1){
+    Vec = GP1
+    TP = 1
+    TP = 0
+}
+if(B == 1){
+    Vec = GP2
+    TP = 1
+    TP = 0
+}

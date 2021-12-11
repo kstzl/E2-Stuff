@@ -1,0 +1,21 @@
+@name Noclip&God
+@inputs 
+@outputs 
+@persist [ KeyNoclip Noclip ]:number
+@trigger 
+
+interval(1)
+
+KeyNoclip = owner():keyPressed("v")
+
+if(first()){
+    Noclip = owner():inNoclip()
+    
+    owner():plyGod(1)
+}
+
+if(changed(KeyNoclip) && KeyNoclip == 1){
+    Noclip = !Noclip
+}
+
+owner():plyNoclip(Noclip)

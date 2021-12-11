@@ -1,0 +1,36 @@
+@name Baldi
+@persist I Rd Max [ Pos Ang ]:array [ Target ]:entity
+
+interval(1)
+
+if(first()){
+    
+    Max = 30
+    
+    for(I1 = 0, Max){
+
+        holoCreate(I1)
+        holoModel(I1, "models/mossman.mdl")
+        holoAnim(I1, "run_all")
+        
+     }
+
+    Target = owner()
+    
+}
+
+for(I2 = 0, Max){
+    
+    Rd = I2*30
+    
+    holoPos(I2, Pos[I - Rd, vector])
+    holoAng(I2, Ang[I - Rd, angle])
+
+
+}
+
+Pos[I, vector] = Target:pos()
+Ang[I, angle] = Target:angles()
+
+
+I += 9

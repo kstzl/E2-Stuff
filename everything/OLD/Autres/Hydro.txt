@@ -1,0 +1,12 @@
+@name Hydro
+@inputs A
+@outputs H B
+
+if(A == 1){
+    H = 15
+    B = 0
+}
+if(A == 0){
+    H = 3
+    B = 1
+}

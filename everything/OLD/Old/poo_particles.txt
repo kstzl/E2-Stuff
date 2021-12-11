@@ -1,0 +1,73 @@
+@name POO_Particles
+
+#include "Old/POO_Lib"
+#include "Old/fastlib"
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(0)
+    holoAlpha(0, 0)
+    holoEntity(0):sfx("coast.wind_01", 0)
+    
+}
+
+for(I = 0, POO_Objects:count()){
+    
+    Object = POO_Objects[I, table]
+    
+    if(Object:poo_init("particle")){
+        
+        PHolo = Object:poo_objectIndex()
+
+        holoCreate(PHolo)
+        holoModel(PHolo, chooseString(array(
+        "models/props_borealis/bluebarrel001.mdl",
+        "models/props_building_details/Storefront_Template001a_Bars.mdl",
+        "models/props_c17/FurnitureBathtub001a.mdl",
+        "models/props_c17/oildrum001_explosive.mdl",
+        "models/props_junk/PropaneCanister001a.mdl",
+        "models/props_vehicles/apc_tire001.mdl",
+        "models/props_junk/wood_crate001a_damaged.mdl"
+        )))
+
+        Object:poo_setNumber("Alpha", 0)
+        
+        
+    }
+    if(Object:poo_loop("particle")){
+        
+        PHolo = Object:poo_objectIndex()
+        
+        holoPos(PHolo, Object:poo_getVector("Pos"))
+        holoAng(PHolo, Object:poo_getAng("Ang"))
+        holoAlpha(PHolo, Object:poo_getNumber("Alpha"))
+        #holoScale(PHolo, vec(Object:poo_getVector("Pos"):distance(entity():pos()) / 10))
+        
+        local Dist = Object:poo_getVector("Pos"):distance(entity():pos())
+        Object:poo_setAng("Ang", Object:poo_getAng("Ang") + 5 )
+        Object:poo_setVector("Pos", Object:poo_getVector("Pos") + ( entity():pos() - Object:poo_getVector("Pos") ) / Dist * 15)
+        Object:poo_setNumber("Alpha", Object:poo_getNumber("Alpha") + 15)
+        Object:poo_setNumber("Scale", Object:poo_getNumber("Scale") - 0.1)
+        
+        if(Object:poo_getVector("Pos"):distance(entity():pos()) < 15 ){
+            
+            holoDelete(PHolo)
+            Object:poo_deleteObject()
+            
+        }
+        
+    }
+    
+}
+
+
+if(randint(0, 5) == 0){
+    local Max = 50
+    Particle = poo_createObject("particle")
+    Particle:poo_setVector("Pos", entity():toWorld(vec(randint(-Max, Max), randint(-Max, Max), -randint(50, 550))) )
+    Particle:poo_setAng("Ang", ang(randint(0, 180)))
+}
+    
+

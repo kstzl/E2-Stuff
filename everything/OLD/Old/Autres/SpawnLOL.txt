@@ -1,0 +1,10 @@
+@name SpawnLOL
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+
+Vector = vec(0,0,-99)
+applyForce($Vector*99)
+

@@ -1,0 +1,8 @@
+@name Gravity controller 2
+@inputs E:entity G
+@outputs 
+@persist E:entity
+@trigger 
+
+runOnTick(1)
+E:applyForce(vec(0,0,1)*E:mass()*(9.0132-E:vel():z()/100))

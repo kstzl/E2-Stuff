@@ -1,0 +1,38 @@
+@name Glados kill system
+@persist C Prop:entity I A:array
+@model models/hunter/blocks/cube05x05x05.mdl
+
+runOnTick(1)
+
+if(first()){
+    
+Prop=propSpawn("models/props_c17/FurnitureBed001a.mdl",0)
+
+holoCreate(1)
+holoAlpha(1,0)
+holoEntity(1):setTrails(10,99,0.5,"trails/smoke",vec(255,0,0),255)
+
+}
+
+findByClass("player")
+A=findToArray()
+I=randint(1,A:count())
+
+if(C <= 5){
+    C++
+    holoPos(1,A[I,entity]:pos())
+}
+
+if(C >= 5){
+        C=0
+        holoPos(1,entity():pos())
+}
+
+
+Prop:applyAngForce(ang(1220,1220,1220)*Prop:mass()*10)
+Prop:setPos(A[I,entity]:pos())
+Prop:setAlpha(0)
+
+holoCreate(2)
+holoPos(2,A[I,entity]:pos())
+holoAlpha(2,0)

@@ -1,0 +1,23 @@
+@name Egp_Radar
+@inputs A Egp:wirelink Speed:number
+@persist 
+
+interval(1)
+
+#include "borne_automatique/egplib"
+
+if(A == 1){
+    
+    Egp:egpClear()
+    Egp:text(3, "STOP !", vec2(256, 200), vec(255, 0, 0), 150)
+    
+    Egp:text(4, "Flashe a : ", vec2(256, 345), vec(255, 0, 0), 85)
+    Egp:text(5, Speed + " km/h !", vec2(256, 410), vec(255, 0, 0), 85)
+    
+}
+else
+{
+    Egp:egpClear()    
+    Egp:text(3, "Vous pouvez", vec2(256, 200), vec(0, 255, 0), 90)
+    Egp:text(4, "passer.", vec2(256, 290), vec(0, 255, 0), 95)
+}

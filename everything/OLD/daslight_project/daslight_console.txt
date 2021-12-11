@@ -1,0 +1,6 @@
+@name daslight_console
+@inputs 
+@outputs 
+@persist 
+@trigger 
+

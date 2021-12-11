@@ -1,0 +1,29 @@
+@name AntiHearingCustom
+@inputs 
+@outputs 
+@persist I
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    entity():setName("Setang stearing : " + I:toString())
+    
+}
+
+local Player = players()[I % players():count(), entity]
+
+holoCreate(I)
+holoAlpha(I, 0)
+
+holoPos(I, Player:pos())
+holoParent(I, Player)
+print(Player)
+
+holoEntity(I):soundPlay(I, 0, "d3_citadel.weapon_zapper_beam_loop1")
+soundPitch(I, 5)
+
+
+I++
+

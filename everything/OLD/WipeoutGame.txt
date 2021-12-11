@@ -1,0 +1,90 @@
+@name WipeoutGame
+@persist [HC I I3 PPos Random]:number [Prop]:array
+
+#Jeu par k3
+
+runOnTick(1)
+
+#----------------------Fonctions:
+#--------------------------------
+function build(Type:number, Pos:vector, Ang:angle) {
+    
+    HC += 1
+    HC2 = 10 + HC
+    HC3 = 10 + HC * 1000
+    
+    if (Type == 1) { Base = propSpawn("models/hunter/blocks/cube4x4x2.mdl", 1) }
+    if (Type == 2) { Base = propSpawn("models/hunter/plates/plate2x2.mdl", 1) }
+    if (Type == 3) { Base = propSpawn("models/hunter/misc/sphere2x2.mdl", 1) }
+    if (Type == 4) { Base = propSpawn("models/hunter/blocks/cube4x4x025.mdl", 1) }
+    if (Type == 5) { Base = propSpawn("models/props_trainstation/traincar_rack001.mdl", 1) }
+    if (Type == 6) { Base = propSpawn("models/props_lab/blastdoor001c.mdl", 1) }
+    if (Type == 7) { Base = propSpawn("models/props_lab/blastdoor001b.mdl", 1) }
+    if (Type == 8) { Base = propSpawn("models/mechanics/robotics/e4.mdl", 1) }
+    if (Type == 9) { Base = propSpawn("models/props_phx/construct/plastic/plastic_panel8x8.mdl", 1) }
+    if (Type == 10) { Base = propSpawn("models/props_phx/construct/plastic/plastic_panel2x4.mdl", 1) }
+    if (Type == 11) { Base = propSpawn("models/props_phx/construct/plastic/plastic_panel1x8.mdl", 1) }
+    if (Type == 12) { Base = propSpawn("models/props_c17/playground_carousel01.mdl", 1) }
+    if (Type == 13) { Base = propSpawn("models/hunter/blocks/cube05x05x025.mdl", 1) }
+    if (Type == 14) { Base = propSpawn("models/props_trainstation/trainstation_arch001.mdl", 1) }
+    if (Type == 15) { Base = propSpawn("models/props_wasteland/interior_fence002e.mdl", 1) }
+    if (Type == 16) { Base = propSpawn("models/hunter/blocks/cube2x6x1.mdl", 1) }
+    if (Type == 17) { Base = propSpawn("models/hunter/blocks/cube2x4x1.mdl", 1) }
+    if (Type == 18) { Base = propSpawn("models/XQM/Rails/gumball_1.mdl", 1) }
+    
+    Base:setPos(Pos + vec(0, 0, (Type == 15) * 150))
+    Base:setAng(Ang + ang(0, (Type == 6 || Type == 7 || Type == 8 || Type == 15) * 90, 0)  )
+    Base:setMaterial("phoenix_storms/gear")
+    Base:setColor(vec(0, 0, 255))
+    Base:setTrails(50,0,1,"trails/physbeam",vec(0, 0, 255),255)
+    
+    holoCreate(HC2)
+    holoPos(HC2, Base:pos() - vec(0, 0, 210 + (Type == 15) * 150))
+    holoParent(HC2, Base)
+    holoModel(HC2, "hqcylinder")
+    holoScale(HC2, vec(1, 1, 35))
+    holoColor(HC2, vec(255, 0, 0))
+    
+    holoCreate(HC3)
+    holoScale(HC3, vec(100, 25, 1))
+    holoColor(HC3, vec(255, 0, 0))
+    holoPos(HC3, Pos - vec(0, 0, 200))
+
+    
+    Prop[HC, entity] = Base
+
+}
+#--------------------------------
+
+
+if(first()){ holoCreate(1) holoCreate(2) holoCreate(3) holoCreate(4) }
+
+I3 += 1
+if(I3 > 30){ 
+    I3 = 0
+    PPos += randint(150, 200)
+    build(randint(1, 16), entity():pos()+vec(0, PPos, 0), ang(0, 180, 0)) 
+}
+
+
+#Animation des props / obstacles:
+#--------------------------------
+if (Prop[HC -1, entity]:model() == "models/hunter/plates/plate2x2.mdl") {
+Prop[HC - 1, entity]:parentTo(holoEntity(1))
+}
+if (Prop[HC -1, entity]:model() == "models/props_lab/blastdoor001c.mdl") {
+Prop[HC - 1, entity]:parentTo(holoEntity(2))
+}
+if (Prop[HC -1, entity]:model() == "models/props_lab/blastdoor001b.mdl") {
+Prop[HC - 1, entity]:parentTo(holoEntity(3))
+}
+if (Prop[HC -1, entity]:model() == "models/mechanics/robotics/e4.mdl") {
+Prop[HC - 1, entity]:parentTo(holoEntity(4))
+}
+holoPos(1, entity():pos()+vec(0, sin(I)* 50, 0))
+holoPos(2, entity():pos()+vec(sin(I)* 150, 0, 0))
+holoPos(3, entity():pos()+vec(0, 0, sin(I / 3) * 150))
+holoAng(4,ang(sin(I) * 2, 0, 0))
+I += 5
+#--------------------------------
+

@@ -1,0 +1,9 @@
+@name Wipeout Controller
+@inputs In
+@outputs Out
+@persist 
+@trigger 
+
+runOnTick(1)
+
+if(In == 1){ Out == 1 }

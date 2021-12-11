@@ -1,0 +1,13 @@
+@name test gravity
+@persist Ply:entity 
+@trigger 
+
+if( first() ){
+    runOnTick(1)
+    runOnLast(1)
+
+    Ply = findPlayerByName("Kecr")
+    #Ply = owner()
+    
+    Ply:plySetGravity( 600 )
+}

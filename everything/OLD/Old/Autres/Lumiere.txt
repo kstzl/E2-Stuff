@@ -1,0 +1,12 @@
+@name E2 Avion
+@inputs PodActive 
+@outputs Lum:vector
+@persist 
+@trigger 
+
+if(PodActive == 1){
+Lum = vec(255,0,0)
+}
+else{
+Lum = vec(0,0,0)
+}

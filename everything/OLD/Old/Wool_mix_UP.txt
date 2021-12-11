@@ -1,0 +1,80 @@
+@name Wool mix UP
+@inputs 
+@outputs 
+@persist Wait Wait2 X Y H H2 H3 H4 H5 PropA:array ColorA:array RDC:vector RDC2:vector StartGAME Scale Diff
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){ 
+    
+    Scale=5
+    holoCreate(-1) holoPos(-1,entity():pos()+vec(5*30*3.5,5*30,150)) holoScale(-1,vec(Scale))
+    
+    hint("Preparation du jeu..",3)
+    timer("start_game_1",10000)
+    timer("start_game_2",13000)
+ }
+
+ Wait++
+ if(Wait >= 50){ Wait=0
+ if(H < 9){
+    
+ H++ holoCreate(H) holoPos(H,entity():pos()+vec(X*30,Y*30,100)) holoScale(H,vec(0.5,0.5,1)) holoAlpha(H,1)
+ holoEntity(H):soundPlay(0,0,"SolidMetal.ImpactHard")
+ Prop=propSpawn("models/props_phx/construct/metal_plate2x2.mdl",1) Prop:setPos(holoEntity(H):pos()) PropA[H,entity] = Prop
+ Prop:setMaterial("models/debug/debugwhite")
+
+ if(X < 15){ X+=5 }
+ if(X >= 15){ X=0 Y+=5 }
+
+ }
+ }
+ 
+ if(clk("start_game_1"))
+ {
+ holoEntity(-1):soundPlay(1,0,"SprayCan.Paint")
+ while(H2 < H)
+ {
+  H2+=1
+  RDC=vec(randint(0,255),randint(0,255),randint(0,255))
+  PropA[H2,entity]:setColor(RDC)
+  ColorA[H2,vector] = RDC  
+    
+ }      
+ }
+ 
+ if(clk("start_game_2")){ StartGAME=1 }
+ if(StartGAME == 1 && Scale != 0)
+ {
+  if(H3 < 10)
+  {
+  Wait2++
+  if(Wait2 >= 8){ H3++ RDC2=ColorA[randint(1,H),vector] Wait2=0 holoColor(-1,RDC2) holoEntity(-1):soundPlay(2,1,"d3_citadel.podarm_rotate")} 
+  }
+ if(H3 == 10)
+ {
+  if(changed(H3) && H3 == 10){ holoEntity(-1):soundPlay(3,0,"apc_engine_start")  }  
+  Scale-=0.0100+Diff
+ }
+ }
+ if(changed(Scale) && Scale == 0)
+ {
+  timer("reset",1000) holoEntity(-1):soundPlay(4,0,"Buttons.snd4") StartGAME=0
+  while(H4 < H)
+  {
+   H4++ 
+   if(PropA[H4,entity]:getColor() != RDC2){ PropA[H4,entity]:propNotSolid(1) PropA[H4,entity]:setAlpha(50) } 
+  }  
+ }
+
+ if(clk("reset"))
+ {
+  soundStop(1) soundStop(2) soundStop(3) soundStop(4) H3=0 H4=0 Wait2=0 Scale=5   
+  while(H5 < H)
+  {
+   H5++ PropA[H5,entity]:setAlpha(255) PropA[H5,entity]:propNotSolid(0) 
+  }  
+  H5=0 StartGAME=1 Diff+=0.0050
+ }
+ holoScale(-1,vec(Scale))

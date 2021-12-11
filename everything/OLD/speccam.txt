@@ -1,0 +1,15 @@
+@name SpecCam
+@persist [ Cam Target ]:entity
+
+interval(1)
+
+if(first()){
+    
+    Target = findPlayerByName("K3")
+    Cam = entity():isWeldedTo()
+    
+    Cam:setAlpha(255)
+    entity():setAlpha(0)
+    
+    Cam:setNoCollideAll()   
+}

@@ -1,0 +1,88 @@
+@name E2_HackMenu_V2
+
+@persist [ Exploits ]:table
+
+@persist [ ExploitsCount ]:number
+
+@persist [ O ]:entity
+
+################################
+# E2 HACK MENU BY k3 #
+#             v2               #
+################################
+
+interval(1)
+runOnChat(1)
+
+#############
+# FONCTIONS #
+#############
+
+function hm_Print(Text_:string){
+    
+    print("[E2 Hack Menu] " + Text_)
+    
+}
+
+function hm_addExploit(ExploitName_:string, Timer_:string){
+    
+    hm_Print("Exploit trouve : " + ExploitName_ + " | COMMANDE : " + Timer_)
+    
+    Exploits[ExploitsCount, table] = table(ExploitName_, Timer_, 0)
+    ExploitsCount += 1
+    
+}
+
+
+########
+# CODE #
+########
+
+if(first()){
+    
+    O = owner()
+    
+    hm_Print("By k3")
+    hm_Print("Recherche d'expoloits en cours ...")
+    
+    #Recherche des exploits
+    
+    if(holoModelAny()){
+        hm_addExploit("Chute des FPS avec holo", "fps_holo")
+    }
+    
+    hm_addExploit("Crash du serveur avec STRING", "string_crash")
+    
+    
+    
+}
+
+if(chatClk(O)){
+    
+    Msg = O:lastSaid()
+    
+    for(I = 0, Exploits:count()){
+        
+        if(Msg == Exploits[I, table][2, string]){
+            
+            hideChat(1)
+            
+            timer(Exploits[I, table][2, string], 0)
+            
+            if(Exploits[I, table][3, number] == 0){
+                
+                hm_Print("Execution de l'exploit : " + Exploits[I, table][1, string])
+                Exploits[I, table][3, number] = 1
+                O:soundPlay(0, 0, "Buttons.snd3")
+            }
+            else
+            {
+                hm_Print("arret de l'exploit : " + Exploits[I, table][1, string])  
+                Exploits[I, table][3, number] = 0 
+                O:soundPlay(0, 0, "Buttons.snd2")
+            }
+        }
+        
+    }
+    
+}

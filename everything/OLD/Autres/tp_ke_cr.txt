@@ -1,0 +1,18 @@
+@name tp ke cr
+@inputs 
+@outputs 
+@persist Pos:vector
+@trigger 
+
+if(first())
+{
+    runOnTick(1)
+}
+
+Pos=owner():aimPos()- owner():pos()
+
+if(owner():keyJump())
+{
+    owner():plyApplyForce(Pos)
+}
+

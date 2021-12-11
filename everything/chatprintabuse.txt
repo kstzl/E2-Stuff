@@ -1,0 +1,22 @@
+@name ChatPrintAbuse
+@inputs 
+@outputs 
+@persist Str:string
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    entity():setName("Minecraft")
+    
+}
+
+Str += "Why did you ragdoll me ? :D "
+
+chatPrint(vec(
+    255,
+    0,
+    0
+), Str)
+

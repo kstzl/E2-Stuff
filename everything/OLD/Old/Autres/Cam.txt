@@ -1,0 +1,11 @@
+@name Cam
+@inputs Cam:wirelink Pod:wirelink
+@outputs 
+@persist 
+@trigger 
+E = entity():isWeldedTo()
+Cam["Angle",angle] = E:angles()
+
+Cam["Position",vector] = E:pos()+vec(100,0,100):rotate(E:angles())
+
+Cam["Activated",number] = Pod["Active",number]

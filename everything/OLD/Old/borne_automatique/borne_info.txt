@@ -1,0 +1,34 @@
+@name borne_info
+@inputs [ Commandes ]:array [ EGP ]:wirelink
+@persist User:entity [ E ]
+
+interval(10)
+
+#include "borne_automatique/egplib"
+
+if(EGP){
+    
+    EGP:egpClear()
+    
+    EGP:roundbox(1, vec2(256, 50), vec2(100, 70), vec4(0, 255, 255, 255))
+    EGP:text(2, "Servit", vec2(256, 50), vec(255), 30)
+
+    for(I = E, Commandes:count()){
+        
+        Commande = Commandes[I, string]
+
+        EGP:text(4 + I, Commande, vec2(256, 100 + (I-E) * 30), vec(255), 20)
+
+        
+    }
+    
+}
+
+
+User = EGP["User", entity]
+Cursor = EGP:egpCursor(User)
+Use = User:keyUse()
+
+if(EGP:button(1, Cursor)){
+    E+=1
+}

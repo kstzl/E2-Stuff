@@ -1,0 +1,57 @@
+@name Second dimension
+@inputs E1:entity
+@outputs 
+@persist T:entity Prop:entity Prop2:entity M S Ang
+@trigger 
+
+ interval(1)
+
+ if(first()){ T=findPlayerByName("kec")
+    }
+    
+E1:propFreeze(1)
+
+ if(E1){
+    E1:setPos(T:pos())
+    E1:propFreeze(1)
+    Sound=1
+ }
+
+ if(T:vel():length() >= 30){
+  if(M <= 600){  M+=5 soundStop(2) }
+    
+}else{ if(M >= -50){ M-=5 Sound2=1}}
+
+
+holoCreate(1)
+holoPos(1,E1:pos()+vec(0,0,110))
+holoScale(1,vec(-100,-100,-15))
+holoColor(1,vec(0))
+holoParent(1,entity())
+holoColor(1,vec(randint(0,15),0,0))
+
+holoAlpha(1,randint(250,255))
+
+holoCreate(2)
+holoPos(2,E1:pos()+vec(0,0,120))
+holoScale(2,vec(-20,-20,-20))
+holoColor(2,vec(0))
+holoParent(2,entity())
+holoColor(2,vec(randint(0,15),0,0))
+holoModel(2,"hqsphere")
+
+holoAlpha(2,randint(230,255))
+
+holoAng(1,ang(0,Ang,0))
+                Ang+=30
+                
+                
+
+E1:setAlpha(0)
+entity():propFreeze(0)
+
+ if(changed(Sound) && Sound == 1){ holoEntity(1):soundPlay(1,9999,"Phx_Rubber_Tire.Strain") holoEntity(1):soundPlay(4,9999,"d3_citadel.portal_windup_loop")}
+ if(changed(Sound2) && Sound2 == 1){ holoEntity(1):soundPlay(2,20,"d1_canals.Floodgate_Move_Short") }
+
+ if(S <= 170){ S++ }
+ if(S == 170){ soundPitch(3,randint(190,210)) holoEntity(1):soundPlay(3,2,"NPC_FastZombie.Scream") holoEntity(1):soundPlay(4,2,"models/props_combine/portalskydome.mdl") S=0 }

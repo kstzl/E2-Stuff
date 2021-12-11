@@ -1,0 +1,59 @@
+@name MarioKart
+
+@persist [ Seat ]:entity
+@persist [ SeatModel ]:string
+@persist [ BaseRanger ]:ranger
+@persist [ Gyro ]:angle
+
+interval(1)
+
+#Mario Kart by K3CR4FT.:DLL - 2020
+
+function kprint(Type_:string, Text_:string){
+    
+    if(Type_ == "normal"){
+        
+        printColor(vec(50, 255, 50), "[Mario Kart] ", vec(75, 255, 75), Text_)
+        
+    }
+    elseif(Type_ == "error"){
+        
+        printColor(vec(255, 50, 50), "[Mario Kart] ", vec(255, 75, 75), Text_)
+        
+    }
+    
+}
+
+if(first()){
+    
+    SeatModel = "models/nova/airboat_seat.mdl"
+    Seat = entity():isWeldedTo()
+    
+    if(Seat:model() != SeatModel){
+        
+        kprint("error", "Erreur, le model du siege doit etre:")
+        kprint("error", SeatModel)
+        
+        selfDestructAll()
+        
+    }
+    else
+    {
+        kprint("normal", "Mario Kart by K3CR4FT.:DLL - 2020")
+        kprint("normal", "Initialisation ...")
+    }
+    
+    Seat:setAng(ang(0))
+    Seat:propFreeze(1)
+    
+}
+
+rangerFilter(Seat)
+BaseRanger = rangerOffset(150, Seat:pos(), vec(0, 0, -1))
+
+TargetPos = BaseRanger:pos() + vec(0, 0, 100)
+Seat:applyForce( (TargetPos - Seat:pos()) * Seat:mass() * 25 - Seat:vel() )
+
+Gyro = -Seat:angles() * 500
+Seat:applyAngForce( Gyro + $Gyro * 5)
+

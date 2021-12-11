@@ -1,0 +1,30 @@
+@name V.I.R.U.S (destructeur)
+@inputs 
+@outputs 
+@persist P:entity I2
+@trigger 
+@model models/hunter/blocks/cube025x025x025.mdl
+
+ interval(900)
+
+ findByClass("prop_*")
+ findSortByDistance(entity():pos())
+ findExcludeEntity(P)
+
+ P=propSpawn("models/props_c17/FurnitureBed001a.mdl",randint(0,1)) P:setPos(find():pos()+vec(randint(-1,1),randint(-1,1),randint(-10,10)))
+
+ I=0
+ I2+=1 holoCreate(I2) holoScale(I2,vec(5)) holoModel(I2,"hqsphere") holoPos(I2,P:pos()) holoParent(I2,P) holoAlpha(I2,100) holoColor(I2,vec(0,255,0))
+ holoEntity(I2):soundPlay(1,0,"Mud.StepRight")
+ holoEntity(I2):setTrails(300,10,1,"trails/laser",vec(0,255,0),255)
+
+
+ if(I2 == 7){ propDeleteAll() I2=0 }
+
+ P:applyAngForce(ang(720,720,720)*P:mass()*30)
+ P:setMass(50000)
+ P:setAlpha(0)
+ P:propGravity(0)
+
+ findExcludeEntity(P)
+ entity():setAlpha(0)

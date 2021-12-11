@@ -1,0 +1,23 @@
+@name Laser DJ 
+@inputs 
+@outputs 
+@persist C
+@trigger 
+@model models/props_phx/construct/metal_plate1.mdl
+
+ runOnTick(1)
+
+ if(first()){
+ holoCreate(1) holoScale(1,vec(4,4,1)) holoParent(1,entity())
+
+ holoCreate(2) holoPos(2,entity():pos()+vec(430,90,30))  holoEntity(2):setTrails(15,500,1,"trails/smoke",vec(0,255,0),255)
+    
+ }
+
+ if(C <= 25){
+    C++ holoPos(2,entity():pos())
+ }
+ if(C >= 25){
+    C=0 M=0  holoPos(2,entity():pos()+vec(390,0,0))
+    
+ }

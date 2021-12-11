@@ -1,0 +1,26 @@
+@name Detecteur_Printer
+@inputs Ents:array
+@persist BlackList:string
+@outputs SoundPlay:number Distance:number
+
+#By K3CR4FT.:DLL 2020
+
+interval(1)
+
+Alarm = 0
+
+
+
+foreach(K, Ent:entity = Ents){
+    
+    if(Ent:type() == "money_printer"){
+        
+        print(Ent:getSkin())
+        Alarm = 1
+        Distance = round(entity():pos():distance(Ent:pos()))
+        
+    }
+    
+}
+
+SoundPlay = Alarm

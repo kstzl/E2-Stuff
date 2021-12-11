@@ -1,0 +1,7 @@
+@name Gyro
+@inputs Temoin:vector Follow:entity Ang:vector
+@outputs
+@persist 
+@trigger 
+
+Ang = ( Temoin():pos() - Follow:pos() ):toAngle()holoAng(1,Ang)

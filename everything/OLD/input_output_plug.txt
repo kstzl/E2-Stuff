@@ -1,0 +1,7 @@
+@name Input_Output_Plug
+@inputs Input
+@outputs A
+
+interval(1)
+
+Intput = A

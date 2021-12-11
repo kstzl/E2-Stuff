@@ -1,0 +1,19 @@
+@name TestLaserHoloClip
+@inputs 
+@outputs 
+@persist I
+@trigger
+
+interval(1)
+
+if( first() ){
+    
+    holoCreate(1)
+    holoMaterial(1, "cable/redlaser")
+    holoModel(1, "models/hunter/plates/plate32x32.mdl")
+    holoScaleUnits(1, vec(2501))
+    
+}
+
+holoAng(1, ang(0, I, 0))
+I+=50

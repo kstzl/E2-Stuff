@@ -1,0 +1,18 @@
+@name PropFollow
+@inputs 
+@outputs 
+@persist Aim:entity E:entity Attack
+@trigger 
+
+runOnTick(1)
+if(first()){ E = entity():isWeldedTo() holoCreate(1)}
+ if(owner():keyAttack2()){
+    A=1
+ }
+ if(changed(A) && A == 1){
+ Aim=owner():aimEntity()    
+ Attack=1 
+ }
+ 
+ if(Attack == 1){ E:setPos(holoEntity(1):pos()) holoParent(1,Aim) holoPos(1,Aim:pos()) }
+ 

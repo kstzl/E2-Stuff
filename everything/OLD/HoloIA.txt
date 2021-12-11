@@ -1,0 +1,67 @@
+@name HoloIA
+@persist [ Mode ]:string [ Target ]:entity [ Dist W ]:number [ TargetPoint ]:vector
+
+interval(100)
+
+if(first()){
+    
+    holoCreate(1)
+    holoModel(1, "models/Kleiner.mdl")
+    
+    Mode = "run"
+    
+}
+
+if(changed(Mode) && Mode == "run"){
+    
+    holoAnim(1, "run_all")
+    
+}
+
+if(changed(Mode) && Mode == "idle"){
+    
+    holoAnim(1, "lineidle01")
+    holoEntity(1):soundPlay(1, 3, "odessa.nlo_cub_hello")
+    
+}
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos())
+Target = find()
+Dist = holoEntity(1):pos():distance(Target:pos())
+TargetPoint = Target:pos()
+
+RgF = rangerOffset(3000, holoEntity(1):pos() + vec(0, 0, 5), holoEntity(1):forward())
+RgD = rangerOffset(3000, holoEntity(1):pos(), -holoEntity(1):up())
+Cond1 = (RgF:distance() < 50 || Dist < 150)
+
+if(Cond1){
+        
+    Mode = "idle"
+       
+}
+else{
+    
+    Mode = "run"
+
+    F = 0
+    
+}
+
+if(Mode == "run"){
+    
+    holoPos(1, holoEntity(1):toWorld(vec(20, 0, 0)))
+
+}
+
+if(W >= randint(40, 60)){
+    
+    holoPos(1, holoEntity(1):toWorld(vec(-25, 0, 0)))
+    holoEntity(1):soundPlay(1, 3, "npc_alyx.randomMoan")
+    W = 0
+    
+}
+
+holoAng(1, ( TargetPoint - holoEntity(1):pos() ):toAngle():setPitch(0) )
+
+W += 1

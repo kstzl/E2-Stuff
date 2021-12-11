@@ -1,0 +1,156 @@
+@name 
+@inputs 
+@outputs 
+@persist NB NB2 RD DF1 DF2 PLUS RDANG CTIME Alphah MAX ANG Win Col Z Count
+@trigger 
+
+interval(1)
+
+if(first()){
+ 
+###########
+MAX = 3
+##########
+
+NB = 1
+holoCreate(NB)
+holoScale(NB,vec(3,3,3))
+holoModel(NB,"hqsphere")
+
+DF1 = 100
+DF2 = 150
+
+holoCreate(0)
+holoScale(0,vec(8.2,8.2,2.2))
+holoColor(0,vec(0,0,0))
+holoPos(0,vec(0,0,-9999))
+
+holoCreate(-1)
+holoScale(-1,vec(8.2,8.2,2.2))
+holoColor(-1,vec(255,255,255))
+holoPos(-1,vec(0,0,-9999))
+
+Alphah = 255
+
+holoCreate(-2)
+holoPos(-2,vec(0,0,-99999))
+holoModel(-2,"models/props_c17/FurnitureBathtub001a.mdl")
+holoScale(-2,vec(0.5,0.5,0.5))
+
+holoCreate(-3)
+holoAlpha(-3,0)
+holoEntity(-3):soundPlay(1,100,"song29")
+
+   
+}
+ 
+
+findByClass("player")
+findSortByDistance(holoEntity(NB):pos())
+
+if(holoEntity(NB):pos():distance(find():pos()) <=90 && NB <= MAX){
+
+DF1 += randint(-60,90)
+DF2 += randint(-75,85)
+
+if(DF1 >= 380){ DF1 = randint(50,100) }
+
+
+if(DF2 >= 410){ DF2 = randint(100,150) }
+
+
+Z+=6
+
+if(Z >= 30) { Z = 0 }
+
+    NB+=1
+    RD = randint(DF1,DF2)
+    RD2 = randint(105,240)
+    
+    RDANG = randint(0,6)
+    
+    holoCreate(NB)
+    holoPos(NB, holoEntity(NB-1):pos()+vec(RD,RD2,Z))
+    holoScale(NB,vec(8,8,2))
+    
+    Prop = propSpawn("models/hunter/plates/plate2x2.mdl",1)
+    Prop:setPos(holoEntity(NB):pos())
+    Prop:propStatic(1)
+    Prop:setAng(ang(0,RD,randint(0,15)))
+    Prop:setAlpha(0)
+    holoAng(NB,ang(0,RD,RDANG))
+    holoColor(NB,vec(NB,RD,RD2))
+    
+       holoEntity(NB):soundPlay(2,100,"Doors.Move14")
+       holoPos(0, holoEntity(NB-1):pos()+vec(RD,RD2,Z)) 
+       holoAng(0,ang(0,RD,RDANG))
+    
+       holoPos(-1, holoEntity(NB-1):pos()+vec(RD,RD2,Z)) 
+       holoAng(-1,ang(0,RD,RDANG))
+    
+    holoPos(-3,holoEntity(NB):pos())
+      
+} 
+
+if(CTIME <= 130){
+holoColor(0,vec(0,PLUS/0.4,PLUS))
+CTIME++
+PLUS++
+
+holoScale(-1,vec(PLUS/20,PLUS/20,PLUS/20))
+holoAlpha(-1,Alphah-PLUS)
+}
+
+if(CTIME >= 130){
+    CTIME = 0
+    PLUS = 100
+    Alpha = 255
+    holoPos(-1,vec(0,0,-1555))
+    holoScale(-1,vec(1.5,1.5,1.5))
+    
+}
+
+if(NB >= MAX){
+    
+    Count += 0.01
+    N = 10
+
+    Z1 = N*cosr(3.3*Count)+20
+    S=1
+    holoPos(-2,entity():pos()+vec(0,0,Z1))
+    
+    
+    holoPos(-2,holoEntity(MAX+1):pos()+vec(0,0,Z1+11))
+    
+    holoAng(-2,holoEntity(MAX+1):angles()+ang(0,ANG,0))   
+    
+    ANG++
+    
+    
+}
+if(holoEntity(MAX+1):pos():distance(find():pos()) <=90 && NB >= MAX){
+    Win = 1   
+}
+if(changed(Win) && Win == 1){
+    holoEntity(-2):soundPlay(1,100,"ravebreak.mp3")
+}
+if(Win == 1){
+        if(NB2 < NB){
+    NB2++
+    
+    holoPos(NB2,holoEntity(NB2):pos()-vec(0,0,3))
+    holoPos(0,holoEntity(NB2):pos()-vec(0,0,3))
+       
+    }
+    if(NB2 >= NB){
+        NB2=0
+      propDeleteAll()
+    }
+}
+
+if(owner():keyPressed("z")){
+    
+    propDeleteAll()
+    selfDestructAll()
+    
+}

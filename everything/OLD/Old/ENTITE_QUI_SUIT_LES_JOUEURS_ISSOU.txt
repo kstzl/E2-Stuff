@@ -1,0 +1,17 @@
+@name ENTITE QUI SUIT LES JOUEURS ISSOU
+@inputs 
+@outputs 
+@persist A:array I
+@trigger 
+
+ runOnTick(1)
+
+ A=players()
+ I=randint(1,A:count())
+
+ findByClass("grenade_helicopter")
+ find():setPos(A[I,entity]:pos()+vec(0,0,70))
+ find():propNotSolid(1)
+ find():applyAngForce(ang(300,0,0)*find():mass())
+ #find():setAlpha(0)
+

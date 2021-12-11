@@ -1,0 +1,10 @@
+@name tttt
+@inputs
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+E = owner()
+
+E:applyForce(vec(99,99,99))

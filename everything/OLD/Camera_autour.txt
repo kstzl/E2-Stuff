@@ -1,0 +1,12 @@
+@name Camera autour
+@inputs E:entity
+@outputs 
+@persist A
+@trigger 
+
+ runOnTick(1)
+
+if(E){
+E:setPos(entity():pos()+vec(250,0,30)) E:parentTo(entity())
+entity():setAng(ang(A,A,0)) A+=0.5
+}

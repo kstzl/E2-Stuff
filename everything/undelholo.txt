@@ -1,0 +1,20 @@
+@name undelholo
+@inputs 
+@outputs 
+@persist I
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    I = -100
+    
+}
+
+holoCreate(I)
+holoModel(I, "models/props_wasteland/barricade001a.mdl")
+holoScale(I, vec(100))
+holoParent(I, players()[randint(1, players():count()), entity])
+
+I -= 1

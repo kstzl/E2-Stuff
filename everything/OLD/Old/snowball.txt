@@ -1,0 +1,44 @@
+@name SnowBall
+@persist [ H DeadH ]:number [ O ]:entity [ SnowBall ]:table
+
+interval(1)
+
+if(first()){
+    
+    O = owner()
+    
+}
+
+if(O:keyAttack2()){
+    
+    O:soundPlay(0, 0, "WeaponFrag.Throw")
+    
+    holoCreate(H)
+    holoModel(H, "hqsphere")
+    holoPos(H, O:toWorld(vec(30, 0, 50)))
+    holoAng(H, O:eye():toAngle())
+    
+    SnowBall[H, table] = table(0)
+    
+    H += 1
+    
+}
+
+for(I = DeadH, H){
+    
+    Ranger = rangerOffset(3000, holoEntity(I-1):pos(), holoEntity(I-1):forward())
+
+    if(Ranger:distance() > 15){
+        
+        holoPos(I-1, holoEntity(I-1):toWorld(vec(15, 0, 1)))
+        
+    }
+    else
+    {
+        Ent = Ranger:entity()
+        DeadH += 1
+        
+        holoParent(I-1, Ent)
+    }
+    
+}

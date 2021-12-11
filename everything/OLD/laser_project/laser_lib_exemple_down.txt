@@ -1,0 +1,22 @@
+@name laser_lib_exemple_down
+@inputs 
+@outputs 
+@persist  Ang Count R R2
+@model models/Combine_Helicopter/helicopter_bomb01.mdl
+#include "laser_project/laser_lib"
+
+ if(first()){
+
+    holoCreate(0) holoAlpha(0,0)
+    laserMake(1) laserTrail(1,40,100,0.3,"trails/smoke",vec(255,0,0),255)
+ }
+ Ranger=rangerOffset(3000,entity():pos(),-entity():up())
+
+ Count+=0.1
+ R= 300
+ R2= 300
+ X1 = R*cosr(0*Count)
+ Y1 = R*sinr(1*Count)
+
+    holoPos(0,Ranger:pos()+vec(X1,Y1,0))
+    laserStart(1,holoEntity(0):pos(),entity():pos())

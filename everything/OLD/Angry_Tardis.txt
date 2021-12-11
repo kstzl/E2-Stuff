@@ -1,0 +1,25 @@
+@name Angry Tardis
+@inputs 
+@outputs 
+@persist [ Target Prop ]:entity [ Vec ]:vector I
+
+interval(100)
+
+if(first()){
+    
+    Prop = propSpawn("models/props_c17/Lockers001a.mdl", 0)
+
+    lightCreate(1)
+    lightDistance(1, 5000)
+    lightPos(1, Prop:pos())
+    lightParent(1, Prop)
+    
+}
+
+findByClass("player")
+findSortByDistance(Prop:pos())
+Target = find()
+Vec = (Target:pos() + vec(0, 0, 50) - Prop:pos()) * Prop:mass() * 5
+
+Prop:applyForce(Vec)
+Prop:applyAngForce( ang(50) * Prop:mass() )

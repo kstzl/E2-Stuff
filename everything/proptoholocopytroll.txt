@@ -1,0 +1,82 @@
+@name PropToHoloCopyTroll
+
+@persist [ First ]:number
+@persist [ O TargetEnt ]:entity
+@model models/hunter/blocks/cube075x075x075.mdl
+
+interval(100)
+
+entity():setAlpha(0)
+
+function prnt(Str:string){
+    
+    print("[ COPY TROLL ] " + Str)
+    
+}
+
+if(first()){
+    
+    O = owner()
+    
+}
+
+if(clk("copy")){
+    
+    if(TargetEnt){
+        
+        local EntOwner = TargetEnt:owner()
+        
+        prnt("Copying " + EntOwner:name() + " props !")
+        
+        findIncludePlayerProps(EntOwner)
+        findByClass("prop_*")
+        
+        local Props = findToArray()
+        
+        for(I = 0, Props:count()){
+            
+            local Prop = Props[I, entity]
+            
+            #[
+            local NProp = propSpawn(Prop:model(), 1)
+            
+            NProp:setPos(Prop:pos())
+            NProp:setAng(Prop:angles())
+            NProp:setColor(Prop:getColor4())
+            NProp:setMaterial(Prop:getMaterial())
+            NProp:parentTo(Prop)
+            ]#
+            
+            holoCreate(I)
+            
+            holoPos(I, Prop:pos())
+            holoAng(I, Prop:angles())
+            
+            holoModel(I, Prop:model())
+            holoColor(I, Prop:getColor4())
+            holoMaterial(I, Prop:getMaterial())
+            
+            holoParent(I, entity())
+            
+            prnt("Copying Prop : " + Prop:model())
+
+            
+        }
+        
+        prnt("OK !")
+        First = 1
+        
+    }
+        
+}
+
+if(changed(O:keyAttack2()) && O:keyAttack2() == 1 && !First){
+    
+    prnt("Starting ...")
+    
+    TargetEnt = O:aimEntity()
+    
+    entity():setPos(O:aimPos())
+    timer("copy", 500)
+    
+}

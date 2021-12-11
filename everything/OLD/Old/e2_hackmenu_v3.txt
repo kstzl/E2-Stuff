@@ -1,0 +1,85 @@
+@name e2_hackmenu_V3
+
+@persist [ WHITE CYAN RED GREEN ]:vector
+
+@persist [ Cheats ]:table
+
+@persist [ O ]:entity
+
+interval(1)
+runOnChat(1)
+
+#[
+  ______ ___    _    _          _____ _  __  __  __ ______ _   _ _    _  __      ______  
+ |  ____|__ \  | |  | |   /\   / ____| |/ / |  \/  |  ____| \ | | |  | | \ \    / /___ \ 
+ | |__     ) | | |__| |  /  \ | |    | ' /  | \  / | |__  |  \| | |  | |  \ \  / /  __) |
+ |  __|   / /  |  __  | / /\ \| |    |  <   | |\/| |  __| | . ` | |  | |   \ \/ /  |__ < 
+ | |____ / /_  | |  | |/ ____ \ |____| . \  | |  | | |____| |\  | |__| |    \  /   ___) |
+ |______|____| |_|  |_/_/    \_\_____|_|\_\ |_|  |_|______|_| \_|\____/      \/   |____/ 
+                                                                                         
+        BY K3CR4FT.:DLL 2020
+]#
+
+function hm_addCheat(CheatName_:string, CheatDescription_:string){
+    
+    Cheats:pushTable(table(
+        "CheatName" = CheatName_,
+        "CheatDescription" = CheatDescription_,
+        "Active" = 0,
+        "Init" = 0,
+        "Content" = table()
+    ))
+    
+    printColor(CYAN, "[ E2 Hack Menu V3 ] ", GREEN, "Cheat trouve : '" + CheatName_ + "' " + CheatDescription_)
+}
+
+
+if(first()){
+    
+    WHITE = vec(255)
+    CYAN = vec(0, 200, 255)
+    RED = vec(255, 80, 80)
+    GREEN = vec(100, 255, 100)
+    
+    O = owner()
+    
+    printColor(CYAN, "[ E2 Hack Menu V3 ] ", WHITE, "By K3CR4FT.:DLL - 2020")
+    
+    printColor(CYAN, "[ E2 Hack Menu V3 ] ", WHITE, "Recherche de cheat(s) en cours ...")
+    
+    hm_addCheat("Holo", "faire crash le serv mdr")
+    
+    if(Cheats:count() < 1){
+        printColor(CYAN, "[ E2 Hack Menu V3 ] ", RED, "Aucun cheat trouve ...")   
+    }
+    else
+    {
+        printColor(CYAN, "[ E2 Hack Menu V3 ] ", GREEN, Cheats:count() + " cheat(s) trouve !")
+        
+        printColor(CYAN, "[ E2 Hack Menu V3 ] ", WHITE, "Tapez -<", GREEN, "NOM DE CHEAT", WHITE, "> <", GREEN, "0 ou 1", WHITE, "> pour activer ou desactiver un cheat.")
+    }
+}
+
+if(chatClk(O)){
+    
+    Msg = O:lastSaid()
+    EMsg = Msg:explode(" ")
+    Part1 = EMsg[1, string]
+    Part2 = EMsg[1, string]
+
+    SentenceCorrect = 0
+    
+    for(I = 1, Cheats:count()){
+        
+        Cheat = Cheats[I, table]
+        
+        if(Part1:lower() == "-" + Cheat["CheatName", string]:lower()){
+            
+        }
+        
+        
+    }
+    
+    hideChat(SentenceCorrect)
+}
+    

@@ -1,0 +1,30 @@
+@name Test_FastLibs
+@persist [ Player ]:entity
+#include "fastlib"
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoEntity(1):sfx("Crane_engine_start", 0)
+ 
+} 
+
+Player = closestPlayer(holoEntity(1):pos())
+Ang = holoEntity(1):angTo(Player:pos())
+holoAng(1, Ang)
+
+if(every(1000)){
+    
+    if(Player:pos():distance(holoEntity(1):pos()) <= 350){
+        
+        holoEntity(1):sfx("NPC_CombineBall.Launch", 0)
+        explosion(Player:pos())
+        
+    }
+    
+}
+ 
+
+

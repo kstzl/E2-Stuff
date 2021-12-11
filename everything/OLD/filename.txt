@@ -1,0 +1,32 @@
+@name EgpImage
+@inputs Egp:wirelink
+@outputs 
+@persist I X Y
+@trigger 
+
+interval(150)
+
+if(first()){
+    
+    Egp:egpClear()
+    I = 1
+}
+
+if(I < 256){
+    
+    Egp:egpBox(I, vec2(X * 16, Y * 16), vec2(16))
+    Egp:egpColor(I, vec(randint(0, 255), randint(0, 255), randint(0, 255)))
+    I += 1
+    
+    if(X < 32){
+        
+        X++
+        
+    }
+    else
+    {
+        X = 0
+        Y++
+    }
+    
+}

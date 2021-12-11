@@ -1,0 +1,36 @@
+@name AntiKikoo
+@inputs
+@outputs 
+@persist R Sound T:entity
+@trigger 
+
+runOnTick(1)
+
+V = T:vel():length()
+    holoAlpha(1,255)
+
+if(first()){
+    
+    T = findPlayerByName("kec")
+    
+    holoCreate(1)
+    holoModel(1,"hqsphere")
+    holoAng(1,ang(90,0,0))
+    holoColor(1,vec(255,255,255))
+}
+R++
+holoPos(1,T:pos()+vec(0,0,140))
+
+if(V >= 750){
+
+    Prop = propSpawn("models/props_c17/oildrum001_explosive.mdl",1)
+    Prop:setPos(holoEntity(1):pos())
+    Prop:propBreak()
+    
+}
+
+holoColor(1,vec(V,0,0))
+
+    
+Pos=owner():aimPos()- owner():pos()
+Force = 100

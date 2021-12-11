@@ -1,0 +1,49 @@
+@name MegaLaser
+@inputs 
+@outputs 
+@persist FinalOffset [ Prop Target ]:entity [ TargetPos TargetPos2 ]:vector
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    Target = findPlayerByName("Snax")
+    #Prop = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    Prop:setAlpha(0)
+    
+    local Holos = 25
+    local Offset = 500
+    
+    FinalOffset = Holos * Offset
+    
+    holoCreate(0)
+    holoPos(0, entity():pos() + vec(0, 0, FinalOffset))
+    holoAlpha(0, 0)
+    holoParent(0, entity())
+    
+    for(I = 1, Holos){
+        
+        holoCreate(I)
+        holoModel(I, "hqcylinder")
+        holoScaleUnits(I, -vec(50, 50, Offset))
+        holoDisableShading(I, 1)
+        holoMaterial(I, "models/alyx/emptool_glow")
+        holoEntity(I):soundPlay(I, 0, "novaprospekt.electric_loop")
+        
+        holoPos(I, holoEntity(0):pos() + vec(0, 0, -Offset * (I-0.5) ))
+        holoParent(I, 0)
+        
+    }
+    
+}
+
+#Prop:setPos(holoEntity(0):pos())
+Prop:applyAngForce(ang(500000) * Prop:mass())
+
+TargetPos = Target:pos() + vec(0, 0, FinalOffset )
+TargetPos2 = holoEntity(0):pos() + (TargetPos - holoEntity(0):pos()) / 1500
+TargetPos2:setZ(Target:pos():z())
+
+holoPos(0, TargetPos2 )
+holoAng(0, ( Target:pos() - holoEntity(0):pos() ):toAngle() + ang(-90, 0, 0))

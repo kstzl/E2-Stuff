@@ -1,0 +1,30 @@
+@name My_Zone_V2
+@persist [ O ]:entity
+
+interval(1)
+
+if(first()){
+    
+    Size = 350
+    
+    holoCreate(1)
+    holoScaleUnits(1, -vec(Size, Size, Size/2))
+    holoPos(1, entity():toWorld(vec(0, 0, Size/4)))
+    holoMaterial(1, "models/props/de_nuke/nukconcretewalla")
+    holoParent(1, entity())
+    
+    holoCreate(2)
+    holoScaleUnits(2, vec(Size, Size, Size/2)*1.01)
+    holoPos(2, entity():toWorld(vec(0, 0, Size/4)))
+    holoMaterial(2, "models/props/de_nuke/nukconcretewalla")
+    holoParent(2, entity())
+    
+    O = owner()
+    
+}
+
+P = players()
+
+for(I = 0, P:count()){
+    
+}

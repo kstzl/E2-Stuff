@@ -1,0 +1,9 @@
+@name 
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+holoCreate(1)
+holoScale(1, vec(5000))
+holoModel(1, "models/combine_dropship.mdl")

@@ -1,0 +1,53 @@
+@name SuperCrash
+@persist [ I Max ] [ Props ]:array
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoParent(1, entity())
+    holoAlpha(1, 0)
+    
+    holoEntity(1):soundPlay(0, 0, "d3_citadel.pod_move")
+    
+    timer("prop", 500)
+    
+    Max = 35
+    
+}
+
+if( clk("prop") ){
+    
+    Prop = propSpawn("models/props_phx/construct/metal_wire1x1x1.mdl", 1)
+    Prop:setPos( entity():toWorld(vec(0, 0, 50)) )
+    Prop:setAng( ang( I * 5 ) )
+    
+    Props[I, entity] = Prop
+    
+    I += 1
+    
+    if(I < Max){
+        
+        timer("prop", 500)
+        
+    }
+    
+    holoEntity(1):soundPlay(1, 0, "d3_citadel.pod_stop")
+    print("[SuperCrash] Positionnement des props : " + I + "/" + Max)
+    
+}
+
+if(changed(I) && I >= Max){
+    
+    for(I2 = 0, Props:count() ){
+        
+        Props[I2, entity]:propFreeze(0)
+        print("[SuperCrash] unfreeze des props : " + I2 + "/" + Props:count())
+        
+    }
+    
+    print("[SuperCrash] Crash du serveur.")
+    
+    
+}

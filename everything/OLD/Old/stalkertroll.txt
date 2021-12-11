@@ -1,0 +1,26 @@
+@name StalkerTroll
+@persist [ Target ]:entity
+@persist [ TargetAng FinalAng ]:angle
+
+interval(1)
+
+if(first()){
+    
+    Target = owner()
+    
+    holoCreate(0)
+    holoAlpha(0, 255)
+    
+    holoCreate(1)
+    holoScaleUnits(1, vec(30, 30, 80))
+    holoColor(1, vec(0))
+    
+}
+
+holoPos(0, Target:pos())
+
+TargetAng = ( Target:aimPos() - Target:pos() ):toAngle():setPitch(0):setYaw(90)
+FinalAng = holoEntity(0):angles() + (TargetAng - holoEntity(0):angles()) / 2
+
+holoAng(0, FinalAng)
+holoPos(1, holoEntity(0):toWorld(vec(90, 0, 0)))

@@ -1,0 +1,33 @@
+#By K3CR4FT.:DLL - 2021
+@name TEST
+@persist BASE:entity
+@persist FRAME_INDEX:number FRAMES:table
+interval(1)
+if(first()){
+BASE = entity()
+#Generating Holograms :
+#[ Holo 0 ]# holoCreate(0) holoModel(0, "cone") holoColor(0, vec4(255))
+#[ Holo 1 ]# holoCreate(1) holoModel(1, "cone") holoColor(1, vec4(255))
+#[ Holo 2 ]# holoCreate(2) holoModel(2, "cube") holoColor(2, vec4(255))
+
+#Adding Frames : 
+FRAMES = table(
+#[ FRAME 0 ]# table(table("id" = 0, "pos" = vec(0.0, 0.0, 2.0), "ang" = ang(0.0, 0.0, 0.0), "scale" = vec(1.0, 1.0, 1.0)), table("id" = 1, "pos" = vec(1.7142064571380615, -0.11238217353820801, -0.2866743803024292), "ang" = ang(-0.0, -0.0, 97.37168907188953), "scale" = vec(1.0, 1.0, 1.0)), table("id" = 2, "pos" = vec(0.0, 0.0, 0.0), "ang" = ang(0.0, 0.0, 0.0), "scale" = vec(1.0, 1.0, 1.0)) ),
+#[ FRAME 1 ]# table(table("id" = 0, "pos" = vec(0.0, 0.0, 2.0), "ang" = ang(0.0, 0.0, 0.0), "scale" = vec(1.0, 1.0, 1.0)), table("id" = 1, "pos" = vec(1.7142064571380615, -0.11238217353820801, -0.2866743803024292), "ang" = ang(-0.0, -0.0, 97.37168907188953), "scale" = vec(1.0, 1.0, 1.0)), table("id" = 2, "pos" = vec(0.0, 0.0, 0.0), "ang" = ang(0.0, 0.0, 0.0), "scale" = vec(1.0, 1.0, 1.0)) ))
+}
+#Playing Frames : 
+function playFrame(FrameNumber:number){
+local GFRAME = FRAMES[FrameNumber, table]
+for(I = 1, GFRAME:count()){
+local Frame = GFRAME[I, table]
+local Id = Frame["id", number]
+holoPos(Id, BASE:toWorld(Frame["pos", vector] * 10))
+holoAng(Id, BASE:angles() + Frame["ang", angle])
+holoScaleUnits(Id, Frame["scale", vector] * 10 * 2)
+}}
+timer("_", 0)
+if(clk("_")){
+playFrame(1 + (FRAME_INDEX % 2))
+FRAME_INDEX++
+timer("_", 50)
+}

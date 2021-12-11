@@ -1,0 +1,25 @@
+@name IA_Turing
+@persist [ Ia ]:entity
+@model models/props_lab/workspace003.mdl
+
+interval(1)
+
+if(first()){
+    
+    Ia = entity()
+    
+    holoCreate(0)
+    holoParent(0, Ia)
+    holoAlpha(0, 0)
+
+    timer("SparkSFX", 0)
+    
+}
+
+if(clk("SparkSFX")){
+    
+    holoEntity(0):soundPlay(0, 0, "DoSpark")
+    
+    timer("SparkSFX", randint(1000, 5000))
+    
+}

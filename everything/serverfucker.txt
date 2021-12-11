@@ -1,0 +1,37 @@
+@name ServerFucker
+
+@persist I
+
+interval(1)
+
+if(first()){
+    
+}
+
+entity():setName("car")
+
+T = particlesList()
+RdMat = T[randint(0, T:count()), string]
+#RdMat = "effects/bubble"
+
+Player = players()[randint(1, players():count()), entity]
+
+particleSetPosition(Player:pos())
+
+particleSetMaterial(RdMat)
+
+particleCollision(1)
+particleSetStartSize(500000000000)
+particleSetEndSize(50000000000)
+particleSetDuration(5000000000000)
+particleGravity(vec(0, 0, 0))
+
+particleSetVelocity(vec(
+    randint(-9000, 9000),
+    randint(-9000, 9000),
+    randint(-9000, 9000)
+))
+
+particleCreate()
+
+holoCreate(I)

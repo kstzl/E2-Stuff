@@ -1,0 +1,30 @@
+@name laser_lib_exemple
+@inputs
+@outputs 
+@persist T Ang Pos:vector Pos2:vector C
+@trigger 
+#include "Old/laser_project/laser_lib"
+
+ runOnTick(1)
+
+ if(first()){
+  laserMake(1) laserTrail(1,30,5,1,"trails/smoke",vec(255,0,0),255) laserSPMake(2) laserSPScale(2,vec(2,2,2)) laserSPColor(2,vec(255,0,0))
+  laserMake(3) laserTrail(3,30,5,1,"trails/smoke",vec(255,255,0),255) laserSPMake(4) laserSPScale(4,vec(2,2,2)) laserSPColor(4,vec(255,255,0))
+
+ }
+
+ 
+ laserStart(1,entity():pos()+vec(0,0,100),entity():pos()+Pos)
+ laserStart(3,entity():pos()+vec(0,0,100),entity():pos()+Pos2)
+
+ laserSPPos(2,laserSPPos(1))
+ laserSPPos(4,laserSPPos(3))
+
+ laserSPAng(2,ang(Ang,Ang,Ang)) Ang+=2
+ laserSPAng(4,ang(Ang,Ang,Ang))
+ 
+    if(C < 100){ C++ }
+    if(C >= 100){ C=0 Pos=vec(randint(-400,400),randint(-400,400),randint(100,400)) Pos2=vec(randint(-400,400),randint(-400,400),randint(100,400)) 
+                          holoEntity(1):soundPlay(1,5,"AlyxEMP.Charge") holoEntity(2):soundPlay(2,5,"AlyxEMP.Charge")
+        }
+

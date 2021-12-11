@@ -1,0 +1,32 @@
+@name Thingy
+@persist [E Target]:entity
+@outputs
+@trigger
+if (first()) {
+#Starting stuff
+E = entity():isWeldedTo() #isWeldedTo will make the e2 apply the force to the prop it is welded to instead of the e2 itself.
+runOnTick(1)
+runOnChat(1)
+}
+#If you said something..
+if (chatClk(owner())) {
+#Explode for easier use
+M = lastSaid():explode(" ")
+#Attack:
+if (M:string(1) == "/target") {
+hideChat(1) #Hide chat message
+Target = findPlayerByName(M:string(2)) #Attempt to find the player
+if (Target) { #If found..
+print("Attacking " + Target:name())
+} else { #If not found..
+print("No player named '" + M:string(2) + "' found.")
+}
+#Stop attacking:
+} elseif (M:string(1) == "/off") {
+hideChat(1) #Hide chat message
+print("Stopped attacking " + Target:name()) #Notify
+Target = noentity() #Set Target to nil
+}
+} elseif (tickClk() & Target) { #If current execution was caused by runOnTick() and if Target is a valid entity, apply force.
+E:applyForce(((Target:pos()+vec(0,0,9)-E:massCenter())*10-E:vel())*E:mass())
+}

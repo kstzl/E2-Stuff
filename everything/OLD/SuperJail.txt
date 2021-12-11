@@ -1,0 +1,80 @@
+@name SuperJail
+@persist [ N Count W WI ]:number [ Target P ]:entity [ Center ]:vector [ Wall ]:table
+
+interval(ops() / 50)
+
+if(first()){
+
+    Target = findPlayerByName("K3")
+    N = 1
+               
+    Center = Target:pos()
+    
+    holoCreate(-1)
+    holoPos(-1, Target:pos())
+    holoAlpha(-1, 0)
+    holoParent(-1, Target)
+    
+    for(H = 0, 8 * N){
+        
+        holoCreate(H)
+        holoPos(H, Center)
+        holoModel(H, "models/props_building_details/Storefront_Template001a_Bars.mdl")
+        
+        holoAng(H, ang(0, H * 45 / N, 0))
+        holoPos(H, holoEntity(H):toWorld(vec(75 * N, 0, -60)))
+        
+        holoScale(H, vec(2, 1, 1))
+        
+        Wall[H, table] = table(0, holoEntity(H):pos(), 50)
+    }
+    
+    P = propSpawn("models/hunter/tubes/tube4x4x4.mdl", 0)
+    P:setAlpha(0)
+    P:propFreeze(1)
+
+}
+
+for(H2 = 0, 8 * N){
+
+    if(Target:pos():distance(holoEntity(H2):pos()) <= 100){
+        
+        if(Wall[H2, table][1, number] == 0){
+            
+            holoEntity(-1):soundPlay(0, 0, "Doors.Move12")
+            Count +=1
+            
+        }
+
+        Wall[H2, table][1, number] = 1
+        
+    }
+    
+    if(Wall[H2, table][1, number] == 1){
+        
+        Pos = Wall[H2, table][2, vector]
+        Up = Wall[H2, table][3, number]
+        
+        holoPos(H2, Pos + vec(0, 0, Up ))
+        holoAng(H2, holoEntity(H2):angles():setPitch(90 - clamp(Up, 0, 90)))
+        
+        if(Up < 110){
+            
+            Wall[H2, table][3, number] = Wall[H2, table][3, number] + 0.5
+            
+        }
+        if(Up == 109){
+            
+            holoEntity(-1):soundPlay(1, 5, "Doors.FullClose9")
+            
+        }
+
+    }
+    
+}
+
+if(Target:pos():distance(Center) < clamp(((75 * N) - 75), 10, 75 * N) ){
+    
+    P:setPos(Target:pos() + vec(0, 0, 50))
+    
+}

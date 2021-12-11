@@ -1,0 +1,199 @@
+@name SoundPad
+@inputs 
+@outputs 
+@persist T T2 T3 T4 T5 X Y Sound:string Sound2:string Sound3:string C1 C2 C3 C4 C5 C6 C7 C8 C9 Anim Sound13 Ang
+@trigger 
+
+ interval(10)
+
+ if(first()){
+    
+    Sound = "d3_citadel.portal_windup_loop"
+    Sound2 = "combine.sheild_loop"
+    Sound3 = "resource/warning.wav"
+    
+
+ holoCreate(10,entity():pos()+vec(37,-37*1,0),vec(2,2,0.1),ang(0),vec(0),"cylinder")
+ holoCreate(11,entity():pos()+vec(37*2,-37*1,0),vec(2,2,0.1),ang(0),vec(0),"cylinder")
+ holoCreate(12,entity():pos()+vec(37*3,-37*1,0),vec(2,2,0.1),ang(0),vec(0),"cylinder")
+
+ holoCreate(13,entity():pos()+vec(37*3,-37*2,0),vec(2,0.1,2),ang(0,0,90),vec(0),"prism")
+ holoCreate(14,entity():pos()+vec(37*3,-37*2.8,0),vec(1.5,1.5,0.1),ang(0),vec(0),"cube")
+
+ holoCreate(15,entity():pos()+vec(37*4.5,37,0),vec(4,4,0.1),ang(0),vec(0),"hqsphere")
+ holoCreate(16) holoPos(16,holoEntity(15):pos()+vec(0,30,0)) holoScale(16,vec(0.3,1,0.1)) holoModel(16,"sphere")
+ holoCreate(17) holoPos(17,holoEntity(15):pos()+vec(0,20,0)) holoScale(17,vec(0.3,0.3,0.1)) holoModel(17,"hqsphere") holoParent(17,15) 
+ holoColor(17,vec(90))
+ holoEntity(17):setTrails(3,10,1,"trails/smoke",vec(255,255,255),255)
+
+ }
+
+ if(T2 <= 8){
+ if(T <= 3){
+ T+=1 T2+=1 X+=37
+ holoCreate(T2,entity():pos()+vec(X,Y,0),vec(3,3,0.1))
+ holoColor(T2,vec(0,0,0))
+ }
+
+ if(T >= 3){
+ Y+=37
+ X=0
+ T=0
+ }
+ }
+
+
+ ##Start Anim
+
+if(Anim == 0){
+
+ if(T4 <= 18){
+    T4+=1
+    if(T4 <= 15){
+    
+ if(T4 == 1){ C1=255 }   
+ if(T4 == 2){ C2=255 }   
+ if(T4 == 3){ C3=255 }   
+ if(T4 == 4){ C4=255 }   
+ if(T4 == 5){ C5=255 }   
+ if(T4 == 6){ C6=255 }   
+ if(T4 == 7){ C7=255 }   
+ if(T4 == 8){ C8=255 }   
+ if(T4 == 9){ C9=255 }   
+ if(T4 == 9){ C9=255 }   
+ if(T4 == 10){ Sound10=1 }   
+ if(T4 == 11){ Sound11=1 }   
+ if(T4 == 12){ Sound12=1 }   
+ if(T4 == 13){ Sound13=1 }   
+ if(T4 == 14){ Sound14=1 Sound13=0 }   
+ Ang+=30 holoAng(15,ang(0,Ang,0))
+ }
+ }
+ if(T4 >= 18){
+ if(T3 <= 15){
+ T3++
+ holoColor(T3,vec(0,0,0))  
+ C1=0 C2=0 C3=0 C4=0 C5=0 C6=0 C7=0 C8=0 C9=0 Ang = 0 holoAng(15,ang(0,Ang,0))
+
+ entity():soundPlay(0,1,"Buttons.snd17")
+ soundPitch(0,T3*10)
+ }
+ }
+ if(T3 >= 9){ Anim=1}
+
+}
+
+
+ ##SEARCH
+
+ if(T5 < 17){
+    T5++
+    findSortByDistance(holoEntity(T5):pos())
+    findByClass("player")
+ }
+ if(T5 >= 17){
+    T5=0
+ } 
+
+
+ ##1
+
+ if(holoEntity(1):pos():distance(find():pos()) <= 30){
+    holoEntity(1):soundPlay(1,1,Sound)
+    if(C1 <= 255){ C1+= 40 holoColor(1,vec(0,0,C1)) }
+ }else{ if(C1 >= 1){ if(C1 >= 1){ C1-= 40 holoColor(1,vec(0,0,C1)) }}}
+  soundPitch(1,C1*Ang/250-50)
+
+ if(holoEntity(2):pos():distance(find():pos()) <= 30){
+    holoEntity(2):soundPlay(2,1,Sound)
+    if(C2 <= 255){ C2+= 40 holoColor(2,vec(0,0,C2)) }
+ }else{ if(C2 >= 1){ if(C2 >= 1){ C2-= 40 holoColor(2,vec(0,0,C2)) }}}
+  soundPitch(2,C2*Ang/250-30)
+
+ if(holoEntity(3):pos():distance(find():pos()) <= 30){
+    holoEntity(3):soundPlay(3,1,Sound)
+    if(C3 <= 255){ C3+= 40 holoColor(3,vec(0,0,C3)) }
+ }else{ if(C3 >= 1){ if(C3 >= 1){ C3-= 40 holoColor(3,vec(0,0,C3)) }}}
+  soundPitch(3,C3*Ang/250-10)
+
+ ##2
+
+ if(holoEntity(4):pos():distance(find():pos()) <= 30){
+    holoEntity(4):soundPlay(4,1,Sound2)
+    if(C4 <= 255){ C4+= 40 holoColor(4,vec(0,C4,0)) }
+ }else{ if(C4 >= 1){ if(C4 >= 1){ C4-= 40 holoColor(4,vec(0,C4,0)) }}}
+  soundPitch(4,C4*Ang/250-50)
+
+
+ if(holoEntity(5):pos():distance(find():pos()) <= 30){
+    holoEntity(5):soundPlay(5,1,Sound2)
+    if(C5 <= 255){ C5+= 40 holoColor(5,vec(0,C5,0)) }
+ }else{ if(C5 >= 1){ if(C5 >= 1){ C5-= 40 holoColor(5,vec(0,C5,0)) }}}
+  soundPitch(5,C5*Ang/250-30)
+
+ if(holoEntity(6):pos():distance(find():pos()) <= 30){
+    holoEntity(6):soundPlay(6,1,Sound2)
+    if(C6 <= 255){ C6+= 40 holoColor(6,vec(0,C6,0)) }
+ }else{ if(C6 >= 1){ if(C6 >= 1){ C6-= 40 holoColor(6,vec(0,C6,0)) }}}
+  soundPitch(6,C6*Ang/250-10)
+
+ ##3
+
+ if(holoEntity(7):pos():distance(find():pos()) <= 30){
+    holoEntity(7):soundPlay(7,1,Sound3)
+    if(C7 <= 255){ C7+= 40 holoColor(7,vec(C7,0,0)) }
+ }else{ if(C7 >= 1){ if(C7 >= 1){ C7-= 40 holoColor(7,vec(C7,0,0)) }}}
+  soundPitch(7,C7*Ang/250-50)
+
+ if(holoEntity(8):pos():distance(find():pos()) <= 30){
+    holoEntity(8):soundPlay(8,1,Sound3)
+    if(C8 <= 255){ C8+= 40 holoColor(8,vec(C8,0,0)) }
+ }else{ if(C8 >= 1){ if(C8 >= 1){ C8-= 40 holoColor(8,vec(C8,0,0)) }}}
+  soundPitch(8,C8*Ang/250-30)
+
+ if(holoEntity(9):pos():distance(find():pos()) <= 30){
+    holoEntity(9):soundPlay(9,1,Sound3)
+    if(C9 <= 255){ C9+= 40 holoColor(9,vec(C9,0,0)) }
+ }else{ if(C9 >= 1){ if(C9 >= 1){ C9-= 40 holoColor(9,vec(C9,0,0)) }}}
+  soundPitch(9,C9*Ang/250-10)
+
+ ##SPECIAL
+
+ ##10
+
+ if(holoEntity(10):pos():distance(find():pos()) <= 30){ Sound10 = 1 }
+ if(changed(Sound10) && Sound10 == 1){ holoEntity(10):soundPlay(10,10,"items/suitchargeok1.wav") holoColor(10,vec(255,0,0)) }
+ else{ holoColor(10,vec(0,0,0)) }
+
+ ##11
+
+ if(holoEntity(11):pos():distance(find():pos()) <= 30){ Sound11 = 1 }
+ if(changed(Sound11) && Sound11 == 1){ holoEntity(11):soundPlay(11,10,"items/medshot4.wav") holoColor(11,vec(0,255,0)) }
+ else{ holoColor(11,vec(0,0,0)) }
+
+ ##12
+
+ if(holoEntity(12):pos():distance(find():pos()) <= 30){ Sound12 = 1 }
+ if(changed(Sound12) && Sound12 == 1){ holoEntity(12):soundPlay(12,10,"keeper_beam/beam_hit.wav") holoColor(12,vec(0,100,255)) }
+ else{ holoColor(12,vec(0,0,0)) }
+
+ ##Special - SOUNDS
+
+ ##13
+
+ if(holoEntity(13):pos():distance(find():pos()) <= 30){ Sound13 = 1 }
+ if(changed(Sound13) && Sound13 == 1){ holoEntity(13):soundPlay(13,99999,"song31") }
+ if(Sound13 == 1){ holoColor(13,vec(0,100,255)) }
+
+ ##14
+
+ if(holoEntity(14):pos():distance(find():pos()) <= 30){ Sound14 = 1 }
+ if(changed(Sound14) && Sound14 == 1){ soundStop(13) holoColor(14,vec(0,100,255)) Sound13=0 holoColor(13,vec(0,0,0))}
+ else{ holoColor(14,vec(0,0,0)) }
+
+ ######Pitch bar########
+
+ if(holoEntity(15):pos():distance(find():pos()) <= 30){
+ holoColor(15,vec(100)) Ang+=2 holoAng(15,ang(0,Ang,0)) holoColor(17,vec(255)) holoEntity(17):soundPlay(17.1,1,"d3_citadel.podarm_rotate")
+ }else{holoColor(15,vec(0)) holoColor(17,vec(90))}
+ if(Ang >= 360){ Ang=0 holoEntity(17):soundPlay(17,3,"Buttons.snd14")}

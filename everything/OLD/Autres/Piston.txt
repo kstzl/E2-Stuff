@@ -1,0 +1,59 @@
+@name 
+@inputs A 
+@outputs 
+@persist Z Z2 Sound Sound2 Sound3 Rok Run 
+@trigger 
+
+runOnTick(1)
+if(first()){
+holoCreate(1)
+holoModel(1,"hqcylinder")
+holoScale(1,vec(1.9,1.9,15))
+
+holoCreate(2)
+holoModel(2,"hqcylinder")
+holoScale(2,vec(1.5,1.5,15))
+
+holoCreate(3)
+holoModel(3,"hqcylinder")
+holoScale(3,vec(0.9,0.9,15))
+}
+if(changed(A) & A == 1){
+    
+    holoEntity(2):soundPlay(100,100,"Doors.Move14")   
+}
+
+if(A == 1){
+  Z+=1.5
+holoPos(2,entity():pos()+vec(0,0,Z))
+}
+
+if(Z >= 90) {
+    
+    Sound = 1
+    
+  Z=90
+
+  Z2+=1.9
+
+holoPos(3,entity():pos()+vec(0,0,Z2))
+}
+if(Z2 >= 200) { Z2 = 200 Sound2 = 1}
+if(changed(Sound) & Sound == 1){holoEntity(2):soundPlay(100,100,"DoorSound.DefaultMove")}
+if(changed(Sound2) & Sound2 == 1){holoEntity(3):soundPlay(100,100,"Doors.FullOpen8") Rok = 1}
+
+if(Rok == 1 && A == 0){
+    Z-=1.2
+    holoPos(2,entity():pos()+vec(0,0,Z))
+    Z2-=1.7
+    holoPos(3,entity():pos()+vec(0,0,Z2))
+        Run++
+        Sound3 = 1
+}
+        if(Run == 100){
+            holoPos(2,vec(0,0,10))
+            Run = 0
+            reset()
+        }
+if(changed(Sound3) & Sound3 == 1){holoEntity(2):soundPlay(100,100,"Doors.Move14") soundPitch(2,60)}
+

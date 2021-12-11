@@ -1,0 +1,13 @@
+@name laser_lib_exemple3
+@inputs 
+@outputs 
+@persist T:entity Ang
+@trigger 
+#include "laser_project/laser_lib"
+
+ runOnTick(1)
+
+ if(first()){ laserMake(1) laserTrail(1,30,5,1,"trails/smoke",vec(255,0,0),255) T=findPlayerByName("kec") }
+              laserStart(1,entity():pos(),T:aimPos())
+              laserSPMake(2) laserSPPos(2,laserSPPos(1)) laserSPScale(2,vec(10)) laserSPColor(2,vec(255,0,0)) laserSPAng(2,ang(0,Ang,Ang)) Ang++
+              laserSPAlpha(2,100) 

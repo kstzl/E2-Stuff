@@ -1,0 +1,66 @@
+@name Mono-Si's Proximity Voice Chat E2
+@persist PLYS:array Anti_Undo:entity
+interval(1000/3)
+if(first()){
+    entity():propNotSolid(1)
+    entity():propFreeze(1)
+    entity():propDraw(0)
+    noCollideAll(entity(),1)
+    entity():setPos(vec())
+    hint("Chip hidden",2)
+    propSpawnUndo(1)
+    runOnLast(1)
+    timer("FastCLK",0)
+    function array getPlayers(){
+        findByClass("player")
+        findExcludeEntity(owner())
+        return findToArray()
+    }
+    function array getHolos(){
+        findByClass("gmod_wire_holograms")
+        findClipToPlayerProps(owner())
+        return findToArray()
+    }
+}
+if(clk("FastCLK")){
+    timer("FastCLK",1)
+}
+if(!Anti_Undo&clk("FastCLK")){
+    if(!first()){
+        hint("DON'T UNDO THE PROGRAM!",5)
+        concmd("play buttons/button10.wav")
+    }
+    Anti_Undo=propSpawn("models/led2.mdl",vec(0),1)
+    Anti_Undo:propNotSolid(1)
+    Anti_Undo:propFreeze(1)
+    Anti_Undo:propDraw(0)
+}
+if(clk("interval")){
+    foreach(I,K:entity=getPlayers()){
+        if(!holoEntity(K:id()):isValid()){
+            holoCreate(K:id(), vec(0), vec(0), ang(0), vec(255, 255, 255), "models/holograms/rcube_thick.mdl")
+        }
+        if(holoEntity(K:id()):getColor()==vec(255)){
+            if(K:boxCenterW():distance(owner():boxCenterW())>500){
+                holoColor(K:id(),vec(0))
+                K:setMuted(1)
+            }
+        }
+        if(holoEntity(K:id()):getColor()==vec(0)){
+            if(K:boxCenterW():distance(owner():boxCenterW())<=500){
+                holoColor(K:id(),vec(255))
+                K:setMuted(0)
+            }
+        }
+    }
+    foreach(I,K:entity=getHolos()){
+        if(entity(holoIndex(K)):type()!="player"){
+            holoDelete(holoIndex(K))
+        }
+    }
+}
+if(last()){
+    foreach(I,K:entity=getPlayers()){
+        K:setMuted(0)
+    }
+}

@@ -1,0 +1,38 @@
+@name Laser Controler
+@inputs BR BG BB 
+@outputs Color1:vector Color2:vector Color3:vector Custom:vector Alpha Alpha2 Alpha3
+@persist RD R G B
+@model models/kobilica/relay.mdl
+
+ interval(500)
+ RD=randint(0,500)
+ 
+ if(RD >= 450 && RD < 500){
+    Color1=vec(255,0,0)   
+    Color2=vec(0,255,0)   
+    Color3=vec(0,0,255) 
+ }
+
+  if(RD >= 350 && RD < 450){
+    Color1=vec(255,0,255)   
+    Color2=vec(0,255,255)   
+    Color3=vec(255,0,255)  
+ }
+
+   if(RD >= 250 && RD < 350){
+    Color1=vec(255,255,255)   
+    Color2=vec(255,0,255)   
+    Color3=vec(255,100,0)   
+ }
+
+    if(RD >= 150 && RD < 250){
+    Color1=vec(255,100,255)   
+    Color2=vec(255,0,15)   
+    Color3=vec(15,100,0)   
+ }
+
+ if(BR == 1){ R+=20 }
+ if(BG == 1){ G+=20 }
+ if(BB == 1){ B+=20 }
+
+ Custom=vec(R,G,B)

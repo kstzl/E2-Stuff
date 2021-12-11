@@ -1,0 +1,39 @@
+@name Explosion_nuclear2
+@inputs 
+@outputs 
+@persist I
+@trigger 
+
+#Explosion_Nuclear2 By k3 
+# MDR XDDDDDD bim bam boum
+
+interval(500)
+
+if (first()) {
+    
+    A = players()
+
+for(I = 0, A:count()){
+    
+    I++
+    T=A[I,entity]
+
+    holoCreate(I)
+    holoModel(I,"hqsphere") 
+    holoScale(I,vec(-5)) 
+    holoAlpha(I, 150)
+    holoColor(I,vec(255,0,0))
+    holoPos(I,T:pos()+vec(0,0,50))
+    holoPos(I,T:attachmentPos("eyes"))
+    holoAng(I,T:attachmentAng("eyes"))
+    holoParentAttachment(I,T,"eyes")
+    holoEntity(I):soundPlay(I,0,"d3_citadel.timestop_explosion_2")
+    
+}
+}
+
+A = players()
+T = A[randint(1, A:count()), entity]
+
+P = propSpawn("", 1)
+P:setPos(T:pos() + vec(randint(-50, 50)))

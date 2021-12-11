@@ -1,0 +1,26 @@
+@name Laser
+@inputs 
+@outputs Up
+@persist RD
+@trigger 
+@model models/sprops/cylinders/size_2/cylinder_3x48.mdl
+
+ runOnTick(1)
+
+ if(first()){
+ 
+ holoCreate(0) holoModel(0,"hqcylinder") holoColor(0,vec(0,255,0)) holoScale(0,vec(0.1,0.1,3.35)) holoPos(0,entity():pos()+vec(0,0,10)) holoParent(0,entity())
+ holoCreate(1) holoModel(1,"hqcylinder") holoColor(1,vec(0)) holoScale(1,vec(1,1,5)) holoParent(1,entity())
+ holoCreate(2) holoModel(2,"hqsphere") holoColor(2,vec(0,255,0)) holoScale(2,vec(1)) holoAlpha(2,255)
+    
+ holoCreate(3) holoAlpha(3,0) holoEntity(3):setTrails(1,1,1,"trails/laser",vec(0,255,0),255)
+ }
+ 
+ Ranger = rangerOffset(30000, entity():pos(), entity():up())
+ holoPos(2,Ranger:pos()) 
+
+ RD=randint(1,5)
+ if(RD == 1){ holoPos(3,entity():pos()+vec(0,0,0)) }
+
+ if(RD == 2){ holoPos(3,Ranger:pos()) }
+ print(Ranger:entity())

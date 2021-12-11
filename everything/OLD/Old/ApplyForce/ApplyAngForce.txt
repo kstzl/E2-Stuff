@@ -1,0 +1,10 @@
+@name Applyangforce
+@inputs W A S D E:entity
+@outputs 
+@persist E:entity Force 
+@trigger 
+
+runOnTick(1)
+Force = 2000
+
+E:applyAngForce(ang(0,99,0)*Force)

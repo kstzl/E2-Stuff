@@ -1,0 +1,93 @@
+@name CombineContainment
+@persist [ Target Prop ]:entity [ Walk Boost Contain I ]:number [ LookPos ]:angle
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(0)
+    holoModel(0, "models/Combine_Soldier.mdl")
+    
+    holoCreate(1)
+    holoScaleUnits(1, -vec(150, 150, 100))
+    holoModel(1, "hqcylinder")
+    holoMaterial(1, "phoenix_storms/metalfence004a")
+    holoAng(1, ang(0))
+    
+    holoCreate(2)
+    holoModel(2, "hqcylinder")
+    holoColor(2, vec(0))
+    
+    Prop = propSpawn("models/hunter/tubes/tube4x4x2.mdl", 0)
+    
+    Target = findPlayerByName("carlos")
+    
+}
+
+function tp_box(Pos_:vector){
+    
+    Prop:setPos(Pos_)
+    
+}
+
+if(changed(Walk) && Walk == 0){ holoAnim(0, "idle1") }
+if(changed(Walk) && Walk > 0){ holoAnim(0, "runall") }
+
+Ranger = rangerOffset(3000, holoEntity(0):pos() + vec(0, 0, 25), -holoEntity(0):up())
+rangerFilter(Prop)
+Ranger2 = rangerOffset(3000, holoEntity(0):pos() + vec(0, 0, 25), holoEntity(0):forward())
+
+Dist = holoEntity(0):pos():distance(Target:pos())
+DistF = Ranger2:distance()
+Dist2 = Prop:pos():distance(Target:pos())
+MaxDist = 50
+
+if(Contain == 0){
+    Boost = abs(sin(I) * 5)
+    Walk = (Dist > MaxDist) * 5
+    LookPos = ( Target:pos() - holoEntity(0):pos() ):toAngle():setPitch(0)
+}
+if(Contain == 1){
+    Boost = 0
+    Walk = (Target:isAlive() * 1.5)
+    if(DistF < 50){
+        LookPos += ang(0, 45, 0)
+    }
+}
+
+if(Dist2 > 100){
+    
+    if(Contain == 1){
+        Contain = 0
+    }
+    
+}
+
+Prop:setAlpha(0)
+Prop:propFreeze(0)
+
+if(Dist < MaxDist){ timer("contain", 1) }
+if(clk("contain")){ Contain = 1  }
+if(changed(Contain) && Contain == 1){ tp_box(Target:toWorld(vec(0, 0, 50))) holoEntity(0):soundPlay(0, 0, "d3_citadel.guards_talk") }
+if(changed(Contain) && Contain == 0){ tp_box(entity():pos()) holoEntity(0):soundPlay(0, 0, "NPC_AttackHelicopter.BadlyDamagedAlert") }
+if(Contain == 1){
+    Prop:applyForce( ( holoEntity(0):toWorld(vec(0, 0, 75)) - Prop:pos() ) * Prop:mass()/2 )
+    Prop:setAng(ang(0))
+    D = holoEntity(0):pos():distance(holoEntity(1):pos())
+    holoPos(2, holoEntity(1):pos())
+    holoAng(2, (holoEntity(0):toWorld(vec(0, 0, 50)) - holoEntity(1):pos()):toAngle() + ang(90, 0, 0) )
+    holoScaleUnits(2, vec(2, 2, D))
+    holoPos(2, holoEntity(2):toWorld(vec(0, 0, D/2)))
+}
+
+holoAng(0, LookPos )
+
+if(DistF > 25){
+
+    holoPos(0, holoEntity(0):toWorld(vec((Walk + Boost), 0, 0)):setZ(Ranger:pos():z()))
+}
+
+holoPos(1, Prop:toWorld(vec(0, 0, 100/2-50)))
+holoAlpha(2, Contain*255)
+
+I += 0.1

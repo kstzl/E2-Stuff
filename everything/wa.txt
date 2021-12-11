@@ -1,0 +1,20 @@
+@name WA
+@inputs 
+@outputs 
+@persist Stream:webaudio
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    Player = findPlayerByName("k3")
+    
+    Stream = webAudio("https://cdn.discordapp.com/attachments/837722455790714950/885544824063815730/knock-knock-sound-effect.mp3")
+    Stream:setPos(Player:pos())
+    Stream:setParent(Player)
+    Stream:setLooping(1)
+    Stream:setRadius(999999999)
+    Stream:play()
+    
+}

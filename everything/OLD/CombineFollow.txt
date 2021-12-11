@@ -1,0 +1,60 @@
+@name CombineFollow
+@persist [ MH I ]:number [ AN ]:table [ Target ]:entity
+
+interval(1)
+
+if(first()){
+    
+    MH = 15
+    
+    for(I = 0, MH){
+        
+        holoCreate(I)
+        holoModel(I, "models/Combine_Super_Soldier.mdl")
+         
+        AN[I, table] = table(1)
+        
+    }
+    
+    holoAlpha(0, 0)
+    
+    Target = findPlayerByName("Bad")
+    
+}
+
+
+holoPos(0, Target:pos())
+
+for(I2 = 1, MH){
+    
+    A = AN[I2, table][1, number]
+    P = 0
+    
+    Ranger = rangerOffset(300000, holoEntity(I2):pos() + vec(0, 0, 50), -holoEntity(I2):up())
+    
+    if(holoEntity(I2):pos():distance(holoEntity(I2 - 1):pos()) > 50){
+        
+        holoPos(I2, holoEntity(I2):toWorld(vec(2.5, 0, 0)):setZ(Ranger:pos():z()) )
+        holoAng(I2, ( holoEntity(I2 - 1):pos() - holoEntity(I2):pos() ):toAngle():setPitch(0) )
+        
+        if(A == 1){
+            
+            holoAnim(I2, "runall")
+            AN[I2, table][1, number] = 0
+        
+        }
+
+    }
+    else
+    {
+        if(A == 0){
+            
+            holoAnim(I2, "idle1")
+            AN[I2, table][1, number] = 1
+            
+        }   
+        
+    }
+
+}
+

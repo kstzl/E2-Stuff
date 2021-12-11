@@ -1,0 +1,39 @@
+@name UndeletableHoloAimpos
+@inputs 
+@outputs 
+@persist HoloIndex Ents:array O:entity
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    entity():setName("setang stearing")
+    O = owner()
+    HoloIndex = -100
+    
+}
+
+if(changed(O:keyAttack2()) && O:keyAttack2() == 1){
+    
+    local Ent = O:aimEntity()
+    
+    if(Ent){
+        
+        print("Holo " + HoloIndex:toString() + " created on " + Ent:toString())
+        
+        holoCreate(HoloIndex)
+        holoModel(HoloIndex, "models/props_c17/oildrum001_explosive.mdl")
+
+        holoPos(HoloIndex, O:aimPos())
+        holoAng(HoloIndex, O:aimNormal():toAngle() + ang(90, 0, 0))
+        
+        holoParent(HoloIndex, Ent)
+                
+        Ents[HoloIndex, entity] = Ent
+        
+        HoloIndex--
+        
+    }
+
+}

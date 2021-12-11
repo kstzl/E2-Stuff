@@ -1,0 +1,39 @@
+@name RampeAuto
+
+@persist [ RoundedY ]:number
+@persist [ Pos ]:vector
+
+@persist [ Rampes ]:table
+
+interval(1)
+
+function add_rampe(Pos:vector, Ang:angle){
+    
+    R = propSpawn("models/hunter/plates/plate4x7.mdl", 1)
+    R:setPos(Pos)
+    R:setAng(Ang)
+    Rampes:pushTable(table("Ent" = R, "Pos" = Pos, "Ang" = Ang))
+    
+}
+
+if(first()){
+    
+    Pos = entity():pos() + vec(0, 0, 100)
+}
+
+
+findByClass("player")
+findSortByDistance(Pos)
+O = find()
+
+RoundedY = round( ( O:pos():y() ) / 260 ) * 260
+
+if(changed(RoundedY)){
+    
+    Pos = Pos:setY(RoundedY)
+    
+    add_rampe(Pos, ang(55, 0, 0))
+    
+    
+    Rampes[Rampes:count()-2, table]["Ent", entity]:propDelete()
+}

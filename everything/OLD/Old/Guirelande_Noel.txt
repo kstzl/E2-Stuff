@@ -1,0 +1,18 @@
+@name Guirelande_Noel
+@inputs 
+@outputs 
+@persist I A:array
+@trigger 
+
+ interval(1)
+
+ findByModel("models/sprops/rectangles/size_1/rect_3x3x3.mdl")
+ A=findToArray()
+ I=0
+ 
+ while(I < A:count()){
+    I++
+
+ A[I,entity]:setColor(vec(randint(0,255),randint(0,255),randint(0,255)))
+
+ }

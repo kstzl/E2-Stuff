@@ -1,0 +1,98 @@
+@name AST Stencils
+@persist Chip:entity
+ 
+if (first())
+{
+    #change this to what enum you want to test
+    #current enums are:
+    #
+    #_STENCIL_WHITELIST
+    #_STENCIL_BLACKLIST
+    #_STENCIL_WHITELIST_WORLD
+    #
+    #and new ones are:
+    #
+    #_STENCIL_RENDER_TARGET
+    #_STENCIL_WHITELIST_MATERIAL
+    
+    Num = _STENCIL_WHITELIST
+    
+    #the switch case below will show you how I set up each stencil
+    #transparency is important with most stencils
+    
+    Chip = entity()
+    
+    Chip:setAlpha(255)
+    
+    if (0 & owner():weapon():type() == "gmod_tool")
+    {
+        hint("or you will get a bug with transparency.", 5)
+        hint("Don't forget to holster your toolgun,", 5)
+    }
+    
+    switch (Num)
+    {
+        case _STENCIL_WHITELIST,
+            #create and parent entities
+            holoCreate(1, Chip:toWorld(vec(0, 40, 0)), vec(5), Chip:angles(), vec(255), "plane")
+            holoParent(1, Chip)
+            
+            holoCreate(2, Chip:toWorld(vec(0, 40, -11)), vec(0.2), Chip:angles(), vec(255), "models/props_c17/FurnitureWashingmachine001a.mdl")
+            holoParent(2, Chip)
+            
+            holoCreate(3, Chip:toWorld(vec(17, 40, 13.2)), vec(0.6), Chip:angles(), vec(255), "models/props_c17/FurnitureWashingmachine001a.mdl")
+            holoAlpha(3, 0)
+            holoParent(3, Chip)
+            
+            stencilCreate(1) #no need to add the type as _STENCIL_WHITELIST is the default type
+            stencilAddEntity(1, holoEntity(2)) #add an entity to get affected by the stencil
+            stencilAddEntity(1, holoEntity(3)) #transparency isn't handled in stencils, so you can hide entities outside the stencil
+            stencilAddReferenceEntity(1, holoEntity(1)) #add an entity to render with the stencil
+            stencilSetEntityOverrideColor(1, vec(0, 255, 0))
+            
+            #keep in mind that if an entity gets culled off by the source engine it will not 
+        break
+        case _STENCIL_BLACKLIST,
+            holoCreate(1, Chip:toWorld(vec(0, 40, 22)), vec(1), Chip:angles())
+            holoAlpha(1, 0)
+            holoParent(1, Chip)
+            
+            holoCreate(2, Chip:toWorld(vec(0, 40, 22)), vec(1), Chip:angles(), vec(255), "models/props_c17/FurnitureWashingmachine001a.mdl")
+            holoAlpha(2, 0)
+            holoParent(2, Chip)
+            
+            stencilCreate(1, _STENCIL_BLACKLIST)
+            stencilAddEntity(1, holoEntity(2))
+            stencilAddReferenceEntity(1, holoEntity(1))
+        break
+        case _STENCIL_WHITELIST_WORLD, #I like indenting these. I think they should be automaticaly
+            Chip:setAlpha(0)
+            Chip:setAng(toWorldAng(vec(), toWorldAng(vec(), ang(0, 0, 180), vec(), ang(0, 0, 90)), vec(), ang(0, owner():eyeAngles()[2] + 90, 0)))
+            Chip:setPos(owner():shootPos() + owner():eye():setZ(0):normalized() * 80 + vec(0, 0, 8))
+            
+            holoCreate(1, Chip:toWorld(vec(0, 0, 1.75)), vec(6), Chip:angles(), vec(255), "plane")
+            holoAlpha(1, 0)
+            holoParent(1, Chip)
+            
+            holoCreate(2, Chip:toWorld(vec(100, 10, -500)), vec(1), Chip:toWorld(toWorldAng(vec(), ang(0, 30, 0), vec(), ang(90, 0, 90))), vec(255), "models/props_wasteland/cargo_container01.mdl")
+            holoAlpha(2, 0)
+            holoParent(2, Chip)
+            
+            holoCreate(3, Chip:pos(), vec(2), Chip:angles(), vec(255), "models/props_phx/construct/windows/window1x1.mdl")
+            holoParent(3, Chip)
+            
+            holoCreate(4, Chip:toWorld(vec(0, 72, -60)), vec(1), Chip:toWorld(toWorldAng(vec(), ang(0, 180, 0), vec(), ang(90, 0, 90))), vec(255), owner():model())
+            holoAlpha(4, 0)
+            holoParent(4, Chip)
+            
+            #ifdef holoAnim(number, string)
+            holoAnim(4, "taunt_laugh", 0, 1)
+            #endif
+            
+            stencilCreate(1, _STENCIL_WHITELIST_WORLD)
+            stencilAddEntity(1, holoEntity(2))
+            stencilAddEntity(1, holoEntity(4))
+            stencilAddReferenceEntity(1, holoEntity(1))
+        break
+    }
+}

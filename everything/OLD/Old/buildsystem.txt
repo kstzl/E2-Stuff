@@ -1,0 +1,40 @@
+@name BuildSystem
+@persist [ O ]:entity [ R ]:vector I
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoModel(1, "models/hunter/plates/plate1x1.mdl")
+    
+    O = owner()
+    
+    I = 2
+    
+}
+
+R = round((O:aimPos() + O:aimNormal())/48)*48
+
+if(O:eyeAngles():pitch() < 50){
+    
+    Pitch = 90
+    
+}
+else
+{
+    Pitch = 0
+}
+holoPos(1, R + vec(0, 0, 5))
+holoAng(1, ang(Pitch, 0, 0))
+
+if(changed(O:keyAttack2()) && O:keyAttack2() == 1){
+    
+    holoCreate(I)
+    holoModel(I, "models/hunter/plates/plate1x1.mdl")
+    holoPos(I, holoEntity(1):pos())
+    holoAng(I, holoEntity(1):angles())
+    holoEntity(I):soundPlay("place", 0, "Buttons.snd14")
+    
+    I += 1
+}

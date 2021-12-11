@@ -1,0 +1,12 @@
+@name MultiTexturedCubeLib
+
+function create_face(Pos_:vector, Scale_:number){
+    
+    H = 0
+    
+    holoCreate(H)
+    holoScaleUnits(H, vec(Scale_):setX(0))
+    
+}
+
+create_face(entity():pos(), 35)

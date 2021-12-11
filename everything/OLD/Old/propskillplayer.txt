@@ -1,0 +1,17 @@
+@name PropsKillPlayer
+@persist [ P T]:entity
+
+interval(1)
+
+if(first()){
+    
+    P = entity():isWeldedTo()
+    T = findPlayerByName("Ziggy")
+    
+    timer("launch", 0)
+}
+
+if(clk("launch")){
+    P:applyForce( (T:pos() - P:pos() ) * P:mass() * 15 )
+    timer("launch", 1000)
+}

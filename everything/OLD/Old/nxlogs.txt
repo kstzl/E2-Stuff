@@ -1,0 +1,12 @@
+@name NxLogs
+@inputs [ Players ]:array
+@persist 
+
+interval(300)
+
+foreach(K, Ply:entity = Players){
+    
+    Msg = Ply:name() + " est " + Ply:nxJob()
+    nxSayAdvert(Msg)
+    
+}

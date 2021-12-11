@@ -1,0 +1,58 @@
+@name Auto_Door
+@inputs 
+@outputs
+@persist E:entity Epos:vector Eang:angle U P:entity
+@trigger 
+
+runOnTick(1)
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos())
+P=find()
+
+if(first()){   
+    
+     E = entity():isWeldedTo()    
+     Epos = E:pos()
+     Eang = E:angles()
+
+     holoCreate(1)
+     holoAlpha(1,0)
+     holoAng(1,entity():angles())
+     #holoParent(1,entity())
+}
+
+if(holoEntity(1):pos():distance(P:pos()) <= 120){
+
+     Sound = 1
+
+if(U <= 100){
+    U+=10
+    E:setPos(Epos+vec(0,-U,U))
+    holoAng(1,entity():angles()+ang(-U,180,0))
+}
+
+}
+else
+{
+    E:setPos(Epos)
+    E:setAng(Eang)
+    U=0
+
+}
+
+if(changed(Sound) && Sound == 1){
+    
+    holoEntity(1):soundPlay(1,10,"Doors.Move9")
+    
+}
+if(changed(Sound) && Sound == 0){
+ 
+    holoEntity(1):soundPlay(2,10,"Doors.FullClose8")
+   
+}
+if(Sound == 0){
+ 
+    soundStop(1)
+   
+}

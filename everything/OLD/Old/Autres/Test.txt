@@ -1,0 +1,7 @@
+@name Levitator
+@inputs
+@outputs
+
+Vector = vec(0,0,90)
+interval(1)
+applyForce($Vector*9999999)

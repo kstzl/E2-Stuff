@@ -1,0 +1,80 @@
+@name mk_redshell
+@persist [ I Up Active ]:number [ Target ]:entity
+
+interval(1)
+
+function breaks(){
+    
+    if(Active == 1){
+        
+        Active = 0
+        
+        P = propSpawn("models/props_c17/oildrum001_explosive.mdl", 1)
+        P:setAlpha(0)
+        P:setPos(holoEntity(1):pos())
+        P:propBreak()
+        
+        soundStop(0)
+        
+    }
+    
+}
+
+if(first()){
+    
+    holoCreate(1)
+    holoAlpha(1, 0)
+    holoEntity(1):soundPlay(0, 0, "NPC_AttackHelicopter.MegabombAlert")
+    
+    holoCreate(2)
+    holoModel(2, "models/hunter/misc/shell2x2a.mdl")
+    holoColor(2, vec(255, 0, 0))
+    holoScale(2, vec(0.5))
+    
+    holoCreate(3)
+    holoModel(3, "hqcylinder")
+    holoScale(3, vec(4, 4, 0.5))
+    holoParent(3, 2)
+    
+    Target = owner()
+    Active = 1
+    Up = 5
+
+}
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos())
+Target = find()
+
+I += 5
+
+if(Active == 1){
+    
+    holoPos(2, holoEntity(1):pos())
+    
+    holoAng(1, (Target:pos() - holoEntity(1):pos()):toAngle())
+    holoPos(1, holoEntity(1):toWorld(vec(10, 0, 0)))
+    
+    holoAng(2, ang(0, I, 0))
+    
+    Ranger = rangerOffset(3000, holoEntity(1):pos() + vec(0, 0, 25), holoEntity(1):forward())
+
+}
+else
+{
+    holoPos(2, holoEntity(2):pos() + vec(0 , 0, Up))
+    holoPos(3, holoEntity(2):pos() + vec(0, 0, Up))
+    
+    holoAng(2, holoEntity(2):angles() + ang(5))
+    holoAng(3, holoEntity(2):angles() - ang(5))
+    
+    Up -= 0.1
+}
+
+
+
+if(Ranger:distance() < 5){
+    
+    breaks()
+    
+}

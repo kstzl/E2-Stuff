@@ -1,0 +1,54 @@
+@name super_computer_base
+
+#Super Computer By K3CR4FT.:DLL
+
+@persist [ BaseCode ]:string
+
+#Peripheriques
+@inputs [ Egp ]:wirelink
+
+interval(1)
+runOnFile(1)
+
+function run_program(File_:string){
+    
+    fileLoad(File_)
+    
+}
+if(fileClk() & fileLoaded()){
+    
+    local AppCode = fileRead()
+    local AppCodeExploded = AppCode:explode("\n")
+    local InsideDirectives = 0
+    local Directives = ""
+    
+    foreach(K, Line:string = AppCodeExploded){
+  
+        print(Line:find("directives"))
+        if(Line == "#directives"){ InsideDirectives = 1 }
+        if(Line == "#end_directives"){ InsideDirectives = 0 }
+        
+        if(InsideDirectives){
+            
+            Directives += Line + "\n"
+
+        }
+
+    }
+
+    
+    Sub =   "\n#[ CE CODE EST GENERE EN RUNTIME ! ]#"
+    Sub +=  "\n#[ Programme en cours : '" + fileName() + "' ]#"
+    Sub +=  "\n\n"
+    
+    #entity():remoteSetCode(BaseCode + Sub + fileRead())
+    
+}
+
+if(first()){
+    
+    BaseCode = getCode()
+    Egp:egpClear()
+
+    run_program("test.txt")
+}

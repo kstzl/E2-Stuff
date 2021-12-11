@@ -1,0 +1,439 @@
+@name animation_lib_v2
+@persist [ CMDS_ CMDSS_ ]:array
+@persist [ ObjectsCount ]:number [ ObjectsInfos ]:table
+@persist [ CanSpace ]:number [ Separation ]:string
+@persist [ Analyse ScriptInfo ]:table [ InAnalyse ]:number
+@persist [ InExecution ExecutionIndex ]:number
+
+#include "old/fastlib"
+ 
+#[
+
+ Expression2
+                 _                 _   _               _      _ _            ___  
+     /\         (_)               | | (_)             | |    (_) |          |__ \ 
+    /  \   _ __  _ _ __ ___   __ _| |_ _  ___  _ __   | |     _| |__   __   __ ) |
+   / /\ \ | '_ \| | '_ ` _ \ / _` | __| |/ _ \| '_ \  | |    | | '_ \  \ \ / // / 
+  / ____ \| | | | | | | | | | (_| | |_| | (_) | | | | | |____| | |_) |  \ V // /_ 
+ /_/    \_\_| |_|_|_| |_| |_|\__,_|\__|_|\___/|_| |_| |______|_|_.__/    \_/|____|
+                                                                                                                                                                                                      
+ By K3CR4FT.:DLL ; 2020
+                                       
+]#
+ 
+interval(1)
+
+function al_print(String_:string, Type_:string){
+    
+    if(Type_ == "info"){
+        print("[INFORMATION] " + String_)
+    }
+    elseif(Type_ == "cmd"){
+        print("[CMD] " + String_)
+    }
+    elseif(Type_ == "error"){
+        print("[ERREUR] " + String_)
+    }
+    else
+    {
+        print("[AnimationLibV2] " + String_)
+    }
+    
+}
+
+function array al_get_cmd_ptype(CmdName_:string){
+    
+    FinalArray = array()
+
+    for(I = 0, CMDS_:count()){
+
+        if(CMDS_[I, string]:explode(";")[1, string] == CmdName_){
+            
+            Args = CMDS_[I, string]:explode(";")
+            
+            for(I = 2, Args:count()){
+                
+                FinalArray[I-2, string] = Args[I, string]
+            }
+            
+            
+        }
+        
+    }
+    
+    return FinalArray
+    
+}
+
+function number al_get_object_id(ObjectName_:string){
+    
+    Return_ = 0
+    
+    for(I = 0, ObjectsCount){
+        
+        if(ObjectName_ == ObjectsInfos[I, table][2, string]){
+            Return_ = ObjectsInfos[I, table][1, number]
+        }
+        
+    }
+    
+    return Return_ 
+    
+}
+
+function string al_get_type(String_:string){
+    
+    NotNumber = array(";", " ", "\n")
+    IsSpecial = 0
+    
+    for(I = 0, NotNumber:count()){
+        
+        if(NotNumber[I, string] == String_){
+            
+            IsSpecial = 1
+            
+        }
+        
+    }
+    
+    if(IsSpecial == 0){
+        
+        if(String_:upper() == String_:lower()){
+            return "number"   
+        }
+        else
+        {
+            return "string"
+        }
+    
+    }
+    else
+    {
+        return "special"   
+    }
+    
+}
+
+function number al_cmd_name_exist(CmdName_:string){
+
+    Exist_ = 0
+    
+    for(I = 0, CMDS_:count()){
+
+        if(CMDS_[I, string]:explode(";")[1, string] == CmdName_){
+            Exist_ = 1   
+        }
+        
+    }
+    
+    return Exist_
+    
+}
+
+function al_cmd(Cmd_:string){
+    
+    ECmd = Cmd_:explode(" ")
+    ECmdName = ECmd[1, string]
+    ECmdParameters = array()
+    ECmdParametersInfo = ""
+    ParametersError = 0
+    
+    #al_print("recherche de : '" + ECmdName + "'", "info")
+    
+    if(al_cmd_name_exist(ECmdName)){
+ 
+        for(I = 2, ECmd:count()){
+            ECmdParameters[I, string] = ECmd[I, string]
+            ECmdParametersInfo += "<" + ECmdParameters[I, string] + ">"
+   
+            if(ECmdParameters[I, string]:length() == 0){
+                ParametersError = 1
+                al_print(" >> Parametre " + (I-1):toString() + " de la fonction '" + ECmdName + "' vide !", "error")
+            }
+        }
+        
+        #Verification des parametres
+        
+        ParamtersNeeded = al_get_cmd_ptype(ECmdName)
+        ParametersNeededInfo = ""
+        
+        for(I = 0, ParamtersNeeded:count()){
+            
+            ParametersNeededInfo += "<" + ParamtersNeeded[I, string]:replace("string", "TEXTE"):replace("number", "NOMBRE") + "> "
+            
+        }
+        
+        for(I = 0, ParamtersNeeded:count()){
+            
+            ParameterN = ParamtersNeeded[I, string]
+            ParameterG = ECmdParameters[I+2, string]
+            
+            ParameterGT = al_get_type(ParameterG)
+            
+            if(ParameterN != ParameterGT){
+                ParametersError = 1
+     
+                al_print(" >> Parametre " + (I+1):toString() + " de la fonction '" + ECmdName + "' incorrecte !", "error")
+            }
+            
+            if(ECmdParameters:count()-2 < ParamtersNeeded:count()){
+                ParametersError = 1
+                al_print(" >> Pas assez de parametres pour la fonction '" + ECmdName + "' !", "error")
+            }
+            
+            if(ECmdParameters:count()-2 > ParamtersNeeded:count()){
+                ParametersError = 1
+                al_print(" >> Trop de parametres pour la fonction '" + ECmdName + "' !", "error")
+            }
+            
+        }
+
+        if(ParametersError == 0){
+            
+            al_print(" >> Execution de '" + Cmd_ + "'", "info")
+            
+            for(I = 2, ECmdParameters:count()){
+                
+                Args[I-2, string] = ECmdParameters[I, string]
+                
+            }
+               
+            #Creation d'un objet
+            if(ECmdName == CMDSS_[1, string]){
+                
+                HoloID = ObjectsCount + time()
+                
+                holoCreate(HoloID)
+                holoModel(HoloID, "models/maxofs2d/cube_tool.mdl")
+                
+                ObjectsInfos[ObjectsCount, table] = table(HoloID, Args[0, string])
+    
+                ObjectsCount++
+                
+                al_print("Object '" + Args[0, string] + "' cree avec succes !", "info")
+                
+            }
+            
+            #Changement du model d'un objet
+            if(ECmdName == CMDSS_[2, string]){
+                
+                HoloID = al_get_object_id(Args[0, string])
+                
+                if(HoloID != 0){
+                    
+                    holoModel(HoloID, Args[1, string])
+                    
+                    al_print("Model de l'objet '" + Args[0, string] + "' change pour '" + Args[1, string] + "' avec succes !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+            
+            #Changement de l'animation d'un objet
+            if(ECmdName == CMDSS_[3, string]){
+                
+                HoloID = al_get_object_id(Args[0, string])
+                
+                if(HoloID != 0){
+                    
+                    holoAnim(HoloID, Args[1, string])
+                    
+                    al_print("Animation de l'objet '" + Args[0, string] + "' change pour '" + Args[1, string] + "' avec succes !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+            #Mouvement toworld d'un objet
+            if(ECmdName == CMDSS_[4, string]){
+                
+                HoloID = al_get_object_id(Args[0, string])
+                
+                if(HoloID != 0){
+                    
+                    holoPos(HoloID, holoEntity(HoloID):toWorld(vec(Args[1, string]:toNumber(), Args[2, string]:toNumber(), Args[3, string]:toNumber())))
+             
+                    al_print("Mouvement de l'objet '" + Args[0, string] + "' to world (" + Args[1, string]:toNumber() + "," + Args[2, string]:toNumber() + "," +  Args[3, string]:toNumber() + ") avec succes !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+        
+        }
+        else 
+        {
+            al_print(" >> Correction : " + ECmdName + " " + ParametersNeededInfo, "error")
+        }
+             
+    }
+    else
+    {
+        al_print("Fonction '" + ECmdName + "' introuvable.", "error")
+    }
+    
+}
+
+function al_start_analyse_execution(Code_:string){
+    
+    #Table Analyse:
+    # Code ; Commandes trouvee ; Index ; Il ; Nom ; Auteur #
+    
+    al_print("----------Analyse du script ... ----------", "info")
+    
+    Analyse = table(Code_, array(), 0, 0, "", "")
+    InAnalyse = 1
+    CanSpace = 0
+    
+}
+
+function al_start_execution(){
+    
+    InExecution = 1
+    ExecutionIndex = 0
+    
+    al_print("---------- Execution en cours ! ----------", "info")
+    al_print("Execution de '" + ScriptInfo[3, string] + "' par '" + ScriptInfo[4, string] + "' en cours.", "info")
+    
+}
+
+if(first()){
+    
+    hint("Animation Lib v2 by K3CR4FT.:DLL", 3)
+    al_print("Par K3CR4FT.:DLL", "")
+    
+    CMDS_ = array("Object;string", "ObjectModel;string;string", "ObjectAnim;string;string", "ObjectMoveToWorld;string;number;number;number", "ScriptName;string", "ScriptAuthor;string")
+    CMDSS_ = array()
+        
+    for(I = 0, CMDS_:count()){
+            
+        CMDSS_[I, string] = CMDS_[I, string]:explode(";")[1, string]
+            
+    }
+    
+    Separation = ";"
+    
+    Code=
+    "
+    ScriptName prototype;
+    ScriptAuthor K3CR4FT.:DLL;
+    
+    Object ground;
+    ObjectModel ground models/props_phx/construct/metal_plate4x4.mdl;
+    
+    "
+    
+    al_start_analyse_execution(Code)
+
+}
+
+#ANALYSE DU SCRIPT#
+
+if(InAnalyse == 1){
+    
+    if(every(1)){
+        
+        Index = Analyse[3, number]
+        
+        IL = Analyse[4, number]
+        
+        Letter = Analyse[1, string][IL]
+        
+        
+        if(Letter == " " && CanSpace == 1){
+            
+            Analyse[2, array][Index, string] = Analyse[2, array][Index, string] + " "
+            CanSpace = 0
+            
+        }
+        
+        if(al_get_type(Letter) == "string" || al_get_type(Letter) == "number"){
+            
+            Analyse[2, array][Index, string] = Analyse[2, array][Index, string] + Letter
+            CanSpace = 1
+            
+        }
+        
+        if(Letter == Separation){
+            
+            ActualCommand = Analyse[2, array][Index, string]
+            ActualCommandExploded = ActualCommand:explode(" ")
+            
+            Analyse[3, number] = Analyse[3, number] + 1
+            CanSpace = 0
+            
+            al_print("Commande trouvee : '" + ActualCommand + "'.", "info")
+            
+            ################SPECIAL###############
+            
+            if(ActualCommandExploded[1, string] == CMDSS_[5, string]){
+                
+                Analyse[5, string] = ActualCommandExploded[2, string]
+                
+                al_print("Nom du script trouve : '" + Analyse[5, string] + "'.", "info")
+                
+            }
+            if(ActualCommandExploded[1, string] == CMDSS_[6, string]){
+                
+                Analyse[6, string] = ActualCommandExploded[2, string]
+                
+                al_print("Auteur du script trouve : '" + Analyse[6, string] + "'.", "info")
+                
+            }
+            
+    
+        }
+        
+        if(Analyse[4, number] < Analyse[1, string]:length()){
+            Analyse[4, number] = Analyse[4, number] + 1
+        }
+        else
+        {
+            InAnalyse = 0
+            ScriptInfo = table("Nom", Analyse[2, array], Analyse[5, string], Analyse[6, string])
+            
+            al_print("Nombre de commandes : " + (Analyse[2, array]:count() + 1):toString(), "info")
+            al_print("---------- Analyse terminee ! ----------", "info")
+            
+            al_start_execution()
+           
+        }
+        
+    }
+
+}
+
+#EXECUTION DU SCRIPT#
+
+if(InExecution == 1){
+
+    if(every(100)){
+        
+        C = ScriptInfo[2, array][ExecutionIndex, string]
+        
+        al_cmd(C)
+        
+        if(ExecutionIndex > ScriptInfo[2, array]:count()-1){
+            
+            InExecution = 0
+            al_print("---------- Execution terminee ! ----------", "info")
+            
+        }
+        else
+        {
+            ExecutionIndex++
+        }
+        
+    }
+    
+}

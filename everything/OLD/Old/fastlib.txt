@@ -1,0 +1,160 @@
+@name FastLib
+@persist 
+
+#[
+
+ Expression2
+  ______        _   _      _ _         
+ |  ____|      | | | |    (_) |        
+ | |__ __ _ ___| |_| |     _| |__
+ |  __/ _` / __| __| |    | | '_ \
+ | | | (_| \__ \ |_| |____| | |_) \
+ |_|  \__,_|___/\__|______|_|_.__/
+                                       
+ By K3CR4FT.:DLL ; 2019
+                                       
+]#
+
+if(first()){
+    
+    hint("FastLibs by K3CR4FT.:DLL", 3)
+
+}
+
+function number entity:touch(Radius_:number, Class_:string){
+    
+    
+    findByClass(Class_)
+    
+    A_ = findToArray()
+    F_ = 0
+    
+    for(I = 0, A_:count()){
+        
+        if(A_[I, entity]:pos():distance(This:pos()) < Radius_){
+            F_ = 1
+        }
+        
+    }
+    
+    return F_
+    
+}
+
+#ifdef function vector entity:goToPos(Pos_:vector, SpeedLimit_:number){
+    
+    SpeedLimit = abs(SpeedLimit_) + 1
+    
+    Vec = This:pos() + (Pos_ - This:pos()) / SpeedLimit
+
+    This:setPos(Vec) 
+
+    return Vec
+    
+} #endif
+
+#ifdef function angle entity:goToAng(Ang_:angle, SpeedLimit_:number){
+    
+    SpeedLimit = abs(SpeedLimit_) + 1
+    
+    Ang = This:angles() + (Ang_ - This:angles()) / SpeedLimit
+    This:setAng(Ang)
+    
+    return Ang
+    
+} #endif
+
+#ifdef function angle entity:angTo(Pos_:vector){
+    
+    DesiredAng = (Pos_ - This:pos()):toAngle()
+    ActualAng = This:angles()
+    FinalAng = ActualAng + (DesiredAng - ActualAng)
+    
+    This:setAng(FinalAng)
+    
+    return FinalAng
+    
+} #endif
+
+function vector fRound(Pos_:vector, Round_:number){
+    
+    local Round = round((Pos_)/Round_)*Round_
+    
+    return Round
+    
+}
+
+function number fRound(Number_:number, Round_:number){
+    
+    local Round = round((Number_)/Round_)*Round_
+    
+    return Round
+    
+}
+
+#ifdef function explosion(Pos_:vector){
+    
+    ExplosionProp = propSpawn("models/props_phx/cannonball_solid.mdl", 1)
+    ExplosionProp:setAlpha(0)
+    ExplosionProp:setPos(Pos_)
+    ExplosionProp:propBreak()
+    
+} #endif
+
+function entity closestPlayer(Pos_:vector){
+    
+    findByClass("player")
+    findSortByDistance(Pos_)
+    return find()
+    
+}
+
+function number every(Millis_:number){
+    
+    TimerName = Millis_:toString()
+    
+    if(clk(TimerName)){
+        return 1
+    }
+    else
+    {
+        timer(TimerName, Millis_)
+        return 0
+    }
+    
+}
+
+function number entity:sfx(Sound_:string, RdPitch_:number){
+    
+    SfxID = time()/ (time() - 500)
+    This:soundPlay(SfxID, 0, Sound_)
+    
+    if(RdPitch_){
+        soundPitch(SfxID, randint(90, 110))
+    }
+    
+    return SfxID
+    
+}
+
+function number number:change(Number_:number){
+    
+    return changed(This) && This == Number_
+    
+}
+
+function number chooseNumber(Array_:array){
+    return Array_[randint(1, Array_:count()), number]   
+}
+
+function string chooseString(Array_:array){
+    return Array_[randint(1, Array_:count()), string]   
+}
+
+function vector chooseVector(Array_:array){
+    return Array_[randint(1, Array_:count()), vector]   
+}
+
+function entity chooseEntity(Array_:array){
+    return Array_[randint(1, Array_:count()), entity]   
+}

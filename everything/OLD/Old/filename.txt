@@ -1,0 +1,32 @@
+@name 
+@inputs 
+@outputs 
+@persist I [ A B ]:vector
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(0)
+    holoScale(0, vec(0.1, 0.1, 2))
+    
+    holoCreate(1)
+    holoColor(1, vec(255, 0, 0))
+    
+    holoCreate(2)
+    holoColor(2, vec(0, 0, 255))
+    holoPos(2, entity():toWorld(vec(150, 0, 0)))
+    
+}
+
+A = holoEntity(1):pos()
+B = holoEntity(2):pos()
+
+D = A:distance(B)
+
+F = sin(I) * 5
+
+I+=5
+
+holoPos(0, B + (A - B) / F)

@@ -1,0 +1,38 @@
+@name POO_Cube
+
+#include "POO_Lib"
+#include "fastlib"
+
+interval(ops() / 100)
+
+if(first()){
+    
+    poo_registerClass("cube")
+    
+    Model = chooseString(array(
+    
+    ))
+    
+    NewCube = poo_createObject("cube")
+    NewCube:poo_setString("Name", "Kevin")
+    
+    
+    
+    
+    
+}
+
+for(I = 0, POO_Objects:count()){
+    
+    Object = POO_Objects[I, table]
+    
+    if(Object:poo_init("cube")){
+        
+        print(Object:poo_getString("Name"))
+  
+    }
+    if(Object:poo_loop("cube")){
+        
+    }
+    
+}

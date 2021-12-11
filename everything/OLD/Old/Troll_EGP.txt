@@ -1,0 +1,43 @@
+@name Troll_EGP
+@persist [ W Alpha ]:number [ O Ent ]:entity
+
+runOnTick(1)
+
+if(first()){
+    
+    O = owner()
+    
+    holoCreate(1)
+    holoMaterial(1,"matsys_regressiontest/background") 
+    
+}
+
+if(changed(O:keyAttack2()) && O:keyAttack2() == 1){
+    
+    Ent = O:aimEntity()
+    
+    holoModel(1, Ent:model()) 
+    holoScale(1, vec(1.1))
+    holoPos(1, Ent:pos())
+    holoAng(1, Ent:angles())
+    holoParent(1, Ent)
+    
+}
+
+if(W >= randint(100, 1000)){
+    
+    holoEntity(1):soundPlay(1, 1, "ambient.electrical_zap_3")
+    Alpha = 35
+    W = 0
+      
+}
+
+if(Alpha > 0){
+    
+    Alpha -= 1
+    
+}
+
+holoAlpha(1, clamp(Alpha, 0, 1) * 255)
+
+W += 1

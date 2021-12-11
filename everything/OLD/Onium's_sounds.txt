@@ -1,0 +1,25 @@
+@name Onium's sounds
+@inputs 
+@outputs 
+@persist Vel
+@trigger 
+
+ runOnTick(1)
+ Vel=owner():vel():length()
+
+
+ if(first()){ holoCreate(1) holoPos(1,owner():pos()) holoParent(1,owner()) }
+ if(Vel >= 5){
+    WalkSound=1
+ }
+ if(changed(WalkSound) && WalkSound ==1 && !owner():isOnGround() ){ holoEntity(1):soundPlay(2,1,"coast.wind_01")  }
+ if(changed(owner():health()) && owner():health() <= 0){  holoEntity(1):soundPlay(3,1,"wilhelm.wav") reset() }
+ if(changed(owner():keyDuck()) && owner():keyDuck()){ holoEntity(1):soundPlay(4,1,"Egg.Crack") }
+ if(changed(owner():keyUse()) && owner():keyUse()==1){ holoEntity(1):soundPlay(5,1,"Weapon_MegaPhysCannon.Pickup") }
+ if(changed(owner():keyPressed("v")) && owner():keyPressed("v") == 1){ holoEntity(1):soundPlay(6,1,"underground_steamjet")}
+
+
+ soundVolume(2,Vel)
+ soundVolume(1,Vel)
+
+ 

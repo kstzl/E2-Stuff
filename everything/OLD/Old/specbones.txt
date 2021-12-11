@@ -1,0 +1,20 @@
+@name SpecBones
+@persist [ Target ]:entity
+
+interval(1)
+
+if(first()){
+    
+    Target = owner()
+    
+    Bones = Target:bones()
+    
+    print(Bones[0, entity])
+    
+    for(I = 0, Bones[0, array]:count()){
+        
+        print("a")
+        
+    }
+    
+}

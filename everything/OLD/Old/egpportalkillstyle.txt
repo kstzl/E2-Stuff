@@ -1,0 +1,89 @@
+@name EgpPortalKillStyle
+@inputs Egp:wirelink Bt:number
+@persist [ Size Center Sec Mil Aff Kill ]:number [ Text ]:string [ Prop ]:entity
+@model models/props_lab/workspace003.mdl
+
+interval(1)
+
+if(first()){
+    
+    Size = 515
+    Center = Size/2
+    
+    Egp:egpClear()
+    
+    Egp:egpBox(0, vec2(Center), vec2(Size))
+    Egp:egpColor(0, vec(0, 200, 255))
+    
+    Egp:egpText(2, "Killing all player in", vec2(Center - 150, 50))
+    Egp:egpFont(2, "arial", 40)
+
+    Egp:egpText(3, "10:10", vec2(Center - 45, 250))
+    Egp:egpFont(3, "arial", 250)
+    
+    timer("mil", 0)
+    timer("kill", 0)
+    
+    Mil = 10000 
+
+    Prop = propSpawn("models/props_c17/FurnitureBed001a.mdl", 1)
+    Prop:setAlpha(0)
+    Prop:propFreeze(0)
+    
+    
+}
+
+if(last()){
+    
+    Prop:propDelete()
+    
+}
+
+Prop:applyAngForce(ang(1,1,720) * Prop:mass() * 30)
+
+if(clk("kill")){
+    
+    if(Kill == 1){
+        
+        Players = players()
+        Rd = randint(0, Players:count())
+        Player = Players[Rd, entity]
+        
+        Prop:setPos(Player:pos())
+    
+    }
+    timer("kill", 500)
+    
+}
+
+
+if(clk("mil")){
+    
+    if(Bt == 1){
+    
+        if(Mil > 0){
+            Mil -= 100
+            Text =  "" + round(Mil / 1000)
+        }
+        else
+        {
+            Kill = 1
+            
+            Aff = !Aff
+            if(Aff){
+                Text =  "0"
+            }
+            else
+            {
+                Text = ""
+            }
+        }
+    
+    }
+    
+    timer("mil", 100)
+        
+        
+}
+
+Egp:egpSetText(3, Text)

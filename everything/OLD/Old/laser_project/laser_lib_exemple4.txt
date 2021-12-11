@@ -1,0 +1,26 @@
+@name laser_lib_exemple4
+@inputs 
+@outputs 
+@persist Count
+@trigger 
+#include "laser_project/laser_lib"
+
+ runOnTick(1)
+
+ if(first()){
+    
+    holoCreate(0) holoAlpha(0,255) holoPos(0,entity():pos()+vec(0,0,130))
+    laserMake(1) laserTrail(1,30,13,1,"trails/smoke",vec(255,0,0),255)
+    
+ }
+
+    Count += 0.01
+    N = 100
+
+    X1 = N*cosr(30*Count)
+    Y1 = N*sinr(30*Count)
+    Z1 = -40
+
+#    holoPos(0,entity():pos()+vec(X1,Y1,Z1))
+    laserStart(1,entity():pos(),holoEntity(0):pos())
+

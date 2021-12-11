@@ -1,0 +1,65 @@
+@name Dessin
+@inputs 
+@outputs 
+@persist Aim:vector Color:vector Nb
+@trigger 
+
+if(first()){
+    Color = vec(255,255,255)
+}
+
+
+Aim = owner():aimPos()
+
+runOnTick(2000)
+runOnChat(1)
+
+if(owner():keyAttack1()){
+    
+Nb+=1
+holoCreate(Nb)
+holoPos(Nb,Aim)
+holoScale(Nb,vec(1))
+holoModel(Nb,"cube")
+holoColor(Nb,Color)
+holoParent(Nb,owner():aimEntity())
+#holoModel(Nb,owner():aimEntity():model())
+
+}
+
+if (chatClk(owner())) {
+
+M = lastSaid():explode(" ")
+
+if (M:string(1) == "blue") {
+    
+    print("Color changed to blue.")
+    Color = vec(0,0,255)
+    
+}
+if (M:string(1) == "red") {
+    
+    print("Color changed to red.")
+    Color = vec(255,0,0)
+    
+}
+if (M:string(1) == "green") {
+    
+    print("Color changed to green.")
+    Color = vec(0,255,0)
+    
+}
+if (M:string(1) == "white") {
+    
+    print("Color changed to white.")
+    Color = vec(255,255,255)
+    
+}
+if (M:string(1) == "yellow") {
+    
+    print("Color changed to yellow.")
+    Color = vec(255,255,0)
+    
+}
+}
+

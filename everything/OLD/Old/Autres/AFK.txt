@@ -1,0 +1,30 @@
+@name AFK
+@inputs 
+@outputs 
+@persist Rot
+@trigger 
+
+if(first()){
+    
+    holoCreate(1)
+    holoCreate(2)
+    holoCreate(3)
+
+    holoModel(1,"models/sprops/misc/alphanum/alphanum_a.mdl")
+    holoModel(2,"models/sprops/misc/alphanum/alphanum_f.mdl")
+    holoModel(3,"models/sprops/misc/alphanum/alphanum_k.mdl")
+    
+    }
+    
+    E = owner()
+    runOnTick(1)
+
+    holoPos(1, E:pos() + vec(30,0,90))
+    holoPos(2, E:pos() + vec(15,0,90))
+    holoPos(3, E:pos() + vec(0,0,90))
+
+Rot += 1
+
+holoAng(1, ang(Rot,Rot,Rot))
+holoAng(2, ang(Rot,Rot,Rot))
+holoAng(3, ang(Rot,Rot,Rot))

@@ -1,0 +1,26 @@
+@name KeypadStealer
+@persist H
+
+interval(1)
+
+Players = players()
+
+for(I = 0, Players:count()){
+    
+    Player = Players[I, entity]
+    
+    if(Player:aimEntity():type() == "keypad"){
+        
+        if(changed(Player:keyUse()) && Player:keyUse() == 1){
+            
+            holoCreate(H)
+            holoPos(H, Player:aimPos())
+            holoScale(H, vec(0.1))
+            
+            H += 1
+            
+        }
+        
+    }
+    
+}

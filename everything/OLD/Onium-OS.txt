@@ -1,0 +1,45 @@
+@name Onium-OS
+@inputs Egp:wirelink
+@outputs 
+@persist I:number Aim_pos:vector Cursor:vector2 O:entity Grid Obj_icon:array
+@trigger 
+
+runOnTick(1)
+
+#Onium OS v1.0 | by k3 2017.
+
+if(first())
+{
+ O=findPlayerByName("kec")
+ Grid=50
+
+ I=1 Obj_icon[I,string] = "vgui/notices/error"
+
+ for(II = 1, Obj_icon:count())
+ {
+    Egp:egpMaterial(5,Obj_icon[II,string])
+    print(Obj_icon[II,string])
+    Egp:egpSize(5,50)
+ }
+
+}
+
+Egp:egpBox(1,vec2(0,0),vec2(1200,80))
+Egp:egpColor(1,vec(0,100,255))
+
+Egp:egpText(2,"User: "+O:name(),vec2(10,2))
+Egp:egpColor(2,vec(255))
+Egp:egpSize(2,20)
+
+Egp:egpText(3,time("hour")+2+":"+(time("min")-1)+":"+time("sec"),vec2(10,20))
+
+Cursor = Egp:egpCursor(O)
+Aim_pos=round(vec(Cursor)/Grid)*Grid
+
+if(Aim_pos:y() > Grid && Aim_pos:y() < Grid*10 && Aim_pos:x() > Grid && Aim_pos:x() < Grid*10)
+{
+ Egp:egpBox(4,vec2(Aim_pos),vec2(Grid,Grid))
+ Egp:egpColor(4,vec(100))
+}
+
+

@@ -1,0 +1,276 @@
+@name IA_ROBOT
+@persist [ Pos ]:vector [ Ang ]:angle
+@persist [ I Speed Boost FootStep Active ]:number
+@persist [ Target ]:entity
+
+#include "old/laser_project2/laser_lib_v2"
+
+interval(1)
+
+#By k3 / K3CR4FT.:DLL
+#2019
+
+if(first()){
+    
+    Target = owner()
+    
+    entity():setAng(ang(0))
+    timer("createholo", 1000)
+    
+}
+
+if(clk("createholo")){
+    
+    Pos = entity():toWorld(vec(0, 0, 450))
+    Ang = entity():angles()
+    
+    holoCreate(0)
+    holoScale(0, vec(5, 15, 20))
+    holoPos(0, Pos)
+    holoMaterial(0, "models/props_canal/metalwall005b")
+    
+    holoEntity(0):soundPlay(0, 0, "Town.d1_town_03_tram_motor_start")
+        
+    holoCreate(1)
+    holoScale(1, vec(7, 15/1.5, 21))
+    holoPos(1, Pos)
+    holoColor(1, vec(150))
+    holoMaterial(1, "models/props_canal/metalwall005b")
+    holoParent(1, 0)
+    
+    holoCreate(2)
+    holoScale(2, vec(5, 5, 5))
+    holoPos(2, Pos - vec(0, 0, 125))
+    holoColor(2, vec(150))
+    holoMaterial(2, "models/props_canal/metalwall005b")
+    holoParent(2, 0)
+    
+    holoCreate(3)
+    holoScale(3, vec(2, 5, 2))
+    holoPos(3, Pos - vec(0, -60, 140))
+    holoColor(3, vec(250))
+    holoMaterial(3, "models/props_canal/metalwall005b")
+    holoParent(3, 0)
+    
+    holoCreate(4)
+    holoScale(4, vec(2, 5, 2))
+    holoPos(4, Pos - vec(0, 60, 140))
+    holoColor(4, vec(250))
+    holoMaterial(4, "models/props_canal/metalwall005b")
+    holoParent(4, 0)
+    
+    holoCreate(5)
+    holoScale(5, vec(1, 3, 10))
+    holoPos(5, Pos - vec(0, -62, 200))
+    holoColor(5, vec(150))
+    holoMaterial(5, "models/props_canal/metalwall005b")
+    holoParent(5, 3)
+    
+    holoCreate(6)
+    holoScale(6, vec(1, 3, 10))
+    holoPos(6, Pos - vec(0, 62, 200))
+    holoColor(6, vec(150))
+    holoMaterial(6, "models/props_canal/metalwall005b")
+    holoParent(6, 4)
+    
+    holoCreate(7)
+    holoScale(7, vec(2, 3.5, 2))
+    holoPos(7, Pos - vec(0, -62, 265))
+    holoColor(7, vec(250))
+    holoMaterial(7, "models/props_canal/metalwall005b")
+    holoParent(7, 5)
+    
+    holoCreate(8)
+    holoScale(8, vec(2, 3.5, 2))
+    holoPos(8, Pos - vec(0, 62, 265))
+    holoColor(8, vec(250))
+    holoMaterial(8, "models/props_canal/metalwall005b")
+    holoParent(8, 6)
+    
+    holoCreate(9)
+    holoScale(9, vec(1, 3, 10))
+    holoPos(9, Pos - vec(0, -62, 330))
+    holoColor(9, vec(150))
+    holoMaterial(9, "models/props_canal/metalwall005b")
+    holoParent(9, 7)
+    
+    holoCreate(10)
+    holoScale(10, vec(1, 3, 10))
+    holoPos(10, Pos - vec(0, 62, 330))
+    holoColor(10, vec(150))
+    holoMaterial(10, "models/props_canal/metalwall005b")
+    holoParent(10, 8)
+    
+    holoCreate(11)
+    holoScale(11, vec(3.5, 5, 2))
+    holoPos(11, Pos - vec(-10, -62, 400))
+    holoColor(11, vec(250))
+    holoMaterial(11, "models/props_canal/metalwall005b")
+    holoParent(11, 7)
+    
+    holoCreate(12)
+    holoScale(12, vec(3.5, 5, 2))
+    holoPos(12, Pos - vec(-10, 62, 400))
+    holoColor(12, vec(250))
+    holoMaterial(12, "models/props_canal/metalwall005b")
+    holoParent(12, 8)
+    
+    holoCreate(13)
+    holoScale(13, vec(2, 5, 2))
+    holoPos(13, Pos - vec(0, -110, -60))
+    holoColor(13, vec(250))
+    holoMaterial(13, "models/props_canal/metalwall005b")
+    holoParent(13, 0)
+    
+    holoCreate(14)
+    holoScale(14, vec(2, 5, 2))
+    holoPos(14, Pos - vec(0, 110, -60))
+    holoColor(14, vec(250))
+    holoMaterial(14, "models/props_canal/metalwall005b")
+    holoParent(14, 0)
+    
+    holoCreate(15)
+    holoScale(15, vec(1, 3, 10))
+    holoPos(15, Pos - vec(0, -110, 0))
+    holoColor(15, vec(150))
+    holoMaterial(15, "models/props_canal/metalwall005b")
+    holoParent(15, 13)
+    
+    holoCreate(16)
+    holoScale(16, vec(1, 3, 10))
+    holoPos(16, Pos - vec(0, 110, 0))
+    holoColor(16, vec(150))
+    holoMaterial(16, "models/props_canal/metalwall005b")
+    holoParent(16, 14)
+    
+    holoCreate(17)
+    holoScale(17, vec(2, 3.5, 2))
+    holoPos(17, Pos - vec(0, -110, 59))
+    holoColor(17, vec(250))
+    holoMaterial(17, "models/props_canal/metalwall005b")
+    holoParent(17, 13)
+    
+    holoCreate(18)
+    holoScale(18, vec(2, 3.5, 2))
+    holoPos(18, Pos - vec(0, 110, 59))
+    holoColor(18, vec(250))
+    holoMaterial(18, "models/props_canal/metalwall005b")
+    holoParent(18, 14)
+    
+    holoCreate(19)
+    holoScale(19, vec(1, 3, 10))
+    holoPos(19, Pos - vec(0, -110, 120))
+    holoColor(19, vec(150))
+    holoMaterial(19, "models/props_canal/metalwall005b")
+    holoParent(19, 17)
+    
+    holoCreate(20)
+    holoScale(20, vec(1, 3, 10))
+    holoPos(20, Pos - vec(0, 110, 120))
+    holoColor(20, vec(150))
+    holoMaterial(20, "models/props_canal/metalwall005b")
+    holoParent(20, 18)
+    
+    holoCreate(21)
+    holoScale(21, vec(5))
+    holoPos(21, Pos - vec(0, 0, -150))
+    holoColor(21, vec(150))
+    holoMaterial(21, "models/props_canal/metalwall005b")
+    holoParent(21, 0)
+    
+    holoCreate(22)
+    holoScale(22, vec(2))
+    holoPos(22, Pos - vec(0, 20, -150))
+    holoColor(22, vec(250))
+    holoMaterial(22, "models/props_canal/metalwall005b")
+    holoParent(22, 21)
+    
+    holoCreate(23)
+    holoScale(23, vec(2))
+    holoPos(23, Pos - vec(0, -20, -150))
+    holoColor(23, vec(250))
+    holoMaterial(23, "models/props_canal/metalwall005b")
+    holoParent(23, 21)
+    
+    holoCreate(24)
+    holoScale(24, vec(1))
+    holoPos(24, Pos - vec(-25, 15, -160))
+    holoColor(24, vec(255, 0, 0))
+    holoMaterial(24, "models/props_canal/metalwall005b")
+    holoParent(24, 21)
+    
+    holoCreate(25)
+    holoScale(25, vec(1))
+    holoPos(25, Pos - vec(-25, -15, -160))
+    holoColor(25, vec(255, 0, 0))
+    holoMaterial(25, "models/props_canal/metalwall005b")
+    holoParent(25, 21)
+    
+    holoCreate(26)
+    holoScale(26, vec(1, 4, 1))
+    holoPos(26, Pos - vec(-25, 0, -140))
+    holoColor(26, vec(250))
+    holoMaterial(26, "models/props_canal/metalwall005b")
+    holoParent(26, 21)
+    
+    holoCreate(27)
+    
+    holoCreate(28)
+    holoScale(28, vec(2))
+    
+    lb_create(1)
+    lb_create(2)
+    
+    Active = 1
+}
+
+#FOOTSTEPS
+Speed = 5 + Boost/100
+I += 1
+
+Ranger = rangerOffset(3000, holoEntity(0):pos(), -holoEntity(0):up())
+Ranger2 = rangerOffset(3000, holoEntity(21):pos(), holoEntity(21):forward())
+Dist = Target:pos():distance(holoEntity(0):pos())
+
+if(Ranger2:distance() < 100 || Dist <= 500){
+    
+    Speed = 0
+    FootStep += (0 - FootStep) / 25
+    
+}
+else
+{
+    FootStep = sin(I * Speed) * 35
+}
+
+if(Dist > 1000){ Boost += 1 }else{ Boost += (0 - Boost)/25 }
+
+holoPos(27, Ranger:pos())
+holoPos(28, Ranger2:pos())
+
+holoAng(3, holoEntity(0):angles() + ang(FootStep, 0, 0))
+holoAng(4, holoEntity(0):angles() + ang(-FootStep, 0, 0))
+
+holoAng(13, holoEntity(0):angles() + ang(FootStep, 0, 0))
+holoAng(14, holoEntity(0):angles() + ang(-FootStep, 0, 0))
+
+holoPos(0, holoEntity(0):toWorld(vec(Speed * 3, 0, ((Ranger:pos():z() - holoEntity(0):pos():z()) + 400) / 50 )))
+
+if(FootStep > 0 && FootStep < Speed*2){
+    
+    holoEntity(randint(5, 6)):soundPlay(time(), 2, "NPC_dog.RunFootstepLeft")
+    
+}
+
+#Head Movement
+Ang = (Target:pos() - holoEntity(21):pos()):toAngle()
+holoAng(0, (Target:pos() - holoEntity(21):pos()):toAngle():setPitch(0) )
+
+#Laser
+if(Active == 1){
+    lb_color(1, vec(255, 0, 0), 255)
+    lb_color(2, vec(255, 0, 0), 255)
+    
+    lb_pos(1, Pos - vec(-25, 15, -160), Target:pos())
+    lb_pos(2, Pos - vec(-25, -15, -160), Target:pos())
+}

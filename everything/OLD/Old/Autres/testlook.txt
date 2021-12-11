@@ -1,0 +1,8 @@
+@name testlook
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+entity():owner():aimEntity():pos() = entity():owner():aimEntity():pos()

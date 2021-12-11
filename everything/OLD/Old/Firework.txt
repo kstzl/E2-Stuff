@@ -1,0 +1,27 @@
+@name Firework
+@inputs Fire
+@outputs 
+@persist Start Launch Explode T T2
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+    
+    holoCreate(0) holoModel(0,"cylinder") holoScale(0,vec(0.1,0.1,2)) holoPos(0,entity():pos()+vec(0,3,10)) holoColor(0,vec(105,14,0))
+    holoCreate(1) holoModel(1,"hqcylinder") holoScale(1,vec(0.5,0.5,1.5)) holoPos(1,entity():pos()+vec(0,0.5,15)) holoMaterial(1,"phoenix_storms/stripes") holoColor(1,vec(255,0,0)) 
+    holoCreate(2) holoModel(2,"hqcone") holoScale(2,vec(0.7)) holoPos(2,entity():pos()+vec(0,0.5,27)) holoMaterial(2,"phoenix_storms/stripes") holoColor(2,vec(255,0,0)) holoParent(2,1)
+    holoCreate(3) holoModel(3,"cylinder") holoScale(3,vec(0.1,0.1,2)) holoPos(3,entity():pos()+vec(0,0,14.5)) holoColor(3,vec(225,100,0)) holoParent(3,2)
+ }
+
+ if(Fire == 1){ Start=1 }
+ if(changed(Start) && Start == 1){ holoEntity(3):soundPlay(3,30,"fire_large") }
+ if(Start == 1){ T++ }
+ if(T >= 100){ Launch=1 T2+=20 holoPos(1,entity():pos()+vec(0,0.5,15+T2))}
+ if(changed(Launch) && Launch == 1){ holoEntity(3):soundPlay(3,5,"fireworks/firework_launch_1.wav") }
+ if(T2 >= 1200){ Explode=1 }
+ if(changed(Explode) && Explode == 1){
+   holoEntity(3):soundPlay(3,5,"BaseExplosionEffect.Sound")   
+   holoEntity(3):soundPlay(4,5,"fireworks/firework_explosion_1.wav")   
+   holoDeleteAll()
+ }

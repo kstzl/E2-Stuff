@@ -1,0 +1,117 @@
+@name Portal2Turret
+@persist [ Opening I ]
+@persist [ STATE DEPLOYED CLOSED SEARCHING FIRING ]
+@persist [ Ang ]:angle
+@persist [ Target ]:entity
+
+interval(1)
+
+function changeState(NewState){ STATE = NewState }
+
+if(first()){
+    
+    STATE = 3
+    
+    CLOSED = 0
+    DEPLOYED = 1
+    SEARCHING = 2
+    FIRING = 3
+    
+    holoCreate(1)
+    holoScaleUnits(1, vec(15, 25, 40))
+    holoPos(1, entity():pos() + vec(0, 0, 45))
+    holoParent(1, entity())
+    
+    holoCreate(2)
+    holoScaleUnits(2, vec(1, 26, 41))
+    holoPos(2, entity():pos() + vec(0, 0, 45))
+    holoColor(2, vec(0))
+    holoParent(2, entity())
+    
+    holoCreate(3)
+    holoScaleUnits(3, vec(5))
+    holoPos(3, entity():pos() + vec(0, 11, 45))
+    holoAng(3, ang(45, 0, 0))
+    holoColor(3, vec(255, 0, 0))
+    holoParent(3, entity())
+    
+    holoCreate(4)
+    holoPos(4, entity():pos() + vec(0, 0, 45))
+    holoParent(4, entity())
+    
+    #Right Arm
+    holoCreate(5)
+    holoScaleUnits(5, vec(11, 2.5, 25))
+    holoColor(5, vec(150))
+    holoParent(5, 4)
+    
+    #Left Arm
+    holoCreate(6)
+    holoScaleUnits(6, vec(11, 2.5, 25))
+    holoColor(6, vec(150))
+    holoParent(6, 4)
+    
+    #Right Pane
+    holoCreate(7)
+    holoScaleUnits(7, vec(3, 15, 26))
+    holoPos(7, entity():pos() + vec(-3, 0, 0))
+    holoParent(7, 5)
+
+    #Left Pane
+    holoCreate(8)
+    holoScaleUnits(8, vec(3, 15, 26))
+    holoPos(8, entity():pos() + vec(3, 0, 0))
+    holoParent(8, 6)
+     
+}
+
+findByClass("player")
+findSortByDistance(entity():pos())
+Target = find()
+
+if(STATE == DEPLOYED){
+    
+    Opening += (10 - Opening) / 15
+    I = 0
+    Ang = ang(0)
+    
+}
+elseif(STATE == SEARCHING){
+    
+    Opening += (7 + abs(sin(I)) * 1 - Opening) / 15
+    I+=1
+    Ang = ang(sin(I)*5)
+    
+}
+elseif(STATE == FIRING){
+    
+    Opening += (10 - Opening) / 15
+    A = ( Target:pos() - holoEntity(4):pos() ):toAngle():yaw() - 90
+    D = A-entity():angles():yaw()
+    print(D)
+    
+    if(D > -25 && D < 25){
+        
+        Ang = ang(0, A, 0)
+    
+    }
+    else
+    {
+        Ang += (ang(0) - Ang) / 25
+    }
+    
+}
+
+elseif(STATE == CLOSED){
+    
+    Opening += (2 - Opening) / 15
+    I = 0
+    Ang = ang(0)
+    
+}
+
+holoAng(4, Ang)
+
+#Arms
+holoPos(5, holoEntity(4):toWorld(vec(-Opening - 3, 0, 0)))
+holoPos(6, holoEntity(4):toWorld(vec(Opening + 3, 0, 0)))

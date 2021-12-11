@@ -1,0 +1,16 @@
+@name Prop follow
+@inputs 
+@outputs 
+@persist Target:entity 
+@trigger 
+
+runOnTick(1)
+if (first()) {
+#Starting stuff
+E = entity():isWeldedTo() #isWeldedTo will make the e2 apply the force to the prop it is welded to instead of the e2 itself.
+}
+Target = findPlayerByName("kec") #Attempt to find the player
+
+if(tickClk()){
+E:applyForce(((Target:pos()+vec(0,0,9)-E:massCenter())*10-E:vel())*E:mass())
+}

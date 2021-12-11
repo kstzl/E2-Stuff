@@ -1,0 +1,43 @@
+@name Portal2Tube
+@inputs 
+@outputs 
+@persist Tubes:array I
+@trigger
+
+interval(1)
+
+if( first() ){
+    
+    findByModel("models/props_phx/construct/windows/window_curve360x2.mdl")
+    findIncludePlayerProps( owner() )
+   
+    Tubes = findToArray()
+    
+    timer("tubes", 0)
+    
+}
+
+if(clk("tubes")){
+    
+    foreach(K, Tube:entity = Tubes){
+        
+        findByClass("prop_*")
+        
+        foreach(X, Prop:entity = findToArray()){
+            
+            local Dist = Prop:pos():distance(Tube:pos())
+            
+            if(Dist < 50){
+                
+                local TargetPos = Tube:toWorld(vec(0, 0, 100))
+                Prop:applyForce( (TargetPos - Prop:pos()) * Prop:mass() * 5 )
+                
+            }
+            
+        }
+        
+    }
+    
+    timer("tubes", 300)
+
+}

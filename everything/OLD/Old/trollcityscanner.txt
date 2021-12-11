@@ -1,0 +1,49 @@
+@name TrollCityScanner
+@inputs 
+@outputs 
+@persist A:array Alpha:array
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    A=players()
+    
+    for(I = 0, A:count() ){
+
+          T = A[I, entity]
+          Alpha[I, number] = 255
+        
+          holoCreate(I)
+          holoDisableShading(I, 1)
+          holoCreate(I) holoModel(I,"hqsphere") 
+          holoScale(I,vec(-5))
+          holoPos(I,T:pos()+vec(0,0,50))
+          holoPos(I,T:attachmentPos("eyes"))
+          holoAng(I,T:attachmentAng("eyes"))
+          holoParentAttachment(I,T,"eyes")
+          holoEntity(I):soundPlay(I,0,"ambient.electrical_zap_9")
+          holoVisible(I, players(), 0)
+          holoVisible(I, T, 1)
+        
+    }
+    
+    timer("rd", 0)
+}
+
+if(clk("rd")){
+    
+    RdH = randint(0, A:count())
+    Alpha[RdH, number] = 255
+    
+    holoEntity(RdH):soundPlay(RdH, 0, "NPC_CScanner.TakePhoto")
+    
+    timer("rd", randint(1, 500))
+}
+
+for(I = 0, A:count()){
+    
+    Alpha[I, number] = (Alpha[I, number] +  ( 0 - Alpha[I, number] ) / 35)
+    holoAlpha(I, Alpha[I, number])
+}

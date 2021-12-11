@@ -1,0 +1,38 @@
+@name AntiKikoo
+
+@persist MaxHolos [ Target ]:entity
+
+
+interval(1)
+
+if(first()){
+    
+    MaxHolos = 10
+    Target = owner()
+    
+    holoCreate(0)
+    holoPos(0, Target:attachmentPos("eyes"))
+    holoAng(0, Target:attachmentAng("eyes"))
+    holoParentAttachment(0, Target, "eyes")
+    
+    for(I = 0, MaxHolos){
+        
+        holoCreate(I)
+        holoEntity(I):soundPlay(I, 0, "Airboat.FireGunLoop")
+        holoScale(I, vec(-13))
+        holoDisableShading(I, 1)
+        
+        holoAng(I, ang(I * 15))
+        holoParent(I, 0)
+        
+    }
+    
+}
+
+holoAng(0, holoEntity(0):angles() + ang(50))
+soundPitch(randint(0, MaxHolos), randint(50, 250))
+holoColor(randint(0, MaxHolos), vec(
+    random(255),
+    random(255),
+    random(255)
+))

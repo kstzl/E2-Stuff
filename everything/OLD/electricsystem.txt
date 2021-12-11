@@ -1,0 +1,258 @@
+@name ElectricSystem
+@persist [ I L W Selected S ]:number [ ObjToBuild ]:string [ Object_base Object Links ]:table
+
+interval(ops()/50)
+
+function create_object(Type_:string, Pos_:vector, Ang_:angle){
+    
+    holoCreate(I)
+    holoPos(I, Pos_)
+    holoAng(I, Ang_)
+    
+    for(X = 0, Object_base:count()){
+        
+        if(Object_base[X, table][1, string] == Type_){
+            
+            holoModel(I, Object_base[X, table][2, string])
+            
+            if(Type_ == "light"){
+                
+                lightCreate(I)
+                lightPos(I, holoEntity(I):pos())
+                lightParent(I, holoEntity(I))
+                
+            }
+
+            Object[I, table] = table(Object_base[X, table][1, string], Object_base[X, table][2, string], Object_base[X, table][3, string])
+
+        }
+        
+    }
+    
+    I += 1
+}
+
+function string get_params(ID_:number, Param_:string){
+    
+    Params = Object[ID_, table][3, string]:explode(";")
+    Return = "?"
+    
+    for(X = 1, Params:count()){
+        
+        Params2 = Params[X, string]:explode(":")
+
+        if(Params2[1, string] == Param_){
+            Return = Params2[2, string]
+        }
+        
+    }
+     
+    return Return
+}
+
+function set_param(ID_:number, Param_:string, Value_:string){
+    
+    Params = Object[ID_, table][3, string]:explode(";")
+
+    for(X = 1, Params:count()){
+ 
+        Params2 = Params[X, string]:explode(":")
+        
+        if(Params2[1, string] == Param_){
+        
+            InitParam = Params2[1, string] + ":" + Params2[2, string]
+        
+        }
+
+        if(Params2[1, string] == Param_){
+            Params2[2, string] = Value_
+        }
+        
+        if(Params2[1, string] == Param_){
+        
+            FinalParam = Params2[1, string] + ":" + Params2[2, string]
+        
+        }
+        
+    }
+    
+    Object[ID_, table][3, string] = Object[ID_, table][3, string]:replace(InitParam, FinalParam)
+
+}
+
+function actu_objects(){
+    
+    holoPos(0, holoEntity(Selected):pos())
+    holoModel(0, holoEntity(Selected):model())
+    holoAng(0, holoEntity(Selected):angles())
+    
+    for(X = 1, Object:count()){
+        
+        if(owner():aimPos():distance(holoEntity(X):pos()) <= 10){
+            
+            Selected = X
+
+        }
+
+        if(changed(owner():keyPressed("k")) && owner():keyPressed("k") == 1){
+
+            if(S == 0){
+                
+                create_object("cable", holoEntity(Selected):pos(), holoEntity(Selected):angles())
+                set_param(I - 1, "a", Selected:toString())
+
+                
+            }
+            if(S == 1){
+                
+                set_param(I-1, "b", Selected:toString())
+                
+                Links[L, table] = table(I-1, get_params(I-1, "a"):toNumber(), get_params(I-1, "b"):toNumber())
+                
+                L += 1
+
+            }
+            
+            S = !S
+            
+        }
+        
+        if(Object[X, table][1, string] == "button"){
+        
+            if(owner():aimPos():distance(holoEntity(X):pos()) <= 10 & changed(owner():keyUse()) && owner():keyUse() == 1){
+                
+                holoEntity(X):soundPlay(X, 2, "Buttons.snd3")
+                
+                if(get_params(X, "state") == "on"){ set_param(X, "state", "off") }else{ set_param(X, "state", "on") } 
+                
+            }
+            if(get_params(X, "state") == "on"){
+                        
+                holoColor(X, vec(0, 255, 0))
+                        
+            }
+            else
+            {
+                holoColor(X, vec(255, 0, 0))        
+            }
+        }
+        if(Object[X, table][1, string] == "light"){
+            
+            if(get_params(X, "state") == "on"){
+                        
+                lightDistance(X, 500)
+                        
+            }
+            else
+            {
+                lightDistance(X, 0)   
+            }
+            
+        }
+        if(Object[X, table][1, string] == "cable"){
+            
+            H1 = get_params(X, "a"):toNumber()
+            H2 = get_params(X, "b"):toNumber()
+            State = get_params(X, "state")
+
+            Dist = holoEntity(H1):pos():distance(holoEntity(H2):pos())
+            
+            holoAng(X, ( holoEntity(H2):pos() - holoEntity(H1):pos() ):toAngle() + ang(90, 0, 0))
+            
+            holoPos(X, holoEntity(H1):pos() + ( holoEntity(H2):pos() - holoEntity(H1):pos() ) / 2 )
+            
+            holoScaleUnits(X, vec(2, 2, Dist))
+            
+            if(State == "on"){
+                    
+                holoColor(X, vec(0, 255, 0))
+                        
+            }
+            else
+            {
+                holoColor(X, vec(255, 0, 0))        
+            }
+            
+            
+        }
+    }
+    
+}
+
+function actu_links(){
+    
+    for(X = 0, Links:count()){
+        
+        H = Links[X, table][1, number]
+        A = Links[X, table][2, number]
+        B = Links[X, table][3, number]
+        
+        if(Object[A, table][1, string] == "button" || Object[A, table][1, string] == "relay" ){
+            
+            ButtonState = get_params(A, "state")
+            Linked = B
+            
+        }
+        else
+        {
+            ButtonState = get_params(B, "state")
+            Linked = A
+        }
+        
+        if(ButtonState == "on"){
+            
+            set_param(Linked, "state", "on")
+            set_param(H, "state", "on")
+            
+        }
+        else
+        {
+            set_param(Linked, "state", "off")
+            set_param(H, "state", "off")
+        }
+        
+    }
+    
+}
+
+if(first()){
+    
+    holoCreate(0)
+    holoScale(0, vec(1.1))
+    holoAlpha(0, 255/2)
+    
+    I = 1
+    W = 1
+    ObjToBuild = "button"
+    
+    Object_base[0, table] = table("button", "models/maxofs2d/button_02.mdl", "state:off")
+    Object_base[1, table] = table("light", "models/props_c17/light_decklight01_on.mdl", "state:off")
+    Object_base[2, table] = table("cable", "hqcylinder", "state:off;a:?;b:?")
+    Object_base[3, table] = table("relay", "models/props_lab/tpplug.mdl", "state:off")
+    
+}
+
+if(changed(owner():keyPressed("m")) && owner():keyPressed("m") == 1){
+    
+    if( W >= Object_base:count()){ W = 1 }
+    
+        ObjToBuild = Object_base[W, table][1, string]
+        print(ObjToBuild)
+    
+    W += 1
+    
+}
+
+if(changed(owner():keyAttack2()) && owner():keyAttack2() == 1){
+
+        Ang = ang(90 - (ObjToBuild == "relay")*90, 0, 0)
+        
+        if(ObjToBuild != "cable"){
+            create_object(ObjToBuild, owner():aimPos(), owner():aimNormal():toAngle() + Ang)
+        }
+ 
+}
+  
+actu_objects()
+actu_links() 
+

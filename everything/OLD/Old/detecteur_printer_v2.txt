@@ -1,0 +1,170 @@
+@name Detecteur_Printer_V2
+@inputs [ Egp ]:wirelink [ BTR ] [ Ents ]:array
+@outputs [ Audio_play ]:number [ Audio_sample ]:string
+@persist [ S ]:number
+
+interval(1)
+
+#By K3CR4FT.:DLL / Khapta Zenda (2020)
+
+################################################
+#EGP Library - coded by Ivef.
+
+function void wirelink:box(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpBox(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+}
+function void wirelink:boxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+    This:egpSize(Index,1)
+}
+function void wirelink:boxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4,Outline:number){
+    This:egpBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+    This:egpSize(Index,Outline)
+}
+function void wirelink:roundbox(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpRoundedBox(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+}
+function void wirelink:roundboxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpRoundedBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)  
+    This:egpSize(Index,1)
+}
+function void wirelink:roundboxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4,S:number){
+    This:egpRoundedBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)  
+    This:egpSize(Index,S)
+}
+function void wirelink:line(Index:number,Pos1:vector2,Pos2:vector2,Color:vector4,Size:number){
+    This:egpLine(Index,Pos1,Pos2)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+}
+function void wirelink:line(Index:number,Pos1:vector2,Pos2:vector2,Color:vector4){
+    This:egpLine(Index,Pos1,Pos2)
+    This:egpColor(Index,Color)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector,Size:number){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    This:egpAlign(Index,1,1)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector4,Size:number){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    This:egpAlign(Index,1,1)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector,Size:number,Align:string){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    if(Align == "c"){
+        This:egpAlign(Index,1,1)
+    }
+    elseif(Align == "l"){
+        This:egpAlign(Index,2,1)
+    }
+    elseif(Align == "r"){
+        This:egpAlign(Index,0,1)
+    }
+    else{
+        This:egpAlign(Index,1,1)
+    }
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector4,Size:number,Align:string){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    if(Align == "c"){
+        This:egpAlign(Index,1,1)
+    }
+    elseif(Align == "l"){
+        This:egpAlign(Index,2,1)
+    }
+    elseif(Align == "r"){
+        This:egpAlign(Index,0,1)
+    }
+    else{
+        This:egpAlign(Index,1,1)
+    }
+}
+function number wirelink:button(ID:number,Cursor:vector2){
+    local BPos = This:egpPos(ID)
+    local BSize = This:egpSize(ID)/2
+    local Pressed = inrange(Cursor,BPos-BSize,BPos+BSize)
+    return Pressed
+}
+##############################################################
+
+function audio_play(AS_:string){
+    
+    Audio_sample = AS_
+    
+    Audio_play = 1
+    
+}
+
+function start_prog(Prog_:string){
+    
+    Egp:text(3, "Lancement du programme '" + Prog_ + "'", vec2(S, S * 1.5), vec(255), 20)
+    
+    timer(Prog_, 2500)
+    
+    audio_play("Buttons.snd17")
+}
+
+
+if(first() || dupefinished()){
+    
+    print("ok")
+    timer("bootscreen", 500)
+    
+    Audio_play = 0
+    S = 512 / 2
+    
+}
+
+if(clk("bootscreen")){
+    
+    audio_play("apc_engine_start")
+    
+    Egp:egpClear()
+    Egp:roundbox(1, vec2(S), vec2(256, 100), vec4(255, 0, 0, 255))
+    Egp:text(2, "K3 OS", vec2(S), vec(255), 30)
+    
+    timer("programme",2500)
+    
+}
+
+if(clk("programme")){
+    
+    start_prog("detecteur_printer")
+    
+}
+
+if(clk("detecteur_printer")){
+    
+    Egp:egpClear()
+    
+    PrinterCount = 0
+    
+    foreach(K, Ent:entity = Ents){
+    
+        if(Ent:type() == "money_printer"){
+
+            PrinterCount++
+                
+        }
+    
+    }
+
+    Egp:roundbox(1, vec2(S), vec2(256, 100), vec4(255, 0, 0, 255))
+    Egp:text(2, PrinterCount:toString() + " Printer(s) trouve.", vec2(S), vec(255), 30)
+    
+    timer("detecteur_printer", 500)
+}

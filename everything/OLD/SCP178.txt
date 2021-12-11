@@ -1,0 +1,102 @@
+@name SCP178
+@persist [ H Mode ]:number [ Player ]:entity
+
+runOnTick(1)
+
+if(first()){
+    
+    Player = findPlayerByName("zomb")
+    
+    holoCreate(0)
+    holoColor(0, vec(255, 0, 255))
+    holoAlpha(0, 100)
+    holoModel(0, "hqsphere")
+    holoScale(0, vec(-5))
+    #holoEntity(0):streamStart(0, "http://k007.kiwi6.com/hotlink/9gbfetg4px/SCP_Containment_Breach_Soundtrack_-_SCP-178_Ambience.mp3")
+    
+    H = 2
+    
+    timer("mode1", randint(30000, 60000))
+        
+    while(H < 25){
+        
+        holoCreate(H)
+        holoModel(H, "models/vortigaunt.mdl")
+        #holoAnim(H, "idle01")
+        holoScale(H, vec(25))
+        
+        holoCreate(-H)
+        holoModel(-H, "models/vortigaunt.mdl")
+       # holoAnim(-H, "idle01")
+        holoMaterial(-H, "models/alyx/emptool_glow")
+        holoScale(-H, vec(25.1))
+        
+        Pos = Player:pos() + vec(randint(-10, 10), randint(-10, 10), 0) * H * 35
+        Ranger = rangerOffset(13000, Pos, -holoEntity(0):up())
+        
+        holoPos(H, Pos:setZ(Ranger:pos():z())) 
+        holoPos(-H, Pos:setZ(Ranger:pos():z())) 
+        
+        Pl = players()
+        
+        for(I = 0, Pl:count()){
+            
+            if(Pl[I, entity] != Player){
+                
+                holoVisible(0, Pl[I, entity], 0)
+                holoVisible(H, Pl[I, entity], 0)
+                holoVisible(-H, Pl[I, entity], 0)
+                
+            }
+            
+        }
+        
+        H += 1
+        
+    }
+    
+}
+
+if(clk("mode1")){
+    
+    Mode = 1
+    
+}
+
+if(changed(Mode) && Mode == 1){
+    
+    for(I = 0, H){
+        
+        #holoAnim(I, "walk_all")
+        #holoAnim(-I, "walk_all")
+        
+    }
+    
+}
+
+holoPos(0, Player:attachmentPos("eyes"))
+holoAng(0, Player:attachmentAng("eyes"))
+holoParentAttachment(0, Player, "eyes")
+
+RD = randint(1, H)
+holoAng(RD, ( Player:pos() - holoEntity(RD):pos() ):toAngle():setPitch(0) )
+holoAng(-RD, ( Player:pos() - holoEntity(RD):pos() ):toAngle():setPitch(0) )
+holoPos(-RD, holoEntity(RD):pos() + vec(randint(-15, 15), randint(-15, 15), 0))
+holoAlpha(RD, randint(210, 255))
+
+if(Mode == 1){
+    
+    Ranger = rangerOffset(3000, holoEntity(RD):pos() + vec(0, 0, 75), holoEntity(RD):forward())
+    Ranger2 = rangerOffset(3000, holoEntity(RD):pos() + vec(0, 0, 75), -holoEntity(RD):up())
+    
+    Dist = Ranger:distance()
+    
+    if(Dist < 50){
+        Boost = 100
+        
+    }
+    
+    holoPos(RD, holoEntity(RD):toWorld(vec(15 + Boost, 0, 0)):setZ(Ranger2:pos():z()))
+
+    
+}

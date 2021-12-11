@@ -1,0 +1,40 @@
+@name Real Shield
+@inputs 
+@outputs 
+@persist P:entity A Model:string
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+    
+    Model="models/props_c17/FurnitureBed001a.mdl"
+    P=propSpawn(Model,1)
+    P:setAlpha(0)
+    
+    holoCreate(1)
+    holoColor(1,vec(255,0,0))
+    holoPos(1,P:pos())
+    holoParent(1,P)
+    holoModel(1,"hqsphere")
+    holoAlpha(1,150)
+    holoScale(1,vec(5))
+    
+    holoEntity(1):soundPlay(1,0,"d3_citadel.combine_ball_field_loop1")
+
+ }
+ findExcludeEntity(owner())
+ findExcludeEntity(entity()) 
+ findByClass("player")
+ findSortByDistance(P:pos())
+ 
+ if(find():pos():distance(entity():pos()) <= 830){
+ 
+    
+    P:setPos(find():pos()+vec(0,0,randint(-1,-2)))
+    P:setAng(ang(randint(0,5900)))
+    P:propFreeze(1)
+    P:applyAngForce(ang(1,1,720)*P:mass()*30)
+
+ }
+    P:setAlpha(0)

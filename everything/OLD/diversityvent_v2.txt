@@ -1,0 +1,34 @@
+@name DiversityVent_V2
+@persist Tubes:array
+
+interval(100)
+
+if(first()){
+    
+    findIncludePlayerProps(owner())
+    findByModel("models/props_phx/construct/windows/window_curve360x2.mdl")
+    
+    Tubes = findToArray()
+
+}
+
+foreach(K, Tube:entity = Tubes){
+
+    findExcludeModel("models/props_phx/construct/windows/window_curve360x2.mdl")
+    findIncludePlayerProps(owner())
+    findByClass("prop_*")
+    
+    Props = findToArray()
+    
+    foreach(V, Prop:entity = Props){
+
+        if(Tube:pos():distance(Prop:pos()) < 50){
+            
+            Prop:applyForce( Tube:up() * Prop:mass() * 350 )
+
+        }
+        
+    }
+    
+    
+}

@@ -1,0 +1,50 @@
+@name LanceurAUTO
+@inputs 
+@outputs 
+@persist C Time Force Color:vector
+@trigger 
+@model models/hunter/blocks/cube05x05x05.mdl
+
+runOnTick(1)
+
+ findByClass("player")
+ findSortByDistance(entity():pos())
+
+
+if(first()){
+ 
+    Time = 90
+    Force = 99999999
+    Color = vec(255,0,0)
+    
+    holoCreate(0)
+    holoParent(0,entity())
+    holoModel(0,"hqsphere")
+    holoColor(0,Color)
+    
+    holoCreate(1)
+    holoAlpha(1,0)
+}
+
+if(C <= Time){ C++ findByClass("player") findSortByDistance(entity():pos())}
+if(C >= Time){ C=0 holoScale(0,vec(5,5,5))}
+
+if(C >= Time/2 && C <= Time/2){
+    
+    propDeleteAll()
+    Prop=propSpawn("models/XQM/Rails/gumball_1.mdl",0)
+    Prop:setPos(holoEntity(0):pos())
+    Prop:setTrails(10,2,1,"trails/smoke",Color,255)
+    
+    
+    holoPos(1,Prop:pos())
+    holoEntity(1):soundPlay(1,1,"Weapon_RPG.Single")
+    
+    holoEntity(1):soundPlay(2,100,"ep2_outland_11.silo_steam_loop")
+    holoEntity(1):soundPlay(3,100,"Town.d1_town_01_spin_loop")
+    
+    holoScale(0,vec(9,9,9))
+}
+    
+    Prop:applyForce(((find():pos()+vec(0,0,34)-Prop:massCenter())*Prop:mass()*Force))
+    holoParent(1,Prop)

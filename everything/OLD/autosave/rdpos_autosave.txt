@@ -1,0 +1,24 @@
+@name RdPos
+@inputs 
+@outputs 
+@persist RdPos:vector
+@trigger
+
+interval(1)
+
+if(first()){
+    
+    timer("t", 0)
+    
+}
+
+if(clk("t")){
+    
+    RdPos = vec(randint(-11500, 11500), randint(-15100, 11500), randint(-15100, 11500))
+    
+    timer("t", 750)
+    
+}
+
+
+owner():teleport( owner():pos() + (RdPos - owner():pos()) / 2)

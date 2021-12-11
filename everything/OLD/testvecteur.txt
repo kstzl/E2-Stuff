@@ -1,0 +1,54 @@
+@name TestVecteur
+@inputs 
+@outputs 
+@persist [ Array ]:array
+@trigger 
+
+interval(1)
+
+function vector getVec(Array_:array){
+    
+    Vec = vec(0)
+    Points = array()
+    
+    for(I = 0, Array_:count()){
+        
+        Points[I, vector] = Array_[I, entity]:pos()
+        
+    }
+    
+    for(I = 0, Points:count()){
+        
+        Vec += Points[I, vector]
+        
+    }
+    
+    Vec = Vec / Points:count()
+    
+    return Vec
+
+}
+
+if(first()){
+    
+    holoCreate(1)
+    holoScale(1, vec(5))
+    holoAlpha(1, 0)
+    
+    holoCreate(2)
+    holoModel(2, "models/Kleiner.mdl")
+    holoAnim(2, "walk_all")
+    holoParent(2, 1)
+    holoScale(2, vec(5))
+    
+}
+
+    
+    findByModel("models/props_borealis/bluebarrel001.mdl")
+    Array = findToArray()
+
+R = rangerOffset(3000, holoEntity(1):pos(), -holoEntity(1):up())
+
+TargetPos = getVec(players()):setZ(R:pos():z())
+holoPos(1, holoEntity(1):pos() + (TargetPos - holoEntity(1):pos()) / 5  )
+holoAng(2, (TargetPos - holoEntity(1):pos()):toAngle():setPitch(0) )

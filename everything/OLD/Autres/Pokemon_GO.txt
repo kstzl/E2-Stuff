@@ -1,0 +1,51 @@
+@name Pokemon Egg
+@model models/Roller.mdl
+@persist It:entity
+@outputs Nb
+
+R1 = randint(0,255)
+R2 = randint(0,255)
+R3 = randint(0,255)
+
+if(first()){
+    holoCreate(1)
+    holoModel(1,"hqsphere")
+    holoScale(1,vec(3,4,5))
+    holoColor(1,vec(R1,R2,R3))
+    
+        holoCreate(2)
+    holoModel(2,"hqsphere")
+    holoScale(2,vec(-3,-4,-5))
+   holoColor(2,vec(R1,R2,R3))
+
+It = entity():owner():aimEntity()
+It:setMaterial("models/props_combine/combine_fenceglow")
+It:soundPlay(0,0,"Popcan.ImpactHard")
+
+Nb = 4
+
+}
+runOnTick(1000)
+ holoPos(1, entity():pos() + vec(0,0,10))
+ holoPos(2, entity():pos() + vec(0,0,10))
+
+#holoAng(1,ang(R1,R2,R3))
+#holoAng(2,ang(R1,R2,R3))
+
+if(owner():keyUse() && owner():aimEntity():pos() == entity():pos()){
+
+Nb += 0.1
+holoScale(1,vec(Nb,Nb,Nb))
+    holoScale(2,vec(Nb,Nb,Nb+1.5))
+
+It:soundPlay(0,0,"Popcan.ImpactHard")
+
+if(Nb == 10){
+
+It = propSpawn("models/props_phx/ball.mdl",1)
+It:propBreak()
+
+selfDestructAll()
+}
+}
+

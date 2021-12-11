@@ -1,0 +1,14 @@
+@name 
+@inputs 
+@outputs 
+@persist
+@trigger 
+
+runOnTick(1)
+if(owner():keyUse()){
+    Print = 1
+}
+if(changed(Print) && Print == 1){
+    E = owner():aimEntity()
+    print(E:type())
+}

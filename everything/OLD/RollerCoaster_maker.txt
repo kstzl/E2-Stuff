@@ -1,0 +1,39 @@
+@name RollerCoaster maker
+@inputs 
+@outputs 
+@persist Ang ModelA:array M
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){ 
+    
+    holoCreate(1)
+    
+    M=1
+    ModelA[1,string]="models/props_phx/trains/tracks/track_1x.mdl"
+    ModelA[2,string]="models/props_phx/trains/tracks/track_225_down.mdl"
+    ModelA[3,string]="models/props_phx/trains/tracks/track_225_up.mdl"
+    ModelA[4,string]="models/props_phx/trains/tracks/track_2x.mdl"
+    ModelA[5,string]="models/props_phx/trains/tracks/track_45_down.mdl"
+    ModelA[6,string]="models/props_phx/trains/tracks/track_45_up.mdl"
+    ModelA[7,string]="models/props_phx/trains/tracks/track_4x.mdl"
+    ModelA[8,string]="models/props_phx/trains/tracks/track_turn45.mdl"
+    ModelA[9,string]="models/props_phx/trains/tracks/track_4x.mdl"
+    ModelA[10,string]="models/props_phx/trains/tracks/track_turn90.mdl"
+    
+    
+ }
+ 
+ if(owner():keyPressed("r")){ Rotate=1 }
+ if(owner():keyPressed("m")){ ChangeModel=1 }
+ if(owner():keyAttack2()){ Place=1 }
+
+ if(changed(Rotate) && Rotate == 1){ Ang+=5 holoEntity(1):soundPlay(1,1,"Buttons.snd26")}
+ if(changed(Place) && Place == 1){ P=propSpawn(ModelA[M,string],1) P:setPos(holoEntity(1):pos()) P:setAng(holoEntity(1):angles()) holoEntity(1):soundPlay(2,1,"Buttons.snd14") }
+ if(changed(ChangeModel) && ChangeModel == 1){ M+=1 if(M > ModelA:count()){ M=0 } holoEntity(1):soundPlay(3,1,"Buttons.snd47") }
+
+
+ holoAng(1,ang(0,Ang,0))
+ holoModel(1,ModelA[M,string])
+ holoPos(1,owner():aimPos()+vec(-50,0,0))

@@ -1,0 +1,12 @@
+@name AntiE2Crash_Lib
+@persist AEC
+
+interval(10)
+
+AEC = ( ops() < (maxquota() / 10) )
+
+if(!AEC){
+    
+    print("error")
+    
+}

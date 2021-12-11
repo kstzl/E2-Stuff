@@ -1,0 +1,35 @@
+@name Drone-Control
+@inputs Pod:wirelink Cam:wirelink
+@outputs 
+@persist
+runOnTick(1)
+
+E = entity():isWeldedTo()
+
+Ang = Pod["Entity",entity]:driver():eyeAngles()
+
+W = Pod["W",number]
+A = Pod["A",number]
+S = Pod["S",number]
+D = Pod["D",number]
+Space = Pod["Space",number]
+Shift = Pod["Shift",number]
+
+Cam["Angle",angle] = E:angles()
+
+Cam["Position",vector] = E:pos()+vec(-100,0,50):rotate(E:angles())
+
+Cam["Activated",number] = Pod["Active",number]
+
+E:applyForce(E:forward()*(W-S)*E:mass()*200)
+
+E:applyForce(E:right()*(D-A)*E:mass()*100)
+
+E:applyForce(E:up()*(Space-Shift)*E:mass()*100)
+
+E:applyForce(-E:vel()*E:mass()/7.5)
+
+E:setMass(50000)
+
+V = E:toLocal(rotationVector(quat(Ang)/quat(E))+E:pos())
+E:applyTorque((200*V - 25*E:angVelVector())*E:inertia())

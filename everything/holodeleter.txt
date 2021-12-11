@@ -1,0 +1,15 @@
+@name holodeleter
+@inputs 
+@outputs 
+@persist
+@trigger 
+
+findByClass("gmod_wire_hologram")
+A = findToArray()
+
+foreach(K, V:entity = A){
+    
+    local I = holoIndex(V)
+    holoDelete(I)
+    
+}

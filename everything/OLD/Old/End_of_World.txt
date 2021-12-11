@@ -1,0 +1,16 @@
+@name End of World
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+ runOnTick(1)
+ if(first()){
+ holoCreate(1)
+ holoScale(1,vec(-300))
+ holoModel(1,"hqsphere")
+ holoPos(1,vec(-1597.650879,1785.822998,11200.232422))
+ holoMaterial(1,"models/props_lab/cornerunit_cloud")
+
+ }
+ holoAng(1,holoEntity(1):angles()+ang(0,-20,5))

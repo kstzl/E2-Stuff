@@ -1,0 +1,45 @@
+@name Camera AUTOUR JOUEUR 2
+@inputs E:entity
+@outputs 
+@persist O:entity RD I A Count
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+    
+    #Player:
+    O=findPlayerByName("kec")
+    
+    #Other:
+    RD=1
+    I=0
+       
+ }
+
+ if(E){
+ if(I < 50){ I+=0.5 }
+ if(I >= 50){ RD=randint(1,3) I=0 A=0 }
+ }
+
+ if(RD == 1){ E:setPos(O:pos()+vec(0,0,160)+A) E:setAng(ang(90,0,0)+ang(0,A,0)) A+=0.1 }
+ if(RD == 2){ E:setPos(O:pos()+vec(0,0,160)+-A) E:setAng(ang(90,0,0)+ang(0,A,0)) A+=0.1 }
+
+ if(RD == 3){
+    
+ Count += 0.01
+ N = 100
+
+ X1 = N*cosr(2*Count)
+ Y1 = N*sinr(2*Count)
+ Z1 = 40
+ 
+ E:setPos(O:pos()+vec(X1,Y1,Z1)) 
+ E:setAng(O:angles()+ang(0,90,0))
+   
+ }
+
+
+
+
+ E:propFreeze(1)

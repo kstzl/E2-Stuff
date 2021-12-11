@@ -1,0 +1,67 @@
+@name BallRebondissante
+@persist [ Size X Y Z ]:number
+
+interval(1)
+
+if(first()){
+    
+    Size = 100
+    X = 0
+    Y = 0
+    Z = 0
+    
+    holoCreate(1)
+    holoModel(1, "hqsphere")
+    holoScaleUnits(1, vec(Size))
+    holoMaterial(1, "phoenix_storms/FuturisticTrackRamp_1-2")
+    holoAng(1, ang(0))
+    
+    holoPos(1, entity():toWorld(vec(0, 0, 50)))
+    
+}
+
+RangerD = rangerOffset(3000, holoEntity(1):pos(), -holoEntity(1):up())
+RangerF = rangerOffset(3000, holoEntity(1):pos(), holoEntity(1):forward() * clamp(X, -1, 1))
+RangerR = rangerOffset(3000, holoEntity(1):pos(), -holoEntity(1):right() * clamp(Y, -1, 1))
+
+if(RangerD:distance() > Size/2){
+    
+    Z -= 0.1
+    
+}
+else
+{
+    Z = abs(Z / -1.1)
+    
+}
+
+if(RangerF:distance() < Size/2){
+    
+    X = X / -2
+    Z += abs(X * -0.5)
+
+}
+
+if(RangerR:distance() < Size/2){
+    
+    Y = Y / -2
+    Z += abs(Y * -0.5)
+
+    
+}
+
+holoPos(1, holoEntity(1):pos() + vec(X, Y, Z))
+
+if(changed(owner():keyAttack2() == 1) && owner():keyAttack2() == 1){
+    
+    D = owner():pos():distance(holoEntity(1):pos()) + 50
+    
+    Pos = owner():toWorld(vec(D, 0, 0)) - holoEntity(1):pos()
+    
+    
+    X = Pos:x() / 50
+    Y = Pos:y() / 50
+    Z = Pos:z() / 50
+    
+}
+

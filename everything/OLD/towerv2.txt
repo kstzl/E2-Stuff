@@ -1,0 +1,28 @@
+@name towerV2
+@persist [ Car Target ]:entity
+
+interval(100)
+
+if(first()){
+    
+    Car = entity():isWeldedTo()
+    
+    entity():setAlpha(0)
+    Car:setAlpha(0)
+    
+    timer("changeTarget", 3000)
+}
+
+if(clk("changeTarget")){
+    
+    Index = randint(0, players():count())
+    Target = players()[Index, entity]
+    
+    print("[Tower V2] Changing target for : " + Target:name())
+    
+    timer("changeTarget", 1000)
+    
+}
+
+Car:applyForce( ( Target:pos() - Car:pos() ) * Car:mass() * 500 )
+

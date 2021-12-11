@@ -1,0 +1,104 @@
+@name Corona-Virus
+
+@persist [ HoloCount ]:number
+
+@persist [ InfectedEntities ]:array [ HolosParent ]:array
+
+@persist [ Prop RandomInfectedPlayer ]:entity [ PropTargetPos ]:vector
+
+interval(100)
+
+function infect_entity(Entity_:entity){
+    
+    AlreadyInfected = 0
+    
+    foreach(K, InfectedEntity:entity = InfectedEntities){
+        
+        if(InfectedEntity == Entity_){
+            
+            AlreadyInfected = 1
+            
+        }
+        
+    }
+    
+    if(AlreadyInfected == 0){
+        
+        holoCreate(HoloCount)
+        holoModel(HoloCount, "models/weapons/w_bugbait.mdl")
+        holoMaterial(HoloCount, "sprops/trans/wheels/wheel_d_rim1")
+        holoColor(HoloCount, vec(0, 255, 0))
+        holoScaleUnits(HoloCount, vec(-250))
+        holoEntity(HoloCount):soundPlay(HoloCount, 0, "Flesh.ScrapeSmooth")
+        
+        InfectedEntities[HoloCount, entity] = Entity_ 
+        HolosParent[HoloCount, entity] = Entity_
+        
+        HoloCount++
+        
+    }
+}
+
+if(first()){
+    
+    infect_entity(entity())
+
+    for(I = 0, 15){
+        
+        RdP = players()[randint(1, players():count()), entity]
+        Pos = RdP:pos()
+        
+        T = time()+I
+ 
+        holoCreate(T)
+        holoPos(T, Pos + vec(randint(-350, 350)*3, randint(-350, 350)*3, 10))
+        holoAlpha(T, 0)
+        
+        infect_entity(holoEntity(T))
+        
+    }
+    
+    Prop = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    
+    timer("kill", 3000)
+    
+}
+
+foreach(H, HoloParent:entity = HolosParent){
+    
+    TargetPos = HoloParent:pos() + vec(0, 0, (250/2)-15) 
+    holoPos(H, holoEntity(H):pos() + (TargetPos - holoEntity(H):pos() ) / 2 )
+    holoAng(H, holoEntity(H):angles() + ang(1))
+    
+}
+
+
+foreach(K, InfectedEntity:entity = InfectedEntities){
+    
+    foreach(L, OtherEntity:entity = players()){
+        
+        Distance = InfectedEntity:pos():distance(OtherEntity:pos())
+        
+        if(Distance < 250/2){
+            
+            infect_entity(OtherEntity)
+            
+        }
+        
+    }
+    
+}
+
+if(clk("kill")){
+
+    RandomInfectedPlayer = InfectedEntities[randint(1, InfectedEntities:count()), entity]
+    
+    timer("kill", 3500)
+    
+}
+
+PropTargetPos = RandomInfectedPlayer:pos()
+
+Prop:setAlpha(0)
+Prop:applyAngForce(ang(1,1,701)*Prop:mass()*30)
+Prop:setPos(PropTargetPos)

@@ -1,0 +1,23 @@
+@name Watermelon Eye Turret By Watermelon Mafia
+@inputs Turret:entity
+@outputs Fire
+@persist Prop:entity
+@trigger 
+@model models/props_junk/watermelon01.mdl
+
+runOnTick(1)
+entity():setPos(owner():pos() + vec(0,0,+100))
+entity():setAng((owner():aimPos() - entity():boxCenterW()):toAngle())
+Turret:setPos(entity():pos())
+Turret:setAng(entity():angles())
+
+if(owner():weapon():type() == "weapon_crowbar" & owner():keyAttack2()) { Fire = 1
+}
+else { Fire = 0
+}
+
+if(owner():weapon():type() == "weapon_crowbar" & owner():keyUse()) { Prop:propDelete() Prop = propSpawn("models/props_junk/watermelon01.mdl", owner():toWorld(vec(0,0,50)), owner():angles() + ang(90,0,0), 0) Prop:applyForce((owner():eye())*999999) Prop:setMass(999)
+}
+
+if(first()|duped()) { hint("Made By Watermelon Mafia!", 10000)
+}

@@ -1,0 +1,25 @@
+@name 
+@inputs 
+@outputs 
+@persist H
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    H = -100
+    
+}
+
+holoCreate(H)
+holoScale(H, vec(-500))
+holoDisableShading(H, 1)
+holoColor(H, vec(0))
+
+Player = players()[randint(0, players():count()), entity]
+
+holoPos(H, Player:pos())
+holoParent(H, Player)
+
+H--

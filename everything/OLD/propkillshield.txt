@@ -1,0 +1,36 @@
+@name PropKillShield
+@persist [ MaxDecoHolo MaxHolo ]:number
+
+interval(1)
+
+if(first()){
+    
+    MaxDecoHolo = 55
+    MaxHolo = 5
+    
+    for(I = 0, MaxDecoHolo){
+        
+        holoCreate(I)
+        holoModel(I, "models/effects/portalfunnel.mdl")
+        holoScale(I, vec(randint(-500, 500)))
+        
+    }
+    
+    for(I = 0, MaxHolo){
+        
+        Id = I + MaxDecoHolo
+        
+        holoCreate(Id)
+        holoModel(Id, "models/props_phx/construct/metal_plate_curve360x2.mdl")
+        
+    }
+    
+    
+}
+
+RdH = randint(0, MaxDecoHolo)
+RdH2 = randint(MaxDecoHolo, MaxHolo)
+
+holoAng(RdH, holoEntity(RdH):angles() + ang(45))
+
+holoPos(RdH2, holoEntity(RdH2):toWorld(vec(5, 0, 0)))

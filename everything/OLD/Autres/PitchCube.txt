@@ -1,0 +1,16 @@
+@name PitchCube
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+if(first()){
+    holoCreate(1)
+    holoEntity(1):soundPlay(0,0,"song4")
+    holoAlpha(1,0)
+}
+
+holoPos(1, entity():pos())
+soundPitch(0, entity():vel():length() / 10)
+

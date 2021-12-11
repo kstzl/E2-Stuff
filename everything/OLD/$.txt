@@ -1,0 +1,28 @@
+@name 
+@persist [ Wait I ]:number [ Buttons ]:array [ Button ]:entity
+
+interval(1)
+
+if(first()){
+    
+    findByModel("models/props_citizen_tech/firetrap_button01a.mdl")
+    Buttons = findToArray()
+    
+}
+
+Wait += 1
+
+if(Wait >= 100){
+    
+    Button = Buttons[I, entity]
+    
+    if(I >= Buttons:count()){
+        
+        I = 0
+        
+    }
+    
+    Wait = 0
+    I += 1
+    
+}

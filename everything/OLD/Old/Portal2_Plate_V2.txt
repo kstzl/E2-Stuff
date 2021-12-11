@@ -1,0 +1,38 @@
+@name Portal2_Plate_V2
+@persist [Anim Sin I]:number
+
+interval(100)
+
+if(first()){
+    
+    holoCreate(0)
+    holoParent(0, entity())
+    
+    holoCreate(1)
+    holoPos(1, holoEntity(0):toWorld(vec(0)))
+    holoScale(1, vec(5, 10, 0.1))
+    holoColor(1, vec(0))
+    holoParent(1, 0)
+    
+    holoCreate(2)
+    holoAlpha(2, 0)
+    holoParent(2, 0)
+    
+    holoCreate(3)
+    holoPos(3, holoEntity(2):toWorld(vec(0, -50, 0)))
+    holoModel(3, "hqcylinder")
+    holoScale(3, vec(3, 9, 1))
+    holoColor(3, vec(0, 0, 255))
+    holoAlpha(3, 255)
+    holoParent(3, 2)
+    
+    Anim = 90
+    
+}
+
+if(Anim > 0){ Anim -= 5 }
+Sin = sin(I) * Anim
+I+=50
+
+holoPos(2, holoEntity(0):toWorld(vec(0, 40, 10 + -Sin / 20)))
+holoAng(2, holoEntity(0):angles() + ang(0, 0, Sin))

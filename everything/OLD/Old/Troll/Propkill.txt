@@ -1,0 +1,13 @@
+@name Propkill
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+if(owner():keyForward()){
+print("PROPKILL !!")
+Model = "models/hunter/blocks/cube025x025x025.mdl"
+concmd("gm_spawn " + Model) + vec(0,0,9999)
+
+}

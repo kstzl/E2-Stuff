@@ -1,0 +1,44 @@
+@name Teleporter prank
+@inputs 
+@outputs 
+@persist P:entity A P2:entity
+@trigger 
+@model models/props_phx/construct/metal_plate1.mdl
+
+ runOnTick(1)
+
+ if(first())
+ {
+  #entity():setPos(findPlayerByName("kec"):pos())
+
+  P=propSpawn("models/props_c17/playground_jungle_gym01a.mdl",0)  
+  
+  P2=propSpawn("models/hunter/blocks/cube075x075x075.mdl",0) 
+
+  holoCreate(1) holoScale(1,vec(-10)) holoModel(1,"hqsphere")
+  holoEntity(1):soundPlay(1,0,"k_lab.teleport_malfunction_sound")
+ holoMaterial(1,"models/alyx/emptool_glow")
+ }
+        holoAlpha(1,randint(210,255))
+        holoColor(1,vec(randint(200,255),0,randint(0,255)))
+        holoPos(1,entity():pos()+vec(0,0,65))
+  P:setAlpha(10)
+  P:setAng(ang(0,A,0)) A+=200
+  P:setPos(entity():pos()+vec(0,0,5))
+
+  P2:setAlpha(0)
+
+ findByClass("player")
+ findSortByDistance(entity():pos())
+
+ if(entity():pos():distance(find():pos()) <= 50){
+    P2:setPos(find():pos()) Sound=1
+ }
+ else
+ {
+    P2:setPos(entity():pos()+vec(0,0,130))
+ }
+
+ if(changed(Sound) && Sound==1){
+    holoEntity(1):soundPlay(2,0,"k_lab.teleport_sound")   
+ }

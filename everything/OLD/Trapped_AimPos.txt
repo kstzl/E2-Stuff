@@ -1,0 +1,23 @@
+@name Trapped AimPos
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+    
+ holoCreate(1) holoModel(1,"hqcylinder") holoModel(1,"hqcylinder") holoScale(1,vec(10)) holoAlpha(1,100)   
+    
+ }
+ holoPos(1,owner():aimPos()+vec(0,0,70))
+
+ if(owner():keyAttack2()){ Place=1 }
+ if(changed(Place) && Place == 1){
+
+  holoEntity(1):soundPlay(1,0,"NPC_CombineMine.Hop")
+    
+  P=propSpawn("models/props_phx/construct/metal_plate_curve360x2.mdl",1)   
+  P:setPos(holoEntity(1):pos()-vec(0,0,65))
+ }

@@ -1,0 +1,9 @@
+@name Wheel
+@inputs Bt
+@outputs Wheel
+@persist 
+@trigger 
+
+if(Bt == 1){
+    Wheel == 1
+}

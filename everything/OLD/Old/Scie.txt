@@ -1,0 +1,29 @@
+@name Scie
+@persist [ Angle ]:angle [ I ]:number [ Prop Target ]:entity
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoModel(1, "models/props_junk/sawblade001a.mdl")
+    holoEntity(1):soundPlay(0, 0, "Town.d1_town_01_spin_loop")
+    holoScale(1, vec(5))
+    
+    Prop = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    Prop:setAlpha(0)
+
+}
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos())
+
+Target = find()
+Angle = ( Target:pos() - holoEntity(1):pos() ):toAngle() + ang(I, 0, 90)
+I += 5
+
+Prop:setPos(holoEntity(1):pos())
+Prop:applyAngForce(ang(700) * Prop:mass() * 130)
+
+holoAng(1, Angle)
+holoPos(1, holoEntity(1):pos() + ( Target:pos():setZ(entity():pos():z()) - holoEntity(1):pos() ) / 5 )

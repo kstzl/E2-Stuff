@@ -1,0 +1,40 @@
+@name HoloGun
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+
+    holoPos(1, owner():pos() + vec(0,0,10))
+
+if(first()){
+    
+    holoCreate(1)
+    
+    R1 = randint(0,255)
+    R2 = randint(0,255)
+    R3 = randint(0,255)
+    holoAlpha(1,0)
+    
+    holoEntity(1):setTrails(50,0,1,"trails/physbeam",vec(R1,R2,R3),255)
+    
+}
+
+
+if(owner():keyAttack1()){
+    holoPos(1, owner():aimPos())
+    timer("remove",1800)
+    
+    P=propSpawn("models/props_phx/cannonball_solid.mdl",holoEntity(8):pos(),1)
+    P:setAlpha(0)
+    P:propNotSolid(1)
+    P:setPos(owner():aimPos())
+    P:propBreak()
+    
+    
+}
+
+if(clk("remove")){
+reset()
+}

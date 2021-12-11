@@ -1,0 +1,23 @@
+@name HoloMix
+@inputs 
+@outputs 
+@persist 
+@trigger 
+#@model models/hunter/blocks/cube8x8x8.mdl
+
+if(first()){
+    
+holoCreate(1)
+holoEntity(1):soundPlay(0,0,"song3")
+}
+
+runOnTick(1)
+holoPos(1,entity():pos())
+soundPitch(0, entity():vel():length())
+#entity():applyForce(vec(0,0,1)*entity():mass()*(9.0132-entity():vel():z()/100))
+
+if(entity():vel():length() <= 1){
+    soundPitch(0, randint(1,2))
+}
+
+

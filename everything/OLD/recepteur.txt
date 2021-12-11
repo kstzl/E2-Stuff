@@ -1,0 +1,16 @@
+@name Recepteur
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+if(first()){
+    runOnChat(1)
+    dsJoinGroup("general")
+}
+
+if(dsClk("printer_found")){
+
+    print(dsGetString())
+
+}

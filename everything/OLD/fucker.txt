@@ -1,0 +1,15 @@
+@name fucker
+@persist Vector:vector
+@model models/hunter/blocks/cube1x1x1.mdl
+
+findByClass("npc_*")
+findSortByDistance(entity():pos())
+Ar = findToArray()
+
+interval(1)
+
+for(I = 0, Ar:count()){
+    N = Ar[I, entity]:pos()
+    Vector = (N-entity():pos())*9999
+    applyForce(Vector)
+}

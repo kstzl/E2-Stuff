@@ -1,0 +1,11 @@
+@name Ply test
+@inputs 
+@outputs It:entity
+@persist 
+@trigger 
+
+runOnTick(1)
+It = owner():eyeTrace():entity()
+It:applyForce(vec(0,0,9900))
+
+

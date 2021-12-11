@@ -1,0 +1,41 @@
+@name BlackHoleAspirateur
+@inputs 
+@outputs 
+@persist I
+@trigger
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoModel(1, "hqsphere")
+    holoScale(1, vec(10))
+    holoColor(1, vec(0))
+    
+    holoPos(1, entity():toWorld(vec(0, 0, 150)))
+
+}
+    
+findByClass("prop_*")
+findIncludePlayerProps(owner())
+
+foreach(K, Prop:entity = findToArray()){
+    
+    local Dist = Prop:pos():distance( holoEntity(1):pos() )
+    
+    local TargetPos = holoEntity(1):pos()
+    local Vec = TargetPos - Prop:pos()
+    
+    Prop:applyForce( Prop:pos() + (TargetPos - Prop:pos()) * Prop:mass() - Prop:vel() * 25)
+    
+    if(Dist < 40){
+        
+        Prop:propDelete()
+        
+    }
+    
+    
+}
+
+I+=5

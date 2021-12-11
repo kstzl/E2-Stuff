@@ -1,0 +1,740 @@
+@name animation_lib
+@persist [ AnimationCode ]:string
+@persist [ Running ExecutionTime ObjectCount Step AnimationSteps MovingObjectsCount RotatingObjectsCount ]:number
+@persist [ Objects MovingObjects RotatingObjects ]:table
+
+#include "fastlibs"
+
+#[
+
+ Expression2
+              _                 _   _               _ _ _     
+             (_)               | | (_)             | (_) |    
+   __ _ _ __  _ _ __ ___   __ _| |_ _  ___  _ __   | |_| |__  
+  / _` | '_ \| | '_ ` _ \ / _` | __| |/ _ \| '_ \  | | | '_ \ 
+ | (_| | | | | | | | | | | (_| | |_| | (_) | | | | | | | |_) |
+  \__,_|_| |_|_|_| |_| |_|\__,_|\__|_|\___/|_| |_| |_|_|_.__/ 
+                                  
+ By K3CR4FT.:DLL ; 2020
+                                       
+]#
+
+#VERSION 1.0
+
+interval(100)
+
+function number al_findObjectIDByName(Name_:string){
+    
+    FinalID = 0
+    
+    for(I = 0, Objects:count()){
+        
+        Name = Objects[I, table][1, string]
+        ID = Objects[I, table][2, number]
+                
+        if(Name == Name_){
+            FinalID = ID
+        }
+        
+    }
+    
+    return FinalID
+    
+}
+
+function al_info(String_:string){
+    
+    print("[INFORMATION] " + String_)
+    
+}
+
+function al_error(String_:string){
+    
+    print("[ERREUR] " + String_)
+    
+}
+
+function number al_verif(String_:string){
+    
+    if(String_ == "" || String_ == " "){
+        return 0
+    }
+    else
+    {
+        return 1
+    }
+    
+}
+
+function array al_gc(String_:string){
+    
+    C = 0
+    Spacing = 0
+    Commands = array()
+    
+    for(I = 0, String_:length()){
+        
+        Letter = String_[I]
+        
+         if(changed(Spacing) && Spacing == 1){ C += 1}
+        
+        if(Letter != " "){
+            
+            Spacing = 0
+            Commands[C, string] = Commands[C, string] + Letter
+            
+        }
+        else
+        {
+            Spacing = 1
+        }
+        
+    }
+    
+    return Commands
+
+}
+
+function al_play(AnimationCode_:string){
+    
+    if(!Running){
+        
+        #Reset
+        holoDeleteAll()
+        for(I = 0, MovingObjectsCount){
+            
+            MovingObjects:removeTable(I)
+            al_info("Redemarrage de l'animation, 1 objet en mouvement a ete supprime")
+            
+        }
+
+        for(I = 0, RotatingObjectsCount){
+            
+            RotatingObjects:removeTable(I)
+            al_info("Redemarrage de l'animation, 1 objet en rotation a ete supprime")
+        }
+        
+        MovingObjectsCount = 0
+        RotatingObjectsCount = 0
+        Step = 0
+        
+        #####
+        
+        AnimationCode = AnimationCode_
+        Running = 1
+        
+        al_info("----- DEBUT DE L'ANIMATION -----")
+        
+    }
+    
+}
+
+if(first()){
+    
+    hint("Animation Lib by K3CR4FT.:DLL", 3)
+    
+    ExecutionTime = 0
+    Running = 0
+    
+Code =
+    "
+    Object floor;
+    Object floor2;
+    Object npc;
+    Object prop1;
+    Object box;
+    Object pivot;
+    Object button;
+    Object door1;
+    Object pivot2;
+    
+    ObjectParent box pivot;
+    ObjectParent door1 pivot2;
+    
+    ObjectModel npc models/Kleiner.mdl;
+    ObjectModel floor models/hunter/plates/plate3x3.mdl;
+    ObjectModel floor2 models/hunter/plates/plate3x3.mdl;
+    ObjectModel prop1 models/props_junk/TrafficCone001a.mdl;
+    ObjectModel box models/props_junk/wood_crate001a.mdl;
+    ObjectModel button models/dav0r/buttons/button.mdl;
+    ObjectModel door1 models/props_lab/blastdoor001c.mdl;
+
+    ObjectScale floor 2 2 1;
+    ObjectScale floor2 2 2 1;
+    ObjectScale button 5 5 2;
+    
+    ObjectLocalPos npc -100 0 0;
+    ObjectLocalPos floor2 400 0 0;
+    ObjectLocalPos button 430 0 0;
+    ObjectLocalPos prop1 15 35 20;
+    ObjectLocalPos pivot 100 0 20;
+    ObjectLocalPos pivot2 -30 140 0;
+    ObjectLocalPos door1 60 140 0;
+    
+    ObjectAng door1 0 90 0;
+    
+    ObjectAnim npc lineidle01;
+    
+    Pause 1500;
+    
+    ObjectAnim npc pace_all;
+    ObjectMove npc forward 10;
+    
+    Pause 1100;
+    
+    ObjectAnim npc throw1;
+    ObjectMoveStop npc;
+    
+    Pause 500;
+    
+    ObjectMove pivot forward 15;
+    ObjectRotate box 5 5 5;
+    Sfx box Boulder.ImpactHard;
+    
+    Pause 1500;
+    
+    ObjectMoveStop pivot;
+    ObjectRotateStop box;
+    Sfx button Buttons.snd3;
+    
+    Pause 1000;
+    
+    Sfx door1 Doors.Move10;
+    ObjectRotate pivot2 -3 0 0;
+    
+    Pause 2800;
+    
+    ObjectRotateStop pivot2;
+    Sfx door1 Doors.FullOpen10;
+    
+    Pause 2800;
+    
+    ObjectRotate pivot2 3 0 0;
+    Sfx door1 DoSpark;
+
+    "
+    
+    al_play(Code)
+   
+}
+
+
+
+if(Running == 1){
+    
+    if(every(ExecutionTime)){
+        
+        ExecutionTime = 0
+        
+        Step += 1
+
+        AnimationCodeSemicolon = AnimationCode:explode(";")
+        AnimationSteps = AnimationCodeSemicolon:count()
+            
+            AnimationCodeSemicolon[Step, string]:replace(";", "")
+            
+            Words = al_gc(AnimationCodeSemicolon[Step, string])
+            
+            for(I2 = 0, Words:count()){
+                
+                Word = Words[I2, string]
+                Arg1 = Words[I2 + 1, string]
+                Arg2 = Words[I2 + 2, string]
+                Arg3 = Words[I2 + 3, string]
+                Arg4 = Words[I2 + 4, string]
+                
+                #ANALYSER
+                WordState = "recognized"
+                WordParameters = ""
+                
+                if(Word == "Object"){
+                    
+                    if(al_verif(Arg1)){
+                        
+                        ObjectID = ObjectCount + time()
+                        ObjectCount++
+                        
+                        holoCreate(ObjectID)
+                        holoModel(ObjectID, "models/maxofs2d/cube_tool.mdl")
+                        
+                        Objects[ObjectCount, table] = table(Arg1, ObjectID)
+                        
+                        al_info("Object '" + Arg1 + "' cree avec succes ! ID: " + ObjectID)
+                        
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un objet.")   
+                    }
+                
+                }
+                elseif(Word == "ObjectModel"){
+                    
+                    if(al_verif(Arg1)){
+                        
+                        HoloID = al_findObjectIDByName(Arg1)
+                        
+                        if(HoloID){
+                            
+                            if(al_verif(Arg2)){
+                                
+                                holoModel(HoloID, Arg2)
+                                al_info("Le model pour l'objet '" + Arg1 + "' a ete change avec succes pour " + Arg2)
+                                
+                            }
+                            else
+                            {
+                                al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un model.")  
+                            }
+                            
+                        }
+                        else
+                        {
+                            al_error("Objet '" + Arg1 + "'" + " introuvable.")    
+                        }
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un objet.")   
+                    }
+                    
+                }
+                elseif(Word == "ObjectParent"){
+                    
+                    CanParent = 0
+                    
+                    if(al_verif(Arg1)){
+                        
+                        HoloID1 = al_findObjectIDByName(Arg1)
+                        
+                        if(HoloID1){
+                            
+                            CanParent++
+                            
+                        }
+                        else
+                        {
+                            al_error("Objet '" + Arg1 + "'" + " introuvable.")  
+                        }
+                        
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un objet.")     
+                    }
+                    
+                    if(al_verif(Arg2)){
+                        
+                        HoloID2 = al_findObjectIDByName(Arg2)
+                        
+                        if(HoloID2){
+                            
+                            CanParent++
+                            
+                        }
+                        else
+                        {
+                            al_error("Objet '" + Arg2 + "'" + " introuvable.") 
+                        }
+                        
+                    }
+                    else
+                    {
+                        al_error("'" + Arg2 + "'" + " n'est pas un nom correct pour un objet.")     
+                    }
+                    
+                    if(CanParent == 2){
+                        
+                        holoParent(HoloID1, HoloID2)
+                        al_info("'" + Arg1 + "' parente a '" + Arg2 + "' avec succes.")
+                        
+                        
+                    }      
+                    
+                }
+                elseif(Word == "ObjectScale"){
+                    
+                    if(al_verif(Arg1)){
+                        
+                        HoloID = al_findObjectIDByName(Arg1)
+                        
+                        if(HoloID){
+                            
+                            if((al_verif(Arg2) + al_verif(Arg3) + al_verif(Arg3)) == 3){
+                                
+                                holoScale(HoloID, vec(Arg2:toNumber(), Arg3:toNumber(), Arg4:toNumber()))
+                                
+                                al_info("La taille de l'objet '" + Arg1 + "' a ete change avec succes pour : " + Arg2 + ";" + Arg3 + ";" + Arg4)
+                                
+                            }
+                            else
+                            {
+                                al_error("'" + Arg2 + ";" + Arg3 + ";" + Arg4 + "'" + " n'est pas un vecteur correct.")
+                            }
+                            
+                        }
+                        else
+                        {
+                            al_error("Objet '" + Arg1 + "'" + " introuvable.")    
+                        }
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un objet.")   
+                    }
+                    
+                }
+                elseif(Word == "ObjectLocalPos"){
+                    
+                    if(al_verif(Arg1)){
+                        
+                        HoloID = al_findObjectIDByName(Arg1)
+                        
+                        if(HoloID){
+                            
+                            if((al_verif(Arg2) + al_verif(Arg3) + al_verif(Arg3)) == 3){
+                                
+                                holoPos(HoloID, entity():toWorld(vec(Arg2:toNumber(), Arg3:toNumber(), Arg4:toNumber())))
+                                
+                                al_info("La position de l'objet '" + Arg1 + "' a ete changer avec succes pour : " + Arg2 + ";" + Arg3 + ";" + Arg4)
+                                
+                            }
+                            else
+                            {
+                                al_error("'" + Arg2 + ";" + Arg3 + ";" + Arg4 + "'" + " n'est pas un vecteur correct.")
+                            }
+                            
+                        }
+                        else
+                        {
+                            al_error("Objet '" + Arg1 + "'" + " introuvable.")   
+                        }
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un objet.")
+                    }
+                    
+                }
+                elseif(Word == "ObjectAng"){
+                    
+                    if(al_verif(Arg1)){
+                        
+                        HoloID = al_findObjectIDByName(Arg1)
+                        
+                        if(HoloID){
+                            
+                            if((al_verif(Arg2) + al_verif(Arg3) + al_verif(Arg3)) == 3){
+                                
+                                holoAng(HoloID, ang(Arg2:toNumber(), Arg3:toNumber(), Arg4:toNumber()))
+                                
+                                al_info("L'angle de l'objet '" + Arg1 + "' a ete changer avec succes pour : " + Arg2 + ";" + Arg3 + ";" + Arg4)
+                                
+                            }
+                            else
+                            {
+                                al_error("'" + Arg2 + ";" + Arg3 + ";" + Arg4 + "'" + " n'est pas un angle correct.")
+                            }
+                            
+                        }
+                        else
+                        {
+                            al_error("Objet '" + Arg1 + "'" + " introuvable.")   
+                        }
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un objet.")
+                    }
+                    
+                }
+                elseif(Word == "Sfx"){
+                    
+                    if(al_verif(Arg1)){
+                        
+                        HoloID = al_findObjectIDByName(Arg1)
+                        
+                        if(HoloID){
+                            
+                            if(al_verif(Arg2)){
+                                
+                                holoEntity(HoloID):soundPlay(time(), 0, Arg2)
+                                al_info("Lecture du son '" + Arg2 + "' sur l'objet '" + Arg1 + "' avec succes")
+                                
+                            }
+                            else
+                            {
+                                al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un son.")
+                            }
+                            
+                        }
+                        else
+                        {
+                            al_error("Objet '" + Arg1 + "'" + " introuvable.") 
+                        }
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un objet.") 
+                    }
+                    
+                }
+                elseif(Word == "ObjectAnim"){
+                    
+                    if(al_verif(Arg1)){
+                        
+                        HoloID = al_findObjectIDByName(Arg1)
+                        
+                        if(HoloID){
+                            
+                            if(al_verif(Arg2)){
+                                
+                                holoAnim(HoloID, Arg2)
+                                al_info("L'animation de l'objet '" + Arg1 + "' a ete changer pour : " + Arg2)
+                                
+                            }
+                            else
+                            {
+                                al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour une animation.") 
+                            }
+                            
+                        }
+                        else
+                        {
+                             al_error("Objet '" + Arg1 + "'" + " introuvable.")    
+                        }
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un objet.")
+                    }
+                    
+                }
+                elseif(Word == "ObjectRotate"){
+                    
+                    if(al_verif(Arg1)){
+                        
+                        HoloID = al_findObjectIDByName(Arg1)
+                        
+                        if(HoloID){
+                            
+                            if((al_verif(Arg2) + al_verif(Arg3) + al_verif(Arg3)) == 3){
+                                
+                                AlreadyRotating = 0
+                                
+                                for(I = 0, RotatingObjectsCount){
+                                    
+                                    if(RotatingObjects[I, table][1, number] == HoloID){
+                                        AlreadyRotating = 1
+                                        RotatingObjects[I, table] = table(HoloID, ang(Arg2:toNumber(), Arg3:toNumber(), Arg4:toNumber()))
+                                    }
+                                    
+                                }
+                                
+                                if(!AlreadyRotating){
+                                    RotatingObjects[RotatingObjectsCount, table] = table(HoloID, ang(Arg2:toNumber(), Arg3:toNumber(), Arg4:toNumber()))
+                                    RotatingObjectsCount++
+                                }
+                                
+                                al_info("Rotation de l'objet '" + Arg1 + "' sur : " + Arg2 + ";" + Arg3 + ";" + Arg4)
+                                
+                            }
+                            else
+                            {
+                                al_error("'" + Arg2 + ";" + Arg3 + ";" + Arg4 + "'" + " n'est pas un angle correct.")
+                            }
+                            
+                        }
+                        else
+                        {
+                            al_error("'" + Arg1 + "'" + " introuvable.")    
+                        }
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un objet.")
+                    }
+                    
+                }
+                elseif(Word == "ObjectMove"){
+                    
+                    if(al_verif(Arg1)){
+                        
+                        HoloID = al_findObjectIDByName(Arg1)
+                        
+                        if(HoloID){
+                            
+                            if(al_verif(Arg2)){
+                                
+                                if(al_verif(Arg3)){
+                                    
+                                    AlreadyMoving = 0
+                                    
+                                    for(I = 0, MovingObjectsCount){
+                                        
+                                        if(MovingObjects[I, table][1, number] == HoloID){
+                                            AlReadyMoving = 1
+                                            MovingObjects[I, table] = table(HoloID, Arg2, Arg3:toNumber())
+                                        }
+                                        
+                                    }
+                                    
+                                    if(!AlreadyMoving){
+                                        MovingObjects[MovingObjectsCount, table] = table(HoloID, Arg2, Arg3:toNumber())
+                                        MovingObjectsCount++
+                                    }
+                                    
+                                    al_info("Mouvement de l'objet '" + Arg1 + "' en '" + Arg2 + "' avec la vitesse '" + Arg3 + "'.")
+                                
+                                }
+                                else
+                                {
+                                    al_error("'" + Arg3 + "'" + " n'est pas une vitesse correcte.")          
+                                }
+                                
+                            }
+                            else
+                            {
+                                al_error("'" + Arg2 + "'" + " n'est pas une direction correcte.")
+                            }
+                            
+                        }
+                        else
+                        {
+                            al_error("'" + Arg1 + "'" + " introuvable.")    
+                        }
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un objet.")
+                    }
+                    
+                }
+                elseif(Word == "ObjectMoveStop"){
+                    
+                    if(al_verif(Arg1)){
+                        
+                        HoloID = al_findObjectIDByName(Arg1)
+                        
+                        if(HoloID){
+                            
+                            for(I = 0, MovingObjectsCount){
+                        
+                                if(MovingObjects[I, table][1, number] == HoloID){
+                                    MovingObjects:removeTable(I)
+                                    al_info("Mouvement de l'objet '" + Arg1 + "'" + " arrete.") 
+                                }
+                                
+                            }
+                            
+                        }
+                        else
+                        {
+                            al_error("'" + Arg1 + "'" + " introuvable.")    
+                        }
+                        
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un objet.")
+                    }
+                }
+                elseif(Word == "ObjectRotateStop"){
+                    
+                    if(al_verif(Arg1)){
+                        
+                        HoloID = al_findObjectIDByName(Arg1)
+                        
+                        if(HoloID){
+                            
+                            for(I = 0, RotatingObjectsCount){
+                        
+                                if(RotatingObjects[I, table][1, number] == HoloID){
+                                    RotatingObjects:removeTable(I)
+                                    al_info("Rotation de l'objet '" + Arg1 + "'" + " arrete.") 
+                                }
+                                
+                            }
+                            
+                        }
+                        else
+                        {
+                            al_error("'" + Arg1 + "'" + " introuvable.")     
+                        }
+                        
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un nom correct pour un objet.")
+                    }
+                }
+                elseif(Word == "Pause"){
+                    
+                    if(al_verif(Arg1)){
+                        al_info("Pause de  " + Arg1 + "ms en cours ...")
+                        ExecutionTime = Arg1:toNumber() 
+                    }
+                    else
+                    {
+                        al_error("'" + Arg1 + "'" + " n'est pas un temps correcte pour une pause")     
+                    }                
+       
+                }
+                else
+                {
+                    WordState = "unrecognized"   
+                }
+                
+            }
+    
+    }
+ 
+    if(Step > AnimationSteps && Running == 1){
+        
+        Running = 0
+        al_info("----- FIN DE ANIMATION -----")
+        
+    }
+}
+ 
+for(I = 0, MovingObjects:count() - 1){
+    
+    HoloID = MovingObjects[I, table][1, number]
+    DirectionString = MovingObjects[I, table][2, string]
+    Speed = MovingObjects[I, table][3, number]
+    
+    if(DirectionString == "forward"){  
+        Direction = holoEntity(HoloID):forward()     
+    }
+    elseif(DirectionString == "backward"){
+        Direction = -holoEntity(HoloID):forward()
+    }
+    elseif(DirectionString == "right"){
+        Direction = holoEntity(HoloID):right()
+    }
+    elseif(DirectionString == "left"){
+        Direction = -holoEntity(HoloID):right()
+    }
+    elseif(DirectionString == "up"){
+         Direction = holoEntity(HoloID):up()
+    }
+    elseif(DirectionString == "down"){
+         Direction = -holoEntity(HoloID):up()
+    }
+    else
+    {
+        al_error("La direction '" + Direction + "' n'est pas correcte.")
+    }
+    
+    holoPos(HoloID, holoEntity(HoloID):pos() + Direction * Speed)
+    
+}
+
+for(I = 0, RotatingObjects:count()){
+    
+    HoloID = RotatingObjects[I, table][1, number]
+    Ang = RotatingObjects[I, table][2, angle]
+    
+    holoAng(HoloID, holoEntity(HoloID):angles() + Ang)
+    
+}

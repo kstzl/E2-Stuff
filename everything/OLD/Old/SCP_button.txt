@@ -1,0 +1,28 @@
+@name SCP button
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+    
+    holoCreate(1) holoScale(1,vec(1.6,0.9,0.4)) holoMaterial(1,"sprops/trans/misc/ls_m1") holoParent(1,entity())
+    holoCreate(2) holoScale(2,vec(0.7,0.8,0.45)) holoPos(2,entity():pos()+vec(0,0,4.7)) holoColor(2,vec(0,250,100)) holoParent(2,entity())
+    
+    holoCreate(3) holoScale(3,vec(0.5,0.5,0.5)) holoPos(3,entity():pos()-vec(0.8,0,4.5)) holoModel(3,"hqsphere") holoParent(3,entity())
+    
+ }
+
+    findByClass("player")
+    findSortByDistance(entity():pos())
+
+      if(find():aimPos():distance(holoEntity(3):pos()) < 5)
+      { 
+             holoColor(3,vec(255,80,80))   
+      }
+      if(find():aimPos():distance(holoEntity(3):pos()) > 5)
+      {
+             holoColor(3,vec(255,10,10))  
+      }

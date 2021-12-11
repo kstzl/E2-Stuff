@@ -1,0 +1,17 @@
+@name UFOnium
+@inputs E:entity W 
+@persist E:entity 
+@outputs 
+
+    runOnTick(1)
+    
+Pos=owner():aimPos()- owner():pos()
+Force = 100
+
+if(W == 1){
+    E:applyForce(Pos*Force)
+    timer("latch",1000)
+}
+
+
+

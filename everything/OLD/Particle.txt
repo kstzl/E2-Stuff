@@ -1,0 +1,29 @@
+@name Particle
+@inputs 
+@outputs 
+@persist N N2 C
+@trigger 
+@model models/props_junk/PopCan01a.mdl
+
+ runOnTick(1)
+
+ if(first()){ holoCreate(-1) holoAlpha(-1,0) holoParent(-1,entity()) holoEntity(-1):soundPlay(1,0,"Fire.Plasma") }
+ if(C < 1){ C++ }
+
+ if(C >= 1){
+ N+=1 C=0
+ }
+ if(N >= 110){ N=0 reset() }
+
+ holoCreate(N)
+ holoScale(N,vec(1))
+ holoModel(N,"sphere")
+ holoColor(N,vec(N*randint(5,120)))
+
+       N2=0
+ while(N2 < N){
+       N2++
+       holoPos(N2,holoEntity(N2):pos()+vec(randint(-2,2),randint(-2,2),randint(0,4)))
+       holoAng(N2,holoEntity(N2):angles()+ang(randint(0,15)))
+       holoAlpha(N2,randint(90,255))
+ }

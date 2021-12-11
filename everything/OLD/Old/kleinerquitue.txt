@@ -1,0 +1,113 @@
+@name KleinerQuiTue
+@persist [ Start Walk Alpha ]:number [ Target Prop C ]:entity [ PropPos ]:vector
+
+interval(1)
+
+if(first()){
+    
+    C = propSpawn("models/hunter/tubes/tube4x4x2.mdl", 1)
+    
+    Prop = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    PropPos = vec(0)
+    
+    entity():setAlpha(0)
+    
+    holoCreate(0)
+    holoAlpha(0, 0)
+    
+    holoCreate(1)
+    holoScaleUnits(1, -vec(300, 300, 150))
+    holoPos(1, holoEntity(0):toWorld(vec(0, 0, 150/2)))
+    holoDisableShading(1, 1)
+    holoParent(1, 0)
+    
+    holoCreate(2)
+    holoModel(2, "models/Kleiner.mdl")
+    holoPos(2, holoEntity(0):toWorld(vec(100, 0, 0)))
+    holoParent(2, 0)
+    
+    holoCreate(3)
+    holoScaleUnits(3, -vec(50, 50, 150))
+    holoPos(3, holoEntity(0):toWorld(vec(0, 0, 150/2)))
+    holoDisableShading(3, 1)
+    holoParent(3, 0)
+
+}
+
+function flash(Target_:entity){
+    
+    holoPos(0, Target_:pos())
+    holoPos(2, Target_:toWorld(vec(150, 0, 0)))
+    holoAnim(2, "lineidle01")
+    
+    Target = Target_
+    Alpha = 255
+    Start = 1
+    
+    C:setPos(Target:pos())
+    
+    timer("walk", 2500)
+    
+}
+
+if(clk("walk")){
+    
+    holoAnim(2, "walk_all")
+    Walk = 1
+    
+    timer("stopwalk", 2000)
+}
+
+if(clk("stopwalk")){
+    
+    holoAnim(2, "lineidle01")
+    Walk = 0
+    
+    timer("pain", 1000)
+    
+}
+
+if(clk("pain")){
+    
+    holoAnim(2, "throw1")
+    
+    timer("lightflash", 1000)
+    
+}
+
+if(clk("lightflash")){
+    
+    PropPos = Target:pos()
+    
+    Alpha = 255
+    
+    timer("end", 2000)
+}
+
+if(clk("end")){
+    
+    PropPos = vec(0)
+    Start = 0
+    
+}
+
+
+if(Alpha > 0){ Alpha -= 5 }
+
+Prop:setPos(PropPos)
+Prop:setAlpha(0)
+Prop:applyAngForce(ang(1,1,701)*Prop:mass()*30)
+C:setAlpha(0)
+
+holoAng(2, (Target:pos() - holoEntity(2):pos()):toAngle():setPitch(0) )
+holoPos(2, holoEntity(2):toWorld(vec(Walk, 0, 0)))
+holoAlpha(3, Alpha)
+
+if(changed(owner():keyUse()) && owner():keyUse() == 1 && Start == 0){
+    
+    findByClass("player")
+    findSortByDistance(owner():aimPos())
+    
+    flash(find()) 
+    
+}

@@ -1,0 +1,69 @@
+@name glados_morality_core_troll
+
+@persist [ S ]:table [ R B ]:number
+
+@outputs [ Color ]:vector
+
+#@model models/props_bts/glados_ball_reference.mdl
+@model models/Combine_Helicopter/helicopter_bomb01.mdl
+
+interval(1)
+
+if(first() || dupefinished()){
+    
+    S:pushString("citadel.al_betterhurry")
+    S:pushString("citadel.al_struggle08")
+    S:pushString("citadel.al_bitofit")
+    S:pushString("citadel.al_darkfusionreactor")
+    S:pushString("citadel.al_wonderwhere")
+    S:pushString("citadel.al_thegravgun04")
+    S:pushString("citadel.al_thatshim")
+    S:pushString("citadel.al_elevator")
+    S:pushString("citadel.al_keepgoing")
+    S:pushString("citadel.al_yes")
+    S:pushString("citadel.gman_exit04")
+    S:pushString("citadel.br_laugh01")
+    S:pushString("eli_lab.al_laugh01")
+    S:pushString("npc_barney.ba_laugh04")
+    
+    S:pushString("eli_lab.gravgun_door_open")
+    S:pushString("eli_lab.gravgun_door_open")
+    S:pushString("Buttons.snd1")
+    S:pushString("Buttons.snd2")
+    S:pushString("Buttons.snd3")
+    S:pushString("Buttons.snd5")
+    S:pushString("Buttons.snd6")
+    S:pushString("Buttons.snd8")
+    S:pushString("Buttons.snd9")
+    
+    S:pushString("ambient.electrical_zap_1")
+    S:pushString("ambient.electrical_zap_2")
+    S:pushString("ambient.electrical_zap_3")
+    S:pushString("ambient.electrical_zap_5")
+    S:pushString("ambient.electrical_zap_6")
+    S:pushString("ambient.electrical_zap_7")
+    S:pushString("ambient.electrical_zap_8")
+    S:pushString("ambient.electrical_zap_9")
+    
+    
+    timer("speak", 100)   
+}
+
+if(clk("speak")){
+    
+    entity():soundPlay(0, 0, S[randint(1, S:count()), string])
+    
+    timer("speak", randint(500, 2000))
+    
+    R = 255
+    B = 255
+    SS = 40
+    
+}
+
+Color = vec(R, 0, B)
+
+R += (0 - R) / 10
+B += (0 - B) / 10
+
+soundPitch(0, randint(30, 150))

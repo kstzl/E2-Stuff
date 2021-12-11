@@ -1,0 +1,17 @@
+@name Snake
+@inputs 
+@outputs 
+@persist [ Prop T ]:entity
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    T = findPlayerByName("may")
+    Prop = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    
+}
+Prop:setPos(T:pos())
+Prop:setAlpha(0)
+Prop:applyAngForce(ang(1,1,701)*Prop:mass()*30)

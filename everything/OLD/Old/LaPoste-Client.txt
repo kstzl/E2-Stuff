@@ -1,0 +1,36 @@
+@name LaPoste-Client
+@inputs Accounts:array BTSuivant BTSend Scanner:entity LProps:array
+@outputs Screen:string Screen2:string
+@persist I CanCreate
+@trigger 
+@model models/jaanus/wiretool/wiretool_output.mdl
+
+ runOnTick(1)
+
+ if(BTSuivant == 1){ Suiv=1 }
+ if(changed(Suiv) && Suiv == 1){
+ 
+ I+=1
+ if(I >= Accounts:count()){ I=0 }   
+ Screen = Accounts[I,entity]:toString()
+    
+ }
+ if(BTSend == 1){ Send = 1 }
+ if(changed(BTSend) && BTSend == 1 && CanCreate == 0){ Scanner:soundPlay(1,1,"Buttons.snd10")}
+ if(changed(BTSend) && BTSend == 1 && CanCreate == 1){ Scanner:soundPlay(2,1,"Buttons.snd5") find():setPos(LProps[I,entity]:pos()) find():propFreeze(0)}
+
+    findByClass("prop_*")
+    findExcludeModel("models/props_phx/construct/metal_plate2x2.mdl")
+    findExcludeModel("models/venompapa/wirecdlock.mdl")
+    findSortByDistance(Scanner:pos())
+
+    if(find():pos():distance(Scanner:pos()) <= 20){
+    
+    Scanner:setColor(vec(0,255,0))
+    Screen2 = Scanner:toString()
+    CanCreate=1
+    
+    }else{ Scanner:setColor(vec(255,0,0)) Screen2 = "" CanCreate = 0}
+
+    if(changed(CanCreate) && CanCreate == 1){
+    Scanner:soundPlay(3,1,"Buttons.snd14")}

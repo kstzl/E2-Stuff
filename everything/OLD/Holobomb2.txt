@@ -1,0 +1,35 @@
+@name Holobomb2
+@inputs 
+@outputs 
+@persist Max C Ang
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+
+Max=10
+C=0 
+   
+holoCreate(1)
+holoColor(1,vec(255,0,0))
+holoParent(1,entity())
+
+}
+
+if(C <= Max){
+    C++
+}
+if(C >= Max){
+    Max-=5
+    Ang+=5
+    C=0
+    holoAng(1,ang(0,Ang,0))
+    holoEntity(1):soundPlay(1,3,"Buttons.snd17")
+}
+if(Max == 0){
+Prop = propSpawn("models/props_c17/oildrum001_explosive.mdl",1)
+Prop:propBreak()
+selfDestructAll()
+   
+}

@@ -1,0 +1,83 @@
+@name Hoverboard
+@inputs 
+@outputs 
+@persist 
+@trigger 
+@model models/sprops/rectangles/size_1_5/rect_6x36x3.mdl
+if (dupefinished()) {reset()}
+runOnTick(1)
+if(first()){
+    
+    holoCreate(1)
+    holoCreate(2)
+    holoCreate(3)
+    holoCreate(4)
+    holoCreate(5)
+    holoCreate(6)
+    holoCreate(7)
+    holoCreate(8)
+    holoCreate(9)
+    
+    holoModel(1,"cylinder")
+    holoModel(2,"cube")
+    holoModel(3,"cube")
+    holoModel(4,"cylinder")
+    holoModel(5,"cylinder")
+    holoModel(6,"pyramid")
+    holoModel(7,"pyramid")
+    holoModel(8,"cylinder")
+    holoModel(9,"cylinder")
+ 
+    holoColor(1,vec(0,0,0))
+    holoColor(2,vec(0,0,0))
+    holoColor(3,vec(0,0,0))
+    holoColor(4,vec(0,0,255))
+    holoColor(5,vec(0,0,255))
+    holoColor(6,vec(0,0,0))
+    holoColor(7,vec(0,0,0))
+
+    holoScale(1,vec(0.3,0.3,2))
+    holoScale(2,vec(1,1,0.4))
+    holoScale(3,vec(1,1,0.4))
+    holoScale(4,vec(1.7,0.4,1.1))
+    holoScale(5,vec(1.7,0.4,1.1))
+    holoScale(6,vec(1,0.5,0.3))
+    holoScale(6,vec(1,0.5,0.7))
+    holoScale(7,vec(1,0.5,0.7))
+    holoScale(8,vec(1.7,1.7,0.3))
+    holoScale(9,vec(1.7,1.7,0.3))
+
+
+    holoParent(1, entity())
+    holoParent(2, entity())
+    holoParent(3, entity())
+    holoParent(4, 2)
+    holoParent(5, 3)
+    holoParent(6, 1)
+    holoParent(7, 1)
+    holoParent(8, 1)
+    holoParent(9, 1)
+    
+    holoAng(1, ang(0,90,90))
+    holoAng(4, ang(0,90,90))
+    holoAng(5, ang(0,90,90))
+    holoAng(6, ang(0,90,90))
+    holoAng(7, ang(0,-90,90))
+    holoAng(8, ang(0,90,90))
+    holoAng(9, ang(0,90,90))
+    
+    
+    
+    
+    holoEntity(1):soundPlay(0,0,"NPC_AttackHelicopter.Rotors")
+}
+
+holoPos(2, entity():toWorld(vec(9,0,0)))
+holoPos(3, entity():toWorld(vec(-9,0,0)))
+holoPos(8, entity():toWorld(vec(15,0,0)))
+holoPos(9, entity():toWorld(vec(-15,0,0))) 
+
+entity():setAlpha(10)
+soundPitch(0, entity():vel():length() / 6)
+
+

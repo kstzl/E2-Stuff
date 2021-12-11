@@ -1,0 +1,30 @@
+@name Decteur_Job
+@inputs Players:array
+@persist BlackList:string
+@outputs SoundPlay:number
+
+#By K3CR4FT.:DLL 2020
+
+if(first()){
+    
+    BlackList = "cp"
+    
+}
+
+interval(1)
+
+Alarm = 0
+
+foreach(K, Player:entity = Players){
+    
+    PlayerJob = Player:nxJob()
+    
+    if(PlayerJob == BlackList){
+        
+        Alarm = 1
+        
+    }
+    
+}
+
+SoundPlay = Alarm

@@ -1,0 +1,279 @@
+@name PrinterFounder_Recepteur
+@inputs [ EGP_EO EGP_EP Egp ]:wirelink
+@outputs [ C3 ]:number
+@persist [ S EC K3_ERROR_T CaPrint K3_FLASH ]:number [ ActualProgramName ]:string [ Emetteurs ]:table
+
+#[
+  _  ______     ____   _____ 
+ | |/ /___ \   / __ \ / ____|
+ | ' /  __) | | |  | | (___  
+ |  <  |__ <  | |  | |\___ \ 
+ | . \ ___) | | |__| |____) |
+ |_|\_\____/   \____/|_____/ 
+                             
+                             By K3CR4FT.:DLL / Khapta Zenda
+                             Version 1.0 ( 2020 )
+                            
+]#
+
+interval(1)
+
+################################################
+#EGP Library - coded by Ivef.
+
+function void wirelink:box(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpBox(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+}
+function void wirelink:boxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+    This:egpSize(Index,1)
+}
+function void wirelink:boxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4,Outline:number){
+    This:egpBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+    This:egpSize(Index,Outline)
+}
+function void wirelink:roundbox(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpRoundedBox(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+}
+function void wirelink:roundboxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpRoundedBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)  
+    This:egpSize(Index,1)
+}
+function void wirelink:roundboxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4,S:number){
+    This:egpRoundedBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)  
+    This:egpSize(Index,S)
+}
+function void wirelink:line(Index:number,Pos1:vector2,Pos2:vector2,Color:vector4,Size:number){
+    This:egpLine(Index,Pos1,Pos2)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+}
+function void wirelink:line(Index:number,Pos1:vector2,Pos2:vector2,Color:vector4){
+    This:egpLine(Index,Pos1,Pos2)
+    This:egpColor(Index,Color)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector,Size:number){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    This:egpAlign(Index,1,1)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector4,Size:number){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    This:egpAlign(Index,1,1)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector,Size:number,Align:string){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    if(Align == "c"){
+        This:egpAlign(Index,1,1)
+    }
+    elseif(Align == "l"){
+        This:egpAlign(Index,2,1)
+    }
+    elseif(Align == "r"){
+        This:egpAlign(Index,0,1)
+    }
+    else{
+        This:egpAlign(Index,1,1)
+    }
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector4,Size:number,Align:string){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    if(Align == "c"){
+        This:egpAlign(Index,1,1)
+    }
+    elseif(Align == "l"){
+        This:egpAlign(Index,2,1)
+    }
+    elseif(Align == "r"){
+        This:egpAlign(Index,0,1)
+    }
+    else{
+        This:egpAlign(Index,1,1)
+    }
+}
+function number wirelink:button(ID:number,Cursor:vector2){
+    local BPos = This:egpPos(ID)
+    local BSize = This:egpSize(ID)/2
+    local Pressed = inrange(Cursor,BPos-BSize,BPos+BSize)
+    return Pressed
+}
+##############################################################
+
+Egp:box(100, vec2(S, 25), vec2(S * 2, 50), vec4(100, 100, 100, 255))
+Egp:text(102, ActualProgramName, vec2(S, 25), vec(0), 30)
+
+EGP_EO:box(100, vec2(S, 25), vec2(S * 2, 50), vec4(100, 100, 100, 255))
+EGP_EO:text(102, "Emetteurs en detail", vec2(S, 25), vec(0), 30)
+
+
+C1 = ( (K3_FLASH*155)*CaPrint)
+C2 = ( (K3_FLASH*100)*CaPrint)
+C3 = ( (K3_FLASH*255)*CaPrint)
+
+EGP_EP:box(100, vec2(S, 25), vec2(S * 2, 50), vec4(100 + C1, 100 - C2, 100 - C2, 255))
+EGP_EP:text(102, "Ca print ?!", vec2(S, 25), vec(C3), 30)
+
+if(clk("K3_ERROR_T")){ K3_ERROR_T = !K3_ERROR_T timer("K3_ERROR_T", 500) }
+if(clk("K3_FLASH")){ K3_FLASH = !K3_FLASH timer("K3_FLASH", 500) }
+
+##########
+# Apps   #
+##########
+
+
+
+#Starter
+function start_prog(ProgName_:string){
+
+    ActualProgramName = ProgName_
+
+    timer(ProgName_, 0)
+    
+}
+
+if(changed(ActualProgramName)){ Egp:egpClear() }
+
+function wirelink:error_show(Error_:string){
+    
+    if(K3_ERROR_T){
+        This:box(103, vec2(S), vec2(Error_:length() * 15, 100), vec4(255, 0, 0, 255))
+    }
+    else
+    {
+        This:boxoutline(103, vec2(S), vec2(Error_:length() * 15, 100), vec4(255, 0, 0, 255))
+    }
+    
+    This:text(104, "ERREUR", vec2(S, S * 0.9), vec(255), 30)
+    This:text(105, Error_, vec2(S, S * 1.1), vec(255), 30)
+    
+}
+
+#Bootscreen
+if(clk("bootscreen")){
+    
+    Egp:egpClear()
+    
+    Egp:box(1, vec2(S), vec2(256, 100), vec4(255, 0, 0, 255))
+    Egp:text(2, "K3 OS", vec2(S, S * 0.9), vec(255), 30)
+    Egp:text(3, "By K3CR4FT.:DLL", vec2(S, S * 1.1), vec(255), 30)
+    Egp:text(4, "'PrinterFounder Recepteur' version only.", vec2(S, S * 1.8), vec(255), 30)
+    
+    timer("end_bootscreen", 500)
+}
+if(clk("end_bootscreen")){ start_prog("PrinterFounder Recepteur") }
+
+if(clk("PrinterFounder Recepteur")){
+
+    dsSend("recepteur_check", "general", "")
+
+    Egp:egpClear()
+    EGP_EO:egpClear()
+    EGP_EP:egpClear()
+    CaPrint = 0
+    
+    
+    if(EC > 0){
+        
+        Egp:text(1, EC + " Emetteur(s) detecte(s).", vec2(S, S), vec(255), 30)
+        EGP_EP:text(1, "<zone> : <nb printer normal> | <nb printer vip>", vec2(S, S * 0.3), vec(255), 25)
+        
+        
+        for(I = 0, Emetteurs:count()){
+            
+            EGP_EO:text(I, Emetteurs[I, table][2, number] + " x " + Emetteurs[I, table][1, string], vec2(S, S + (I-1) * 30), vec(255), 30)
+
+            IS = (Emetteurs[I, table][3, number] + Emetteurs[I, table][4, number])
+            
+            if(IS){
+                EGP_EP:text(2 + I, Emetteurs[I, table][1, string] + " : " + Emetteurs[I, table][3, number] + " | " +  Emetteurs[I, table][4, number], vec2(S, S + (I-1) * 30), vec(255), 30)
+                CaPrint = 1
+            }
+        }
+        
+    }
+    else
+    {
+        Egp:error_show("Aucun emetteur detecte.")
+        EGP_EO:error_show("Aucun emetteur detecte.")
+        EGP_EP:error_show("Aucun emetteur detecte.")
+    }
+    
+    
+    timer("PrinterFounder Recepteur", 500)
+    
+    Emetteurs = table()
+    EC = 0
+    
+}
+
+
+if(first() || dupefinished()){
+    
+    S = 512 / 2
+    
+    dsJoinGroup("general")
+    
+    start_prog("bootscreen")
+    
+    timer("K3_ERROR_T", 0)
+    timer("K3_FLASH", 0)
+    
+}
+
+if(dsClk("printer_found")){
+
+    print(dsGetString())
+
+}
+
+if(dsClk("emetteur_init")){
+
+    print("[NX PrintFounder RECEPTEUR] 1 emetteur detecte sur : " + dsGetString())
+
+}
+
+if(dsClk("emetteur_check")){
+    
+    Create = 1
+    
+    for(I = 0, Emetteurs:count()){
+        
+        NE = Emetteurs[I, table][1, string]
+        
+        if(dsGetTable()[1, string] == NE){
+            Create = 0
+            Emetteurs[I, table][2, number] = Emetteurs[I, table][2, number] + 1
+            
+            Emetteurs[I, table][3, number] = Emetteurs[I, table][3, number] + dsGetTable()[2, number]
+            Emetteurs[I, table][4, number] = Emetteurs[I, table][4, number] + dsGetTable()[3, number]
+        }
+    
+    }
+    
+    if(Create == 1){
+        
+        N = dsGetTable()[1, string]
+        P = dsGetTable()[2, number]
+        PV = dsGetTable()[3, number]
+        
+        Emetteurs:pushTable(table(N, 1, P, PV)) 
+        
+    }
+
+    EC++
+    
+}
+

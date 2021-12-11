@@ -1,0 +1,22 @@
+@name Disco Trail
+@inputs 
+@outputs 
+@persist Ang
+@trigger 
+
+interval(10)
+
+if(first()){
+    
+    holoCreate(1)
+    
+    holoCreate(2)
+    holoEntity(2):setTrails(3,10,1,"trails/smoke",vec(255,0,0),255)
+    holoParent(2,1)
+    holoPos(2,entity():pos()+vec(120,0,0))
+
+}
+
+    holoAng(1,ang(0,Ang,0))
+    holoPos(1,entity():pos())
+    Ang+=5

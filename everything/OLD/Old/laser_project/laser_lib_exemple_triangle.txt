@@ -1,0 +1,17 @@
+@name laser_lib_exemple_triangle
+@inputs 
+@outputs 
+@persist 
+@trigger 
+#include "laser_project/laser_lib"
+ 
+ if(first()){ 
+    
+    laserMake(1)
+    laserMake(2)
+    laserMake(3)
+}
+
+    laserStart(1,entity():pos()+vec(150,50,0),entity():pos()+vec(-150,50,0))
+    laserStart(2,entity():pos()+vec(150,0,0),entity():pos()+vec(0,150,0))
+    laserStart(3,entity():pos()+vec(-150,0,0),entity():pos()+vec(0,150,0))

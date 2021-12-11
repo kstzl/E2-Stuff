@@ -1,0 +1,11 @@
+@name DMG
+@inputs A
+@outputs
+@persist
+@trigger 
+
+runOnTick(1)
+
+    findByClass("player") 
+    findSortByDistance(entity():pos())
+    find():dmgApplyDamage(300)

@@ -1,0 +1,12 @@
+@name tp if
+@inputs Pod
+@outputs Tp
+@persist 
+@trigger 
+
+if(Pod == 0){
+    Tp == 1
+}
+else{
+    Tp == 0
+}

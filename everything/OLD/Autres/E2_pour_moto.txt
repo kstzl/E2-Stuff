@@ -1,0 +1,24 @@
+@name E2 pour moto (sound)
+@inputs W A S D
+@outputs 
+@persist 
+@trigger 
+
+if(W == 1){
+ soundPlay(0,1,"d3_citadel.weapon_zapper_beam_loop1")
+}
+elseif(A == 1)
+{
+     soundPlay(0,1,"d3_citadel.weapon_zapper_beam_loop1")
+}
+elseif(S == 1)
+{
+       soundPlay(0,1,"d3_citadel.weapon_zapper_beam_loop1")
+}
+elseif(D == 1)
+{
+       soundPlay(0,1,"d3_citadel.weapon_zapper_beam_loop1")
+}
+else{
+    soundPlay(0,1,"Airboat_engine_stop")
+}

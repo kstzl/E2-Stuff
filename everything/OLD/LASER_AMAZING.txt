@@ -1,0 +1,41 @@
+@name 
+@inputs 
+@outputs 
+@persist I RD T P:entity
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+
+I=5
+
+holoCreate(-1) holoScale(-1,vec(5)) holoPos(-1,entity():pos()) holoModel(-1,"hqsphere")
+holoCreate(0) holoAlpha(0,0)
+
+P=propSpawn("models/props_c17/FurnitureBed001a.mdl",1)
+P:setAlpha(0)
+P:propFreeze(0)
+
+}
+
+if(I < 51){
+I+=1
+}
+holoCreate(I) holoEntity(I):setTrails(5000,2,9000000,"trails/laser",vec(255,255,255),255) holoAlpha(I,0) holoEntity(I):soundPlay(I,0,"WeaponDissolve.Beam")
+holoPos(I,holoEntity(-1):pos())
+
+holoPos(I-2,holoEntity(0):pos())
+holoParent(I-2,holoEntity(0))
+holoPos(0,players()[RD,entity]:pos())
+
+P:setPos(holoEntity(0):pos()+vec(0,0,15))
+
+P:applyAngForce(ang(1,1,720)*P:mass()*30)
+
+
+T++
+if(T >= 10){ T=0
+RD=randint(1,players():count())
+}
+

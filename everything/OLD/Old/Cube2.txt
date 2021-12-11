@@ -1,0 +1,129 @@
+@name Cube2
+@persist [ Scale Dist I Dx W W2 Delay Push ]:number
+@persist [ Color ]:vector
+@persist [ Target Prop ]:entity
+
+interval(1)
+
+if(first()){
+    
+    #CONFIG#
+    Scale = 500
+    Delay = 250
+    Target = owner()
+    
+    entity():setAlpha(0)
+    
+    holoCreate(0)
+    holoAlpha(0, 0)
+    
+    holoCreate(1)
+    holoPos(1, entity():pos() + vec(0, 0, Scale / 2) )
+    holoScaleUnits(1, vec( Scale ) )
+    holoEntity(1):soundPlay(1, 0, "d3_citadel.combine_ball_field_loop2")
+    holoParent(1, 0)
+    
+    holoCreate(2)
+    holoPos(2, entity():pos() + vec(0, 0, ( (Scale + 1) / 2 )) )
+    holoScaleUnits(2, vec( Scale + 1) )
+    holoMaterial(2, "models/props_combine/tpballglow")
+    holoAlpha(2, 5)
+    holoParent(2, 0)
+    
+    holoCreate(3)
+    holoPos(3, entity():pos() + vec(0, 0, (Scale) / 2) )
+    holoScaleUnits(3, vec( -Scale ) )
+    holoColor(3, vec(0))
+    holoParent(3, 0)
+    
+    holoCreate(4)
+    holoAlpha(4, 0)
+    holoEntity(4):setTrails(50, 1, 1, "trails/electric", vec(255, 0, 255), 255)
+    
+    Prop = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    
+    
+} 
+
+#VARIABLES#
+Color = vec(255, 0, abs( sin( I ) * 255 ) )
+Dist = holoEntity(1):pos():distance( Target:pos() )
+I += 0.1
+W += 1
+W2 += 1
+
+#FIND#
+findByClass("player")
+findSortByDistance(holoEntity(0):pos())
+Target = find()
+
+if(Dist < (Scale * 0.8) ){
+    
+    Push = 1
+    timer("MoveAway", 500)
+    
+}
+
+if(clk("MoveAway")){
+
+    Dx = randint(-5000, 5000)
+    W = Delay
+    
+}
+
+#HOLOS#
+for(H2 = 0, 2){
+    
+    holoColor(H2, Color * H2)
+    
+}
+
+#TRAILS#
+if(W2 >= randint(200, 1000)){
+    
+    holoPos(4, holoEntity(0):pos()  + vec(randint(-Scale, Scale), randint(-Scale, Scale), randint(0, Scale)) * randint(1, 5))
+    holoEntity(4):soundPlay(4, 0, "ambient.electrical_random_zap_1")
+    timer("ResetTrail", 50)
+    
+    W2 = 0
+       
+}
+if(clk("ResetTrail")){
+    
+    holoPos(4, holoEntity(0):pos())
+    
+}
+
+#MOVE#
+if(W >= Delay){
+    
+    Push = 0
+    Ang = ( holoEntity(1):pos() - Target:pos() ):toAngle() + ang(0, 180, 0)
+    Scale2 = 0
+
+    holoAng(0, ang(0, Ang:yaw(), 0) )
+    holoPos(0, holoEntity(0):toWorld( vec( Dx + clamp(Delay * 1.5, 0, Dist), 0, 0) ) )
+    holoEntity(0):soundPlay(0, 0, "Doors.FullClose9")
+    
+    W = 0
+    Dx = 0
+    
+}
+
+#PROP#
+
+Prop:setAlpha(0)
+Prop:propFreeze(0)
+Prop:applyAngForce( ang(1000) * Prop:mass())
+    
+if(Push == 1){
+    
+    Prop:setPos(Target:pos() + vec(0, 0, 30) )
+    
+}
+else
+{
+    Prop:setPos(holoEntity(0):pos() + vec(0, 0, Scale / 2) )
+    
+}
+    

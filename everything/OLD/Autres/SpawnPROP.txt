@@ -1,0 +1,9 @@
+@name SpawnPROP
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+interval(2000)
+propSpawn("models/props_c17/oildrum001_explosive.mdl",0)
+

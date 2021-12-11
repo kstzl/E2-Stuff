@@ -1,0 +1,16 @@
+@name Radionche
+@inputs 
+@outputs 
+@persist Nb
+@trigger 
+
+if(first()){
+    holoCreate(1)
+    holoModel(1,"models/props_lab/citizenradio.mdl")
+    holoEntity(1):soundPlay(0,0,"song20_submix0")
+}
+
+runOnTick(1)
+ holoPos(1, entity():pos())   
+holoAng(1,ang(0,Nb,0))
+Nb++

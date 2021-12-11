@@ -1,0 +1,84 @@
+@name Holo_Ai_V2
+
+@persist [ DistanceOfTargetPos Running Dopamine Adrenaline Stress Capacity Speed ]:number
+
+@persist [ Target ]:entity
+
+@persist [ TargetPos HoloPos ]:vector
+
+@persist [ TargetAngle ]:angle
+
+@persist [ Enemies Friends ]:table
+
+
+
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoModel(1, "models/Kleiner.mdl")
+    
+    holoCreate(2)
+    
+    Target = owner()
+    
+    Dopamine = randint(1, 5)
+    Capacity = randint(1, 5)
+
+}
+
+TargetPos = Target:pos()
+HoloPos = holoEntity(1):pos()
+
+TargetAngle = ( Target:pos() - holoEntity(1):pos() ):toAngle():setPitch(0)
+
+DistanceOfTargetPos = TargetPos:distance(HoloPos)
+
+D = TargetPos:distance(HoloPos)/Speed
+
+Running = (DistanceOfTargetPos > 100)
+
+#############################################
+#               B R A I N                   # ############################################# ############################################# #############################################
+#############################################
+
+Speed = 2 + clamp(Dopamine, 0, Capacity)
+
+if(Dopamine > 1){ Dopamine-=0.01 }
+
+
+
+
+
+
+
+
+############################################# ############################################# ##########################################################################################
+
+if(changed(Running) && Running == 1){ holoAnim(1, "run_all") }
+if(changed(Running) && Running == 0){ holoAnim(1, "lineidle01") }
+
+
+if(Running){
+    
+    holoPos(1, HoloPos + ( TargetPos - HoloPos ) / D )
+    
+}
+
+holoAng(1, TargetAngle)
+
+foreach(K, Player:entity = players()){
+    
+    Pos = owner():forward() * owner():pos():distance(holoEntity(2):pos())
+    holoPos(2, Pos )
+    
+    FacingPlayer = ( Player:aimEntity() == holoEntity(1) )
+    
+    if(FacingPlayer){
+        
+        print(Player)
+        
+    }
+}

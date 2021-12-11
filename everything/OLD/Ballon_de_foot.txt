@@ -1,0 +1,47 @@
+@name Ballon de foot
+@persist Count
+@model models/props_phx/misc/soccerball.mdl
+
+ runOnTick(1)
+
+ if(first()){
+ holoCreate(1) holoScale(1,vec(3,3,0.1)) holoAlpha(1,0) entity():propFreeze(0) entity():setTrails(0.24,54,1,"trails/smoke",vec(0,50,255),100)
+ hint("[V1.1] Ballon de foot by k3",5)
+ }
+
+ findByClass("player")
+ findSortByDistance(entity():pos())
+ holoPos(1,entity():pos()) 
+ entity():setColor(vec(255))
+
+
+ if(entity():pos():distance(find():pos()) <= 60){ Sound=1 entity():applyForce(find():eye()*entity():mass()*find():vel():length()/1.4) 
+ if(find():vel():length() >= 600){ Sound3=1  entity():applyForce(find():eye()*entity():mass()*find():vel():length()*randint(2,4)) 
+ }
+ }
+ if(entity():pos():distance(find():pos()+vec(0,0,80)) <= 26 && find():vel():length() >= 0 && find():keyJump()){ 
+    entity():setPos(owner():pos()+vec(0,0,100)) entity():applyForce(vec(0,0,randint(450,600))*entity():mass()) Sound5=1
+    entity():applyAngForce(ang(randint(-800,800)))
+     }
+ if(entity():pos():distance(find():pos()+vec(0,0,80)) <= 26 && find():vel():length() >= 5 && !find():keyJump()){
+
+ Sound4=randint(-1,5)
+ Count += 0.01
+ N = 5
+
+ X1 = N*cosr(30*Count)
+ Y1 = N*sinr(30*Count)
+ Z1 = 85
+
+  entity():setPos(find():pos()+vec(X1,Y1,Z1))   
+  entity():applyAngForce(ang(50))
+ }
+
+ Ranger=rangerOffset(300,holoEntity(1):pos(), -holoEntity(1):up())
+ if(Ranger:distance() <= 20){ Sound2=1 }
+
+ if(changed(Sound) && Sound == 1){ holoEntity(1):soundPlay(1,2,"Popcan.ImpactHard") soundPitch(1,randint(100,130)) }
+ if(changed(Sound2) && Sound2 == 1){ holoEntity(1):soundPlay(2,2,"Popcan.ImpactHard") }
+ if(changed(Sound3) && Sound3 == 1){ holoEntity(1):soundPlay(3,2,"BaseExplosionEffect.Sound")}
+ if(changed(Sound4) && Sound4 == 1){ holoEntity(1):soundPlay(4,2,"Cardboard.StepLeft")}
+ if(changed(Sound5) && Sound5 == 1){ holoEntity(1):soundPlay(5,2,"NPC_Combine.GrenadeLaunch")}

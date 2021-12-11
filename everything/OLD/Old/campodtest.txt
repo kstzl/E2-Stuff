@@ -1,0 +1,52 @@
+@name CamPodTest
+@inputs [ Cam Pod ]:wirelink
+@persist W A S D J Jump
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(0)
+    holoModel(0, "models/Humans/Group01/male_07.mdl")
+    
+}
+
+W = Pod["W", number] * 5
+S = Pod["S", number] * 5
+A = Pod["A", number] * 5
+D = Pod["D", number] * 5
+J = Pod["Space", number]
+
+Cam["Position", vector] = holoEntity(0):toWorld(vec(-50, 0, 70))
+Cam["Direction", vector] = holoEntity(0):eye()
+
+Ranger = rangerOffset(3000, holoEntity(0):toWorld(vec(0, 0, 5)), -holoEntity(0):up())
+
+holoPos(0, holoEntity(0):toWorld(vec(W - S, 0, holoEntity(0):pos():z() + (Ranger:pos():z() - holoEntity(0):pos():z()) / 5) ))
+holoAng(0, holoEntity(0):angles() + ang(0, (A - D), 0))
+
+if( (changed(W) & W > 0) || (changed(S) & S > 0)){
+    
+    holoAnim(0, "walk_all")
+    
+}
+if( (changed(W) & W < 1) || (changed(S) & S < 1)){
+    
+    holoAnim(0, "idle_angry")
+}
+
+if(changed(J) && J == 1){
+    
+    if(Jump < 1){
+        
+        Jump = 50
+        
+    }
+    
+}
+
+if(Jump > 0){
+    
+    Jump -= 2
+    
+}

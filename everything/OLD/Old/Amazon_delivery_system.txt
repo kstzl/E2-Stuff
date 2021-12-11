@@ -1,0 +1,17 @@
+@name Amazon delivery system
+@inputs Plate:entity Quai:entity Finish:entity BT
+@outputs 
+@persist Start SC
+@trigger 
+
+ runOnTick(1)
+
+ findByModel("")
+
+ if(BT == 1){ Start=1 }
+ if(Start == 1){ SC+=1 }
+
+ if(SC < 100){ Plate:applyForce(((find():pos()+vec(0,0,150)-Plate:massCenter())*Plate:mass()/3)) }
+ if(SC >= 100 && SC < 200){ Plate:applyForce(((Quai:pos()+vec(0,0,50)-Plate:massCenter())*Plate:mass()/3)) }
+ if(SC >= 200){ Plate:applyForce(((Finish:pos()+vec(0,0,50)-Plate:massCenter())*Plate:mass()/3)) }
+ if(SC == 300){ SC=0 BR=0 }

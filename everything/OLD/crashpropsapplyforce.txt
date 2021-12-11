@@ -1,0 +1,22 @@
+@name CrashPropsApplyForce
+@inputs 
+@outputs 
+@persist Props:array
+@trigger 
+
+interval(1)
+
+findIncludePlayerProps(owner())
+findByClass("prop*")
+
+Props = findToArray()
+    
+for(I = 1, Props:count()){
+        
+        Prop = Props[I, entity]
+
+        Entity = entity()
+        
+        Prop:applyForce( ( Entity:pos() - Prop:pos() ) * Prop:mass() * 500 )
+
+}

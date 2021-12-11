@@ -1,0 +1,56 @@
+@name laser_project/laser_lib
+@persist N:number A:vector B:vector I:number AA:array
+
+ # LASER LIB [FR]
+ # Laser lib est une lib pour creer des lasers en e2.
+ # Creer par k3, 2016
+
+ #Include:                     #include "laser_project/laser_lib"
+
+ interval(50)
+
+ function laserMake(I:number){
+          holoCreate(I)
+          holoScale(I,vec(0.01))
+          holoEntity(I):setTrails(50,5,1,"trails/smoke",vec(255,255,255),255)
+          }
+   
+ function laserSPMake(I1:number){
+          holoCreate(I1)
+ }
+ function laserTrail(I2:number,S:number,Min:number,Max:number,Str:string,Color:vector,Alpha:number){
+          holoEntity(I2):setTrails(S,Min,Max,Str,Color,Alpha)
+ }
+
+ function laserStart(I3:number,A:vector,B:vector){
+          if(N < 5){ N++ holoPos(I3,A) }
+          if(N >= 5){ holoPos(I3,B) N=0 }
+          
+          AA[I3,vector]=B
+ }
+
+ #LASER SP (special)
+
+ function laserSPScale(I4:number,S:vector){
+          holoScale(I4+0.1,S) 
+ }
+ function laserSPModel(I5:number,Str2:string){
+          holoModel(I5+0.1,Str2)
+ }
+ function laserSPColor(I6:number,Color2:vector){
+          holoColor(I6+0.1,Color2)
+ }
+ function laserSPAlpha(I7:number,Alpha:number){
+          holoAlpha(I7+0.1,Alpha)   
+ }
+ function laserSPAng(I8:number,Ang:angle){
+          holoAng(I8+0.1,Ang)   
+ }
+ function laserSPPos(I9:number,Pos:vector){
+          holoPos(I9,Pos)
+ }
+
+ function vector laserSPPos(I10:number){
+          return AA[I10,vector]
+ }
+

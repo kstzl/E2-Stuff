@@ -1,0 +1,39 @@
+@name chatprint_q
+@inputs 
+@outputs 
+@persist I Arr:array
+@trigger 
+
+interval(300)
+
+if(first()){
+    
+    entity():setName("e2 car")
+    
+}
+
+function string bs(Amount){
+    
+    local Str = ""
+    for(I = 0, Amount){ Str += "\n" }
+    return Str
+    
+}
+function prnt(Str:string){
+    
+    chatPrint(bs(60) + Str)
+    
+}
+
+function setSequence(Index, Seq:string){
+    
+    Arr[Index, string] = Seq
+    
+}
+
+setSequence(1, "Server")
+setSequence(2, "Server HACKED")
+
+local Seq = (I % Arr:count()) + 1
+prnt(Arr[Seq, string])
+I++

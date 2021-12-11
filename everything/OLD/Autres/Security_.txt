@@ -1,0 +1,13 @@
+@name Security 
+@inputs N
+@outputs A
+@persist 
+@trigger 
+
+runOnTick(1)
+if(N < 5){
+    A = 1
+}
+else{
+    A = 0
+}

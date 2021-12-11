@@ -1,0 +1,6 @@
+@name MegaRobot
+@inputs 
+@outputs 
+@persist 
+@trigger 
+

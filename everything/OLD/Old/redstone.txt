@@ -1,0 +1,51 @@
+@name Redstone
+@persist [ I ] [ O ]:entity [ Aim_pos ]:vector [ State ]:array
+
+interval(50)
+
+if(first()){
+    
+    O = owner()
+    I = 1
+    
+    holoCreate(0)
+    
+}
+
+if(changed(O:keyAttack2()) && O:keyAttack2() == 1){
+    
+    holoCreate(I)
+    holoScaleUnits(I, vec(35, 35, 0.1))
+    holoColor(I, vec(255, 0, 0))
+    holoPos(I, Aim_pos)
+    
+    State[I, number] = 0
+    
+    I += 1
+}
+
+for(I2 = 1, I){
+    
+    R = State[I2, number]
+    holoColor(I2, vec(R, 0, 0))
+    
+    for(I3 = 1, I){
+        
+        if(I2 != I3){
+            
+            P = 0
+            
+            if(holoEntity(I2):pos():distance(holoEntity(I3):pos()) <= 36){
+                State[I3, number] = (State[I3, number] + State[I2, number]*0.1)
+            }
+            
+        }
+        
+    }
+    
+}
+
+Aim_pos = (round(( O:aimPos() + O:aimNormal() ) / 35.6 ) * 35.6) + vec(0, 0, 20)
+
+holoPos(0, Aim_pos)
+State[1, number] = 255

@@ -1,0 +1,52 @@
+@name Laser Hyper Puissant qui tue
+@inputs 
+@outputs 
+@persist I RD T P:entity ENT:entity MaxI A:array Size
+@trigger 
+
+interval(50)
+
+#Laser par k3, version 1 
+#MaxI: minium = 10
+
+findPlayerByName("(0")
+findExcludeEntity(owner())
+
+A=findToArray()
+
+if(first()){
+
+I=3
+MaxI=15
+Size=5
+
+holoCreate(0) holoAlpha(0,0) holoPos(0,vec(0)) holoModel(0,"hqsphere") holoScale(0,vec(5))
+
+P=propSpawn("models/props_c17/FurnitureBed001a.mdl",1)
+P:setAlpha(0)
+P:propFreeze(0)
+
+}
+
+if(I < MaxI)
+{
+I++
+holoCreate(I) holoEntity(I):setTrails(500,22,9000000,"trails/laser",vec(255,255,255),255) holoAlpha(I,0) holoEntity(I):soundPlay(I,0,"d3_citadel.weapon_zapper_beam_loop1")
+holoPos(I,entity():pos()+vec(0,0,1))
+}
+
+holoPos(I-3,holoEntity(0):pos()+vec(randint(-Size,Size),randint(-Size,Size),5))
+holoParent(I-3,holoEntity(0))
+
+holoPos(0,ENT:pos())
+
+P:setPos(holoEntity(0):pos()+vec(randint(-15,15),randint(-15,15),randint(0,15)))
+P:applyAngForce(ang(1,1,720)*P:mass()*30)
+
+T++
+if(T >= 9){ T=0
+RD=randint(1,A:count())
+ENT=A[RD,entity]
+#ENT=findPlayerByName("quenti")
+}
+

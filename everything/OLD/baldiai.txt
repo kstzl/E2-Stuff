@@ -1,0 +1,65 @@
+@name BaldiAI
+@persist [ I Mode ]:number [ Pos ]:array [ Target Prop ]:entity
+
+#include "FastLibs"
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoModel(1, "models/Kleiner.mdl")
+    holoColor(1, vec(0, 255, 0))
+    
+    Target = owner()
+    Prop = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    
+}
+
+if(changed(Mode) && Mode == 1){ timer("mode0", 1000) holoEntity(1):soundPlay(time(), 0, "BaseExplosionEffect.Sound") }
+
+if(Mode == 0){
+
+    if(every(500)){
+        
+        holoPos(1, Pos[I - 200, vector])
+        
+        Ranger = rangerOffset(3000, holoEntity(1):pos(), -holoEntity(1):up())
+        
+        holoPos(1, holoEntity(1):pos():setZ(Ranger:pos():z()))
+        
+        holoEntity(1):soundPlay(0, 0, "PhxMetal.ImpactHard")
+        soundPitch(0, 120)
+        holoAnim(1, "kgesture12")
+    }
+    
+    Pos[I, vector] = Target:pos()
+    I += 1
+    
+}
+else
+{
+    holoPos(1, Target:toWorld(vec(12, randint(-5, 5), 0)))
+}
+
+if(clk("mode0")){
+    
+    holoPos(1, entity():pos()) I = 0
+    Mode = 0   
+}
+
+holoAng(1, (Target:pos() - holoEntity(1):pos()):toAngle():setPitch(0) + ang(0, 90, 0))
+
+if(Target:pos():distance(holoEntity(1):pos()) <= 50){
+    
+    Mode = 1 
+    
+}
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos())
+Target = find()
+
+Prop:setPos(holoEntity(1):pos())
+Prop:setAlpha(0)
+Prop:applyAngForce(ang(1, 1, 701) * Prop:mass() * 30)

@@ -1,0 +1,26 @@
+@name 
+@inputs 
+@outputs 
+@persist T:entity X Y Z C C2
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+ T=findPlayerByName("treb")
+ holoCreate(1) holoPos(1,T:pos()) holoParent(1,T) holoAlpha(1,0)
+holoEntity(1):soundPlay(1,10,"coast.windmill")
+}
+
+
+ if(C < 100){
+    C++
+ }
+ if(C >= 100){
+ X=randint(-50,350)   
+ Y=randint(-50,350)   
+ Z=randint(-1,2)   
+ C=0
+
+ }
+ T:plyApplyForce(vec(X,Y,Z))

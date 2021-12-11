@@ -1,0 +1,49 @@
+@name Cloack
+@persist [ Cloack ]:number [ Mat ]:string
+
+interval(1)
+runOnLast(1)
+
+if(first()){
+    
+    Cloack = 1
+    Mat = "Models/effects/vol_light001"
+    
+    entity():setAlpha(0)
+    entity():setName("e2 voiture")
+    
+}
+
+if(last()){
+    
+    Cloack = 0
+    
+}
+
+if(changed(Cloack) || last()){
+    
+    if(Cloack){
+        
+        owner():setMaterial(Mat)
+        
+        foreach(K, Weapon:entity = owner():weapons()){
+            Weapon:setMaterial(Mat)
+        }
+        
+        print("Invisible !")
+        
+    }
+    else
+    {
+        owner():setMaterial("")
+        
+        foreach(K, Weapon:entity = owner():weapons()){
+            Weapon:setMaterial("")
+        }
+        
+        print("Visible !")
+    }
+    
+}
+
+

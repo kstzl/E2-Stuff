@@ -1,0 +1,49 @@
+@name daslight_console
+
+@persist 
+
+function string get_param(Table_:table, Param_:string){
+    
+    Final_ = "not found"
+    
+    for(I = 0, Table_:count()){
+        
+        T_ = Table_[I, table]
+        
+        if(T_[1, string]:lower() == Param_:lower()){
+            Final_ = T_[2, string]
+        }
+        
+    }
+    
+    return Final_
+    
+}
+
+
+if(first() || dupefinished()){
+    
+    interval(1)
+    dsJoinGroup("daslight")
+    
+    timer("search", 0)
+    
+}
+
+if(clk("search")){
+    
+    dsSend("daslight_console_check", "daslight", "hello")
+        
+    timer("search", 1000)
+
+}
+
+if(dsClk("new_machine")){
+    
+    print("new machine detected : ")
+    
+    MachineName = get_param(dsGetTable(), "Name")
+    
+    print("Machine Name : " + MachineName)
+    
+}

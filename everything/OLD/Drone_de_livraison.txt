@@ -1,0 +1,49 @@
+@name Drone de livraison
+@inputs Package:entity
+@outputs 
+@persist C
+@trigger 
+@model models/hunter/plates/plate05x05.mdl
+
+ runOnTick(1)
+
+ findByModel("models/maxofs2d/hover_plate.mdl")
+
+ if(first()){
+    
+          holoCreate(1)
+          holoPos(1,entity():pos()+vec(0,0,5))
+          holoParent(1,entity())
+          holoModel(1,"pyramid")
+    
+ }
+
+ if(find() & Package & find():pos():distance(entity():pos()) <= 40 ){
+    
+    soundStop(1) soundStop(2)  selfDestructAll()
+    
+    timer("destruct",1000)
+    holoEntity(1):soundPlay(3,0,"Weapon_AR2.Reload_Rotate")
+ }
+
+ if(find() & Package & find():pos():distance(entity():pos()) >= 38 ){ Sound1=1
+    Package:setPos(entity():pos())
+    
+    entity():setColor(vec(0,255,0))
+    entity():propFreeze(0)
+    
+    if(C < 30){ C+=1 }
+    if(C >= 30){
+    entity():applyForce(((find():pos()+vec(0,0,50)-entity():massCenter())*entity():mass()/3))
+    entity():setAng(ang(0))
+    }
+    
+    
+ }
+ else
+ {
+    entity():setColor(vec(255,0,0))
+ }
+ 
+ if(changed(Sound1) && Sound1==1){ holoEntity(1):soundPlay(1,0,"Buttons.snd17") holoEntity(1):soundPlay(2,0,"NPC_CombineDropship.OnGroundRotorLoop") }
+ if(clk("destruct")){ selfDestructAll() }

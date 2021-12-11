@@ -1,0 +1,15 @@
+@name crypto_miner
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+interval(1)
+
+function string sha256(Str:string){
+    
+}
+
+if(first()){
+    
+}

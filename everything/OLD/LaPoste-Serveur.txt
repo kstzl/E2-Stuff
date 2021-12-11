@@ -1,0 +1,34 @@
+@name LaPoste-Serveur
+@inputs BTAdd SAccount:entity Scanner:entity
+@outputs Screen:string Accounts:array LProps:array
+@persist Accounts:array LProps:array I CanCreate
+@trigger 
+@model models/jaanus/wiretool/wiretool_input.mdl
+
+ runOnTick(1)
+
+ if(first()){ I = 1 }
+
+ if(BTAdd == 1){
+      Add=1
+ }
+ if(changed(Add) && Add == 1 && CanCreate == 0){ Scanner:soundPlay(1,1,"Buttons.snd10")}
+ if(changed(Add) && Add == 1 && CanCreate == 1){ Scanner:soundPlay(2,1,"Buttons.snd5")
+    I+=1
+    Accounts[I, entity] = SAccount
+    LProps[I, entity] = find()
+    
+ }
+
+    
+    findByModel("models/props_wasteland/controlroom_filecabinet001a.mdl")
+
+    findSortByDistance(Scanner:pos())
+
+    if(find():pos():distance(Scanner:pos()) <=20){
+    
+    Scanner:setColor(vec(0,255,0))
+    Screen = Scanner:toString()
+    CanCreate=1
+    
+    }else{ Scanner:setColor(vec(255,0,0)) Screen = "" CanCreate = 0}

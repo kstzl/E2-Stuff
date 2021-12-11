@@ -1,0 +1,21 @@
+@name SkyChanger
+@inputs 
+@outputs 
+@persist I
+@trigger 
+
+interval(1)
+
+if(first()){
+    
+    for(I = 0, 10){
+        holoCreate(1)
+        holoScale(1, vec(-500) )
+        holoDisableShading(1, 1)
+        holoModel(1, "hqsphere")
+        holoPos(1, vec(-1538.394653, 1711.008789, 10873.482422))
+    }
+
+}
+
+holoColor(randint(0, I), vec(randint(0, 255), randint(0, 255), randint(0, 255)))

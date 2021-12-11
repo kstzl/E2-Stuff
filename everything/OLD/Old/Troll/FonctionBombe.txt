@@ -1,0 +1,13 @@
+@name 
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+function createbomb (){
+    
+     Prop = propSpawn("models/props_c17/oildrum001_explosive.mdl",1)
+Prop:setPos(owner():aimPos())
+    Prop:propBreak()
+    
+}

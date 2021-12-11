@@ -1,0 +1,22 @@
+@name IA2
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){ holoCreate(1) holoModel(1,"models/Barney.mdl") holoParent(1,entity()) entity():propFreeze(0) holoEntity(1):soundPlay(1,999,"sfx/skidding.wav") }
+
+  findByClass("player")
+  findSortByDistance(entity():pos())
+  entity():applyForce(((find():pos()+vec(0,0,34)-entity():massCenter())*entity():mass()*1))
+  entity():setAng(find():angles()+ang(0,180,0))
+
+  if(entity():pos():distance(find():pos()) <= 300){
+     Sound=1 
+ }
+ if(changed(Sound) && Sound == 1){
+     holoEntity(1):soundPlay(2,5,"Town.d1_town_02a_fz_scream1")
+    
+  }

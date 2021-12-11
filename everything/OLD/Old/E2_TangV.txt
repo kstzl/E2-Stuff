@@ -1,0 +1,17 @@
+@name E2 TangV
+@inputs Bouton
+@outputs Roue Teleporte
+@persist Tourne I TempsRoue
+
+interval(1000)
+
+#Config
+
+TempsRoue = 6 #secondes
+
+#------
+
+if(Bouton == 1){ Tourne = 1}
+if(Tourne == 1){ I+= 1 }
+if(I <= TempsRoue && Tourne == 1){ Roue = 1 }
+if(I >= TempsRoue){ Teleporte = 1 Tourne = 0}

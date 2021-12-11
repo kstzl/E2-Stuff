@@ -1,0 +1,81 @@
+@name Tazer
+@inputs 
+@outputs 
+@persist D1 Ph1 T:entity Prop:entity Charge
+@trigger 
+
+ runOnTick(1)
+    
+ #By k3 
+
+ findByClass("player")
+ findSortByDistance(owner():aimPos())
+
+ if(first())
+ { 
+    holoCreate(1) 
+    holoPos(1,owner():pos()) 
+    holoParent(1,owner()) 
+    holoAlpha(1,0)
+    holoCreate(2) 
+    holoAlpha(2,0)
+    
+    Prop=propSpawn("models/hunter/blocks/cube4x4x4.mdl",0)
+ 
+    Charge=255
+ }
+
+ if(changed(owner():keyAttack2()) && owner():keyAttack2() == 1 && D1 == 0 && Charge >= 255)
+ {
+   D1=1
+   Charge=0
+   timer("Ph1",30)
+   timer("Ph1_E",8000) 
+ }
+
+ if(clk("Ph1")){ Ph1=1 }
+ if(clk("Ph1_E")){ Ph1=0 D1=0 }
+
+ if(changed(Ph1) && Ph1 == 1)
+ {
+    T=find() 
+    holoEntity(1):soundPlay(1,0,"ambient.electrical_random_zap_2") 
+    holoEntity(1):soundPlay(2,0,"Town.d1_town_01_electric_loop") 
+    holoEntity(2):setTrails(40,100,0.5,"trails/electric",vec(255,255,255),255)
+ }
+
+ if(Ph1 == 1)
+ {
+    Prop:setPos(T:pos()+vec(0,0,randint(0,15)))
+    Prop:applyAngForce(ang(1,1,720)*Prop:mass()*30)
+    holoPos(2,T:pos()+vec(randint(-50,50),randint(-50,50),randint(1,90)))
+ }
+ else
+ { 
+    soundStop(2) holoPos(2,owner():pos()+vec(0,0,15)) 
+    holoEntity(2):removeTrails()
+    Prop:setPos(entity():pos()+vec(0,0,50))
+ }
+
+ if(D1 == 0)
+ {
+ if(Charge < 255)
+ {
+    Charge+=50
+
+ }   
+ }
+
+ if(changed(owner():keyAttack2()) && owner():keyAttack2() == 1 && Charge < 255 && D1==0)
+ {
+ hint("[Tazer] Le tazer est decharge, veuillez attendre. (niveau de charge: "+Charge+" / 255 )",3)
+ holoEntity(2):soundPlay(3,0,"Buttons.snd10")
+ }
+
+ if(changed(Charge) && Charge >= 255)
+ {
+ hint("[Tazer] Le tazer est charge, pret pour utilisation.",3)
+ holoEntity(2):soundPlay(3,0,"Buttons.snd16")
+ }
+
+Prop:setAlpha(0)

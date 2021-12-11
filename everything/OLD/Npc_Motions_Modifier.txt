@@ -1,0 +1,31 @@
+@name Npc Motions Modifier
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+#findInSphere(entity():pos(),5000)
+findIncludePlayerProps(owner())
+findByClass("npc_*")
+E = findToArray()
+
+foreach(I,L:entity=E){
+    
+    L:npcRelationship(owner(),"like",998)
+    
+    foreach(I,J:entity=E){
+        
+
+        
+        if(J!=L){
+            
+            L:npcGiveWeapon("rpg")
+            #L:npcShoot()
+            
+            L:npcRelationship(J,"hate",999)
+               
+        }
+           
+    }
+       
+}

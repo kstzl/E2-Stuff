@@ -1,0 +1,201 @@
+@name Bob-Bomb
+@inputs 
+@outputs 
+@persist [ I I2 EPitch Activated MoveSpeed ]:number
+@persist [ BASE Target ]:entity
+@trigger 
+
+interval(1)
+
+if(first()){
+  
+    BASE = entity()
+    Target = owner()
+    
+    holoCreate(1)
+    holoColor(1, vec(100, 100, 125))
+    holoModel(1, "hqsphere")
+    holoScale(1, vec(1.5))
+    holoPos(1, BASE:toWorld(vec(0, 0, 15)))
+    holoParent(1, BASE)
+    
+    holoCreate(2)
+    holoModel(2, "hqcylinder")
+    holoColor(2, vec(100, 100, 200))
+    holoScale(2, vec(0.8, 0.8, 0.25))
+    holoPos(2, holoEntity(1):toWorld(vec(0, 0, 8)))
+    holoParent(2, 1)
+    
+    holoCreate(3)
+    holoModel(3, "hqcylinder")
+    holoColor(3, vec(225))
+    holoScale(3, vec(0.15, 0.15, 1))
+    holoPos(3, holoEntity(1):toWorld(vec(0, 0, 10)))
+    holoParent(3, 1)
+    
+    holoCreate(4)
+    holoModel(4, "hqcylinder")
+    holoColor(4, vec(35))
+    holoScale(4, vec(0.16, 0.16, 0.20))
+    holoPos(4, holoEntity(1):toWorld(vec(0, 0, 15)))
+    holoParent(4, 1)
+    
+    holoCreate(5)
+    holoModel(5, "hqcylinder")
+    holoColor(5, vec(255, 255, 0))
+    holoScale(5, vec(0.15, 0.15, 0.20))
+    holoPos(5, holoEntity(1):toWorld(vec(-10, 0, 0)))
+    holoAng(5, holoEntity(1):angles())
+    holoParent(5, 1)
+    
+    holoCreate(6)
+    holoModel(6, "hqtorus")
+    holoColor(6, vec(255, 255, 0))
+    holoScale(6, vec(0.35))
+    holoPos(6, holoEntity(5):toWorld(vec(0, -2, 2)))
+    holoAng(6, holoEntity(1):angles() + ang(90, 0, 0))
+    holoParent(6, 5)
+    
+    holoCreate(7)
+    holoModel(7, "hqtorus")
+    holoColor(7, vec(255, 255, 0))
+    holoScale(7, vec(0.35))
+    holoPos(7, holoEntity(5):toWorld(vec(0, 2, 2)))
+    holoAng(7, holoEntity(1):angles() + ang(90, 0, 0))
+    holoParent(7, 5)
+    
+    holoCreate(8)
+    holoAlpha(8, 0)
+    holoPos(8, holoEntity(1):pos())
+    holoParent(8, 1)
+    
+    holoCreate(9)
+    holoAlpha(9, 0)
+    holoPos(9, holoEntity(1):pos())
+    holoParent(9, 1)
+    
+    holoCreate(10)
+    holoModel(10, "hqcylinder")
+    holoColor(10, vec(255, 200, 0))
+    holoScale(10, vec(0.25, 0.25, 0.5))
+    holoPos(10, holoEntity(1):toWorld(vec(0, -3, -10)))
+    holoParent(10, 8)
+    
+    holoCreate(11)
+    holoModel(11, "hqcylinder")
+    holoColor(11, vec(255, 200, 0))
+    holoScale(11, vec(0.25, 0.25, 0.5))
+    holoPos(11, holoEntity(1):toWorld(vec(0, 3, -10)))
+    holoParent(11, 9)
+    
+    holoCreate(12)
+    holoModel(12, "hqcylinder")
+    holoColor(12, vec(255, 200, 0))
+    holoScale(12, vec(0.5, 0.3, 0.15))
+    holoPos(12, holoEntity(10):toWorld(vec(1, 0, -3)))
+    holoParent(12, 10)
+    
+    holoCreate(13)
+    holoModel(13, "hqcylinder")
+    holoColor(13, vec(255, 200, 0))
+    holoScale(13, vec(0.5, 0.3, 0.15))
+    holoPos(13, holoEntity(11):toWorld(vec(1, 0, -3)))
+    holoParent(13, 11)
+    
+    holoCreate(14)
+    holoModel(14, "hqsphere")
+    holoColor(14, vec(255))
+    holoScale(14, vec(0.2, 0.2, 0.5))
+    holoPos(14, holoEntity(1):toWorld(vec(8, -2, 0)))
+    holoParent(14, 1)
+    
+    holoCreate(15)
+    holoModel(15, "hqsphere")
+    holoColor(15, vec(255))
+    holoScale(15, vec(0.2, 0.2, 0.5))
+    holoPos(15, holoEntity(1):toWorld(vec(8, 2, 0)))
+    holoParent(15, 1)
+    
+    holoEntity(1):soundPlay(1, 0, "NPC_CeilingTurret.Move")
+    soundVolume(1, 0.75)
+    
+    MoveSpeed = 1
+    
+    timer("fs", 0)
+    
+}
+
+holoAng(5, holoEntity(1):angles() + ang(I, -90, 90))
+holoAng(8, holoEntity(1):angles() + ang(sin(I) * 25, 0, 0))
+holoAng(9, holoEntity(1):angles() + ang(-sin(I) * 25, 0, 0))
+I += 5 * MoveSpeed
+I2 += 15
+Ranger = rangerOffset(3000, holoEntity(1):toWorld(vec(0, 0, 0)), -holoEntity(1):up())
+
+holoAng(1, (Target:pos() - holoEntity(1):pos()):toAngle():setPitch(0) + ang(0, 0, sin(I) * 2.5))
+holoPos(1, holoEntity(1):toWorld(vec(MoveSpeed, 0, 0)))
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos())
+Target = find()
+
+if(Target:pos():distance(holoEntity(1):pos()) < 100 && !Activated){
+    
+    timer("activate", 0)
+    
+}
+
+if(clk("activate")){
+    
+    Activated = 1
+    MoveSpeed = 0
+    EPitch = 90
+    holoEntity(1):soundPlay(1, 0, "NPC_AttackHelicopter.CrashingAlarm1")
+    
+    timer("launch", 1500)
+    
+}
+
+if(clk("launch")){
+    
+    Activated = 2
+    timer("explode", 100)
+    
+}
+
+if(clk("explode")){
+    
+    local P = propSpawn("models/props_c17/oildrum001_explosive.mdl", 1)
+    P:setAlpha(0)
+    P:setPos(holoEntity(1):pos())
+    P:propBreak()
+    
+    selfDestruct()
+}
+
+if(Activated){
+    
+    soundPitch(1, EPitch)
+    EPitch += 1
+    
+    holoColor(1, vec(100 + abs(sin(I2) * 200), 0, 0))
+    
+}
+else
+{
+    holoPos(1, holoEntity(1):pos():setZ(Ranger:pos():z()) + vec(0, 0, 15))
+}
+
+if(Activated == 2){
+    
+    holoPos(1, holoEntity(1):toWorld(vec(0, 0, 25)))
+    
+}
+
+if(clk("fs") && !Activated){
+    
+    holoEntity(12):soundPlay(12, 0, "NPC_Alyx.Climb_Footstep_Metal")
+    soundPitch(12, random(110, 120))
+    timer("fs", random(400, 600))
+    
+}

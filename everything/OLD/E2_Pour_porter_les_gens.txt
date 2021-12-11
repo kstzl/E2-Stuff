@@ -1,0 +1,51 @@
+@name E2 Pour porter les gens
+@inputs 
+@outputs 
+@persist PBase:entity PBase2:entity PCyl:entity T:entity
+@trigger 
+
+
+runOnTick(1)
+
+if (first()) {
+    
+    holoCreate(1)
+    holoAlpha(1, 0)
+    holoEntity(1):soundPlay(1,0,"d3_citadel.combine_ball_field_loop2")
+    
+    PBase = propSpawn("models/props_phx/construct/windows/window_angle360.mdl",0 )
+    PBase:setAlpha(0)
+    PBase2 = propSpawn("models/props_phx/construct/windows/window_angle360.mdl",0 )
+    PBase2:setAlpha(0)    
+    PCyl = propSpawn("models/props_phx/construct/metal_plate_curve360x2.mdl",0 )
+    PCyl:setAlpha(0)
+
+    PBase:setPos(holoEntity(1):pos())
+    PBase2:setPos(holoEntity(1):pos() + vec(0, 0, 95))
+    PCyl:setPos(holoEntity(1):pos())
+    
+    weld(PBase, PCyl)
+    weld(PBase2, PCyl)
+}
+
+if (changed(owner():keyAttack2())) {
+    
+    findByClass("player")
+    findSortByDistance(owner():aimPos())
+    T = find()
+    
+    if (T != owner()) {
+    
+    holoPos(1, T:pos() - vec(0, 0, 5))
+    
+    PBase:setPos(holoEntity(1):pos())
+    PBase2:setPos(holoEntity(1):pos() + vec(0, 0, 100))
+    PCyl:setPos(holoEntity(1):pos())
+    
+    }
+    
+}
+    PBase:setAng(ang(0))
+    PBase2:setAng(ang(0))
+    PCyl:setAng(ang(0))
+

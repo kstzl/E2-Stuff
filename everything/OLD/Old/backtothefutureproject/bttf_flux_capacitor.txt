@@ -1,0 +1,65 @@
+@name BTTF_Flux_Capacitor
+@inputs [ BT_ON BT_SPEEDUP ]:number
+@outputs  [ Lights ]:vector [ Teleport ]:number
+@persist [ ON SpeedUp I C ]:number
+
+interval(1)
+
+if(first() || duped()){
+    
+    holoCreate(0)
+    holoParent(0, entity())
+    holoAlpha(0, 0)
+    
+}
+
+ON = BT_ON
+
+if(changed(ON) && ON == 1){
+    
+    holoEntity(0):soundPlay(1, 0, "coast.thumper_startup")
+    
+}
+if(changed(ON) && ON == 0){
+    
+    holoEntity(0):soundPlay(1, 0, "coast.thumper_shutdown")
+    SpeedUp = 0
+    
+}
+
+if(changed(BT_SPEEDUP) && BT_SPEEDUP == 1){
+    SpeedUp = 1
+}
+
+if(ON == 1){
+    
+    if(changed(SpeedUp) && SpeedUp == 1){
+        
+        holoEntity(0):soundPlay(0, 0, "k_lab.teleport_spark")
+        
+        Teleport = 1
+        
+    }
+
+        if(SpeedUp > 0){
+            C = abs(sin(I * SpeedUp*5)) * 255
+            Lights = vec(C)
+        }
+        else
+        {
+            Lights = vec(abs(sin(I) * 50))
+        }
+        
+        I += 1
+
+    
+    
+}
+else
+{
+    Lights = vec(5)
+    
+}
+
+SpeedUp += (0 - SpeedUp) / 25
+if(Teleport > 0){ Teleport -= 0.1 }

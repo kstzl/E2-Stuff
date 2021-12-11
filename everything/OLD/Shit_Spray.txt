@@ -1,0 +1,53 @@
+@name Shit Spray
+@inputs 
+@outputs 
+@persist RD Nb2 Nb3 U
+@trigger 
+
+ runOnTick(2000)
+
+ if(first()){ holoCreate(0) holoPos(0,owner():pos()) holoAlpha(0,0) holoParent(0,owner()) }
+ if(first()){
+ H= -10 holoCreate(H) holoModel(H,"hqcylinder") holoScale(H,vec(1.5,1.5,8)) holoPos(H,entity():pos()) holoColor(H,vec(255,0,0))
+ H= -9 holoCreate(H) holoModel(H,"dome") holoScale(H,vec(1.5,1.5,1.5)) holoPos(H,entity():pos()+vec(0,0,47)) holoParent(H,-10) holoColor(H,vec(255,0,0))
+ H= -8 holoCreate(H) holoModel(H,"cylinder") holoScale(H,vec(0.5,0.5,2)) holoPos(H,entity():pos()+vec(0,0,47)) holoParent(H,-10) holoColor(H,vec(0))
+ H= -7 holoCreate(H) holoModel(H,"cube") holoScale(H,vec(0.5,0.8,0.1)) holoPos(H,entity():pos()+vec(0,0,60)) holoAng(H,ang(0,90,-10)) holoParent(H,-10) holoColor(H,vec(0))
+ H= -6 holoCreate(H) holoModel(H,"cube") holoScale(H,vec(0.5,1,0.1)) holoPos(H,entity():pos()+vec(0,0,63)) holoAng(H,ang(0,90,10)) holoParent(H,-10) holoColor(H,vec(0))
+ H= -5 holoCreate(H) holoModel(H,"cylinder") holoScale(H,vec(0.5,0.5,0.5)) holoPos(H,entity():pos()+vec(0,0,61)) holoAng(H,ang(0,0,90)) holoParent(H,-10) holoColor(H,vec(0))
+ H= -4 holoCreate(H) holoModel(H,"dome") holoScale(H,vec(1,1,1)) holoPos(H,entity():pos()+vec(7,0,61)) holoAng(H,ang(0,-90,90)) holoParent(H,-10) holoColor(H,vec(0))
+}
+ 
+
+ if(owner():keyAttack2()){
+    Spray=1
+    
+    Nb=randint(0,350) Ang = owner():aimNormal():toAngle()+ang(90,0,0)
+    
+    holoCreate(Nb)
+    holoPos(Nb,owner():pos())
+    holoModel(Nb,"hqsphere") holoScale(Nb,vec(RD,RD,randint(0.1,0.4))) holoAng(Nb,Ang)
+    holoAlpha(Nb,randint(10,80)) 
+    holoParent(Nb,owner():aimEntity())
+    holoPos(Nb,owner():aimPos()+vec(randint(-5,5),randint(-5,5),0))
+
+
+    
+    
+ }
+ if(changed(Spray) && Spray == 1){ holoEntity(0):soundPlay(0,9999,"ExtinguisherJet.TurnOn")  }
+ if(changed(Spray) && Spray == 0){ soundStop(0) holoEntity(0):soundPlay(0.1,1,"ExtinguisherJet.TurnOff")  }
+
+ RD=randint(1,1.5)
+
+ Nb2=randint(0,350)
+ holoAlpha(Nb2,randint(10,80))
+ holoEntity(Nb2):setTrails(10,0.1,0.1,"trails/smoke",vec(255,255,255),255)
+ holoPos(Nb2,holoEntity(Nb2):pos()+vec(randint(-5,5),randint(-5,5),0))
+
+ Nb3=randint(0,950)
+ holoAlpha(Nb3,randint(0,1))
+ holoScale(Nb3,vec(randint(0,0.5),randint(0,0.5),0.01))
+ holoEntity(Nb3):removeTrails()
+
+ holoPos(-10,owner():pos()+vec(0,30,0))
+ holoAng(-10,owner():eye():toAngle())

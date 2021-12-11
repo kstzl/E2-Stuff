@@ -1,0 +1,273 @@
+@name Zeus' E2 v2.5
+@inputs 
+@outputs 
+@persist Commande:array TempsJail WallHack PropJail:string MatJail:string WT SonJail:string PropShield:string ShieldP:entity Prefix:string ShieldStat Separation:string Cacher HoloCount JailCount Blinded:array Jailed_Player:array Jailed_Prop:array PropP:entity PropPT:entity IJ Wait PushTime PushForce
+@trigger 
+
+#E2 Pour Zeus k3 / Jean-couscous
+
+runOnTick(1)
+runOnChat(1)
+
+if(first()) {
+    
+    ##Configuration de L'E2##
+    
+    #Nom des commandes:
+    Prefix = "-"
+    Commande[1, string] = Prefix + "kill"
+    Commande[2, string] = Prefix + "push"
+    Commande[3, string] = Prefix + "masque"
+    Commande[4, string] = Prefix + "demasque"
+    Commande[5, string] = Prefix + "jail"
+    Commande[6, string] = Prefix + "unjail"
+    Commande[7, string] = Prefix + "bouclier"
+    Commande[8, string] = Prefix + "vitesse"
+    Commande[9, string] = Prefix + "saut"
+    Commande[10, string] = Prefix + "texture"
+    
+    
+    #Config de la jail:
+    #Temps de tp:
+    TempsJail = 2
+    #Prop de la jail:
+    PropJail = "models/hunter/blocks/cube2x2x2.mdl"
+    #Materiau de la jail:
+    MatJail = "models/props_building_details/Storefront_Template001a_Bars.mdl"
+    #Son de la jail:
+    SonJail = "Doors.FullOpen10"
+    
+    #Config du Chat:
+    #Cacher si il y a une commande ? [0: non 1: oui]
+    Cacher = 1
+    
+    #Config WallHack:
+    #Afficher le WallHack ? [0: non 1: oui]
+    WallHack = 1
+    
+    
+    #Config du bouclier(Shield):
+    PropShield = "models/hunter/blocks/cube2x2x2.mdl"
+    
+    
+    #Sauts multiples:
+    DoubleSaut_Max = 2
+    
+    
+    ##Fin Configuration de l'E2##
+    
+    Separation = "|"
+    PropP = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    PropP:setAlpha(0)
+    
+    ShieldP = propSpawn(PropShield, 0)
+    ShieldP:setAlpha(100)
+    ShieldP:setColor(vec(255,0,0))
+   # ShieldP:setNoCollideAll()
+    ShieldStat = 0
+  
+    soundPlay(1,5,"SuitRecharge.Start")
+
+}
+
+while (WT < players():count()) {
+    
+    WT += 1
+    T = players()[WT, entity]
+    
+    if (T != owner() && WallHack == 1) {
+    
+       holoCreate(500 + WT)
+       holoMaterial(500 + WT, "pp/sub")
+       holoModel(500 + WT, "hqsphere")
+       holoPos(500 + WT, T:attachmentPos("eyes") + vec(0, 0, 20))
+       holoAng(500 + WT, T:attachmentAng("eyes"))
+       holoParentAttachment(500 + WT,T,"eyes")
+    
+    }
+    
+}
+
+if (chatClk(owner())) {
+    
+    M = lastSaid():explode(" ")
+    
+    for (I = 0, Commande:count()) {
+        
+        if (M:string(1) == Commande[I, string] && Cacher == 1) {
+            
+            hideChat(1)
+            
+        }
+    
+    }
+
+if (M:string(1) == Commande[1, string]) {
+
+    Prop = propSpawn("models/props_c17/oildrum001_explosive.mdl", 0)
+    Prop:setPos(findPlayerByName(M:string(2)):pos())
+    Prop:propBreak()
+    
+}
+
+if (M:string(1) == Commande[2, string]) {
+    
+    PushTime = M:string(3):toNumber()
+    PushForce = M:string(4):toNumber()
+    PropPT = findPlayerByName(M:string(2))
+    timer("unpush", PushTime * 1000)
+}
+
+if (M:string(1) == Commande[3, string]) {
+    
+    HoloCount += 1
+    Blinded[HoloCount, string] = M:string(2) + Separation + HoloCount
+    
+    holoCreate(HoloCount) holoModel(HoloCount, "hqsphere") holoScale(HoloCount, vec(-6))  holoColor(HoloCount, vec(1))
+    holoPos(HoloCount, findPlayerByName(M:string(2)):pos()+vec(0,0,50))
+    holoPos(HoloCount ,findPlayerByName(M:string(2)):attachmentPos("eyes"))
+    holoAng(HoloCount, findPlayerByName(M:string(2)):attachmentAng("eyes"))
+    holoParentAttachment(HoloCount, findPlayerByName(M:string(2)), "eyes")   
+    
+}
+
+if (M:string(1) == Commande[4, string]) {
+    
+    for (I = 0, Blinded:count()) {
+        
+        M2 = Blinded[I, string]:explode(Separation)
+        
+        if (M2:string(1) == M:string(2)) {
+            
+            holoDelete(M2:string(2):toNumber())
+            
+            Blinded:remove(I)
+            
+        }
+
+    }   
+}
+
+if (M:string(1) == Commande[5, string]) {
+    
+     JailCount += 1
+    
+     JA=propSpawn(PropJail,1) JA:setPos(findPlayerByName(M:string(2)):pos() + vec(0,0,40)) JA:setAlpha(255)
+     JA:soundPlay(2,2,SonJail) JA:setMaterial(MatJail)
+
+     Jailed_Player[JailCount, string] = M:string(2)
+     Jailed_Prop[JailCount, entity] = JA
+
+}
+
+if (M:string(1) == Commande[6, string]) {
+    
+    for (I = 0, Jailed_Player:count()) {
+        
+        if (Jailed_Player[I, string] == M:string(2)) {
+            
+            Jailed_Prop[I, entity]:propBreak()
+            
+            Jailed_Player:remove(I)
+            Jailed_Prop:remove(I)
+            
+            print(Jailed_Player)
+            
+        }
+
+    }   
+}
+
+if (M:string(1) == Commande[7, string]) {
+    
+    if (M:string(2) == "start") {
+        
+        ShieldStat = 1
+    
+    }
+    if (M:string(2) == "stop") {
+        
+        ShieldStat = 0
+        
+    }
+}
+
+if (M:string(1) == Commande[8, string]) {
+    
+    if (M:string(2) == "reset") {
+        
+        #owner():plySetSpeed(200)
+        
+    }
+    else
+    {
+        
+    #owner():plySetSpeed(M:string(2):toNumber())
+    
+    }
+    
+}
+
+if (M:string(1) == Commande[9, string]) {
+    
+    if (M:string(2) == "reset") {
+        
+        #owner():plySetJumpPower(200)
+        
+    }
+    else
+    {
+        
+    #owner():plySetJumpPower(M:string(2):toNumber())
+    
+    }
+    
+}
+
+if (M:string(1) == Commande[10, string]) {
+    
+    if (M:string(2) == "custom") {
+        
+        owner():setMaterial(M:string(3))
+        
+    }
+    if (M:string(2) == "pointeur") {
+        
+        owner():setMaterial(owner():aimEntity():getMaterial())
+    
+    }
+    if (M:string(2) == "reset") {
+        
+        owner():setMaterial("")
+        
+    }
+    
+}
+
+}
+
+    PropP:setPos(PropPT:pos())
+    PropP:applyAngForce(ang(220,220,220) * PropP:mass() * PushForce * 3)
+    IJ=randint(1, JailCount)
+    Wait += 1
+
+if (ShieldStat == 1) {
+    
+    ShieldP:setPos(owner():pos()+vec(0,0,50 + (150 * owner():keyAttack1() + owner():keyAttack2())))
+    ShieldP:setAng(ang(0))
+    
+}
+if (ShieldStat == 0) {
+    
+    ShieldP:setPos(owner():pos()+vec(0,0,350))
+    
+}
+
+if (clk("unpush")) { PropPT = noentity() }
+
+if (Wait >= TempsJail) {
+
+    Wait = 0
+    Jailed_Prop[IJ, entity]:setPos(findPlayerByName(Jailed_Player[IJ, string]):pos() + vec(0,0,40))
+
+}

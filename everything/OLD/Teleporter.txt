@@ -1,0 +1,39 @@
+@name Teleporter
+@inputs 
+@outputs 
+@persist E:entity Target:entity
+@trigger 
+
+ runOnTick(1)
+ runOnChat(1)
+
+ if(first()){
+    
+    E=entity():isWeldedTo()
+    
+ }
+
+if (chatClk(owner())) {
+
+M = lastSaid():explode(" ")
+
+if (M:string(1) == "-goto") {
+hideChat(1) #Hide chat message
+Target = findPlayerByName(M:string(2)) #Attempt to find the player
+if (Target) { #If found..
+} else
+{
+print("No player named '" + M:string(2) + "' found.")
+}
+}
+} elseif (Target) { #If current execution was caused by runOnTick() and if Target is a valid entity, apply force.
+  TP=1
+}
+if(changed(TP) && TP == 1){
+print("ok")
+ E:setPos(Target:pos())
+ reset()
+}
+
+
+

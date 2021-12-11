@@ -1,0 +1,106 @@
+@name MineCraft block placer
+@inputs 
+@outputs 
+@persist AngD Ang ModelA:array SoundA:array MaterialA:array ColorA:array NameA:array AddPosA:array M Aim_pos:vector O:entity P:entity I A:array
+@trigger 
+@model models/hunter/blocks/cube025x025x025.mdl
+
+ #Par k3 2016.
+ #Droit de copie INTERDIT. 
+
+ interval(1)
+
+ if(first()){
+ 
+    holoCreate(1) holoAlpha(1,100) hint("MineCraft Block Placer [V1.1] by k3 [2016]",3)
+    
+    M=1
+    O=owner()
+
+    #Blocks
+    ModelA[1,string]="models/hunter/blocks/cube075x075x075.mdl" SoundA[1,string]="Default.StepLeft" MaterialA[1,string]="models/props_c17/metalladder003" ColorA[1,vector]=vec(255) NameA[1,string]="Stone Block"  
+    ModelA[2,string]="models/hunter/blocks/cube075x075x075.mdl" SoundA[2,string]="Wood.StepLeft" MaterialA[2,string]="phoenix_storms/wood_side" ColorA[2,vector]=vec(255) NameA[2,string]="Wood Block"  
+    
+    #Furnitures
+    ModelA[3,string]="models/props_c17/FurnitureSink001a.mdl" SoundA[3,string]="EpicMetal_Heavy.ImpactHard" ColorA[3,vector]=vec(255) NameA[3,string]="Lavabo"  
+    ModelA[4,string]="models/props_c17/FurnitureTable001a.mdl" SoundA[4,string]="Wood.StepLeft" ColorA[4,vector]=vec(255) NameA[4,string]="Table"  
+    ModelA[5,string]="models/props_junk/TrafficCone001a.mdl" SoundA[5,string]="Plastic_Barrel.ImpactHard" ColorA[5,vector]=vec(255) NameA[5,string]="Traffic cone"  
+    ModelA[6,string]="models/props_c17/furnitureStove001a.mdl" SoundA[6,string]="EpicMetal.ImpactHard" ColorA[6,vector]=vec(255) NameA[6,string]="Stove"  
+    ModelA[7,string]="models/props_c17/FurnitureFridge001a.mdl" SoundA[7,string]="EpicMetal_Heavy.ImpactHard" ColorA[7,vector]=vec(255) NameA[7,string]="Fridge"  
+    ModelA[8,string]="models/props_c17/FurnitureFireplace001a.mdl" SoundA[8,string]="EpicMetal_Heavy.ImpactHard" ColorA[8,vector]=vec(255) NameA[8,string]="Fire Place"  
+    
+    #Blocks Wool
+    ModelA[9,string]="models/hunter/blocks/cube075x075x075.mdl" SoundA[9,string]="Gravel.StepLeft" MaterialA[9,string]="models/XQM/Rails/gumball_1" ColorA[9,vector]=vec(255,0,0) NameA[9,string]="Red wool Block"  
+    ModelA[10,string]="models/hunter/blocks/cube075x075x075.mdl" SoundA[10,string]="Gravel.StepLeft" MaterialA[10,string]="models/XQM/Rails/gumball_1" ColorA[10,vector]=vec(0,255,0) NameA[10,string]="Green wool Block"  
+    ModelA[11,string]="models/hunter/blocks/cube075x075x075.mdl" SoundA[11,string]="Gravel.StepLeft" MaterialA[11,string]="models/XQM/Rails/gumball_1" ColorA[11,vector]=vec(0,0,255) NameA[11,string]="Blue wool Block" 
+    
+    #Blocks Misc
+    ModelA[12,string]="models/hunter/blocks/cube075x075x075.mdl" SoundA[12,string]="Water.BulletImpact" MaterialA[12,string]="models/shadertest/shader3" NameA[12,string]="Water"  
+    
+    #Slab
+    ModelA[13,string]="models/hunter/blocks/cube075x075x025.mdl" SoundA[13,string]="Default.StepLeft" MaterialA[13,string]="sprops/textures/sprops_metal4" ColorA[13,vector]=vec(255) NameA[13,string]="Stone slab" AddPosA[13,vector]=vec(0,0,-6)
+     
+    #Blocks glass
+    ModelA[14,string]="models/hunter/blocks/cube075x075x075.mdl" SoundA[14,string]="Glass.StepRight" MaterialA[14,string]="models/dog/eyeglass" NameA[14,string]="Glass Block" ColorA[14,vector]=vec(30,60,100)
+    
+    #Block iron bar
+    ModelA[15,string]="models/props_building_details/Storefront_Template001a_Bars.mdl" SoundA[15,string]="SolidMetal.StepLeft" NameA[15,string]="Iron bar" ColorA[15,vector]=vec(255) AddPosA[15,vector]=vec(0,0,35)
+    
+    #Stairs
+    ModelA[16,string]="models/hunter/misc/stair1x1.mdl" SoundA[16,string]="SolidMetal.StepLeft" NameA[16,string]="Stone stairs #1" MaterialA[16,string]="models/props_c17/metalladder003" ColorA[16,vector]=vec(255)
+    ModelA[17,string]="models/hunter/misc/stair1x1inside.mdl" SoundA[17,string]="SolidMetal.StepLeft" NameA[17,string]="Stone stairs #2" MaterialA[17,string]="models/props_c17/metalladder003" ColorA[17,vector]=vec(255)
+    ModelA[18,string]="models/hunter/misc/stair1x1outside.mdl" SoundA[18,string]="SolidMetal.StepLeft" NameA[18,string]="Stone stairs #3" MaterialA[18,string]="models/props_c17/metalladder003" ColorA[18,vector]=vec(255)
+    
+    ModelA[19,string]="models/hunter/misc/stair1x1.mdl" SoundA[19,string]="Wood.StepLeft" NameA[19,string]="Wood stairs #1" MaterialA[19,string]="phoenix_storms/wood_side" ColorA[19,vector]=vec(255)
+    ModelA[20,string]="models/hunter/misc/stair1x1inside.mdl" SoundA[20,string]="Wood.StepLeft" NameA[20,string]="Wood stairs #2" MaterialA[20,string]="phoenix_storms/wood_side" ColorA[20,vector]=vec(255)
+    ModelA[21,string]="models/hunter/misc/stair1x1outside.mdl" SoundA[21,string]="Wood.StepLeft" NameA[21,string]="Wood stairs #3" MaterialA[21,string]="phoenix_storms/wood_side" ColorA[21,vector]=vec(255)
+    
+    #Brick block : brick/brick_model
+    ModelA[22,string]="models/hunter/blocks/cube075x075x075.mdl" SoundA[22,string]="Default.StepLeft" MaterialA[22,string]="brick/brick_model" ColorA[22,vector]=vec(255) NameA[22,string]="Brick Block"
+      
+    #Door
+  #  ModelA[23,string]="models/props_borealis/borealis_door001a.mdl" SoundA[23,string]="Default.StepLeft" ColorA[23,vector]=vec(255) NameA[23,string]="Door"  
+
+}
+
+
+
+ if(O:keyPressed("m")){ ChangeModel=1 }
+ if(O:keyPressed("r")){ Rotate=1 }
+
+ if(O:keyAttack2()){ Place=1 }
+ if(O:keyAttack1()){ Break=1 }
+
+ if(changed(ChangeModel) && ChangeModel == 1){ M+=1 if(M > ModelA:count()){ M=1 } holoEntity(1):soundPlay(1,1,"Buttons.snd18") print(NameA[M,string]) }
+ if(changed(Rotate) && Rotate == 1){ O:aimEntity():setAng(O:aimEntity():angles()+ang(0,90,0)) holoEntity(1):soundPlay(2,1,"Weapon_AR2.Reload_Rotate") soundPitch(3,randint(90,105)) }
+ if(changed(Break) && Break == 1){  O:aimEntity():propDelete() holoEntity(1):soundPlay(3,1,"Breakable.Concrete") }
+ if(changed(Place) && Place == 1){ 
+    
+    propSpawnEffect(0)
+    
+    P=propSpawn(ModelA[M,string],1)
+    P:setPos(holoEntity(1):pos()+AddPosA[M,vector]) 
+    P:setAng(ang(0))
+    P:setMaterial(MaterialA[M,string])
+    P:setColor(ColorA[M,vector])
+
+    holoEntity(1):soundPlay(4,0.4,SoundA[M,string]) 
+    #weld(P,entity())
+    
+    #Water no colide
+    if(M == 12){ P:propNotSolid(1) }
+
+ }   
+    
+
+ Aim_pos=round((O:aimPos()+O:aimNormal())/35.6)*35.6
+
+ holoModel(1,ModelA[M,string])
+ holoMaterial(1,MaterialA[M,string])
+ holoColor(1,ColorA[M,vector])
+
+ holoPos(1,Aim_pos+AddPosA[M,vector])
+ soundPitch(4,randint(90,120))
+
+ AngD+=1
+ entity():setAng(ang(0,AngD,0))

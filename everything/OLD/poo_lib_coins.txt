@@ -1,0 +1,108 @@
+@name POO_Lib_Coins
+
+#include "POO_Lib"
+#include "fastlib"
+
+
+interval(50)
+
+if(first()){
+    
+    for(I = 0, 5){
+        NewCoin = poo_createObject("coin")
+        NewCoin["Content", table]["y", number] = I
+        NewCoin["Content", table]["position", vector] = entity():pos() + vec(0, I * 40, 0)
+    }
+    
+    timer("c", 0)
+}
+
+for(I = 0, POO_Objects:count()){
+    
+    Object = POO_Objects[I, table]
+    
+    if(Object:poo_init("coin")){
+        
+        CoinHolo = Object:poo_objectIndex()
+        
+        Object["Content", table]["i", number] = 0
+        Object["Content", table]["picked", number] = 0
+        Object["Content", table]["alpha", number] = 255
+        Object["Content", table]["bounces", number] = 10
+        
+        holoCreate(CoinHolo)
+        holoColor(CoinHolo, vec(255, 255, 0))
+        holoModel(CoinHolo, "hqtorus")
+        holoScale(CoinHolo, vec(2))
+        
+        holoEntity(CoinHolo):sfx("Concrete_Block.ImpactHard", 1)
+        
+        
+    }
+    if(Object:poo_loop("ah")){}
+    if(Object:poo_loop("coin")){
+        
+        CoinHolo = Object:poo_objectIndex()
+        CoinAng = Object["Content", table]["i", number]
+        CoinAlpha = Object["Content", table]["alpha", number]
+        CoinPicked = Object["Content", table]["picked", number]
+        CoinY = Object["Content", table]["y", number]
+        CoinZ = Object["Content", table]["z", number]
+        CoinOffset = Object["Content", table]["offset", vector]
+
+        holoAng(CoinHolo, ang(90, CoinAng, 0))
+        holoAlpha(CoinHolo, CoinAlpha)
+        holoPos(CoinHolo, Object["Content", table]["position", vector] + vec(0, 0, 25))
+        
+        Object["Content", table]["i", number] = (CoinAng + 10 + (CoinPicked * 5))
+        
+        if(CoinPicked){
+            
+            if(CoinAlpha > 0){
+                Object["Content", table]["alpha", number] = CoinAlpha - 2
+                Object["Content", table]["position", vector] = Object["Content", table]["position", vector] + vec(0, 0, CoinZ) + CoinOffset
+            }
+            
+            if(CoinZ > -15){
+                
+                Object["Content", table]["z", number] = Object["Content", table]["z", number] - 1.12
+                
+            }
+            
+            Ranger = rangerOffset(3000, holoEntity(CoinHolo):pos(), vec(0, 0, -1))
+
+            if(Ranger:distance() < 40){
+                Object["Content", table]["z", number] = 2*Object["Content", table]["bounces", number]
+                Object["Content", table]["bounces", number] = Object["Content", table]["bounces", number] - 1
+            
+            }
+            if(CoinAlpha < 5){
+                holoDelete(CoinHolo)
+                Object:poo_deleteObject()
+            }
+
+        }
+        else
+        {
+            if(holoEntity(CoinHolo):touch(40, "player")){
+                
+                if(!CoinPicked){
+                    holoAlpha(CoinHolo, 0)
+                    holoEntity(CoinHolo):sfx("NPC_Alyx.Vend_Coin", 1)
+                    Object["Content", table]["picked", number] = 1
+                    Object["Content", table]["z", number] = 15
+                    Object["Content", table]["offset", vector] = vec(randint(-5, 5), randint(-5, 5), randint(-5, 5))
+                }
+            }
+        }
+    }
+
+}
+
+
+if(owner():keyUse():change(1)){
+    
+        NewCoin = poo_createObject("coin")
+        NewCoin["Content", table]["position", vector] = owner():aimPos()
+        
+}

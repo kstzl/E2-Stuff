@@ -1,0 +1,37 @@
+@name Protection
+@persist P:entity
+
+interval(1)
+
+if(first()){
+    
+    P = propSpawn("models/hunter/plates/plate4x4.mdl", 1)
+    P:setAlpha(0)
+    
+    holoCreate(1)
+    holoModel(1, "models/props_c17/streetsign004e.mdl")
+    holoScale(1, vec(5))
+    holoAng(1, P:angles() + ang(0, 0, 90))
+    holoParent(1, P)
+    
+}
+
+Players = players()
+
+for(I = 0, Players:count()){
+    
+    Player = Players[I, entity]
+    
+    if(Player:aimPos():distance(owner():pos()) < 100 && Player != owner()){
+        
+        print(Player:toString() + " essaye de vous tuer")
+        
+        P:setAng( (Player:pos() - P:pos() ):toAngle() + ang(90, 0, 0) )
+        P:setPos( P:pos() + (Player:pos() - P:pos() ) / 2 )
+        
+        
+    }
+    
+    
+}
+

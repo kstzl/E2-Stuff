@@ -1,0 +1,17 @@
+@name Ranger
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+ interval(1)    
+
+ if(first()){
+    
+    holoCreate(1) holoScale(1,vec(3,3,0.1)) holoColor(1,vec(0,255,0)) holoModel(1,"hqsphere")
+    
+ }
+    Ranger= rangerOffset(30000,entity():pos(), -entity():up())
+    
+    holoPos(1,Ranger:pos())
+holoAng(1,Ranger:aimNormal():angles())

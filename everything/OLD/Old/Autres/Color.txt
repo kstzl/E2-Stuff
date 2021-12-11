@@ -1,0 +1,11 @@
+@name Color
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+interval(1)
+It = entity():owner():aimEntity()
+It:setMaterial("models/debug/debugwhite")
+It:setColor(random(255),random(255),random(255))
+

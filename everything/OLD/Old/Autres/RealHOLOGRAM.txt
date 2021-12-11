@@ -1,0 +1,77 @@
+@name RealHOLOGRAM
+@inputs 
+@outputs 
+@persist T Ang Sound Time
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+    
+    
+#lightCreate(1,entity():pos()+vec(0,0,11))
+#lightColor(1,vec(0,100,255))
+
+
+    
+holoCreate(1)
+holoCreate(2)
+holoCreate(3)
+holoCreate(4)
+
+holoAlpha(3,0)
+
+holoModel(1,"cone")
+holoModel(2,"models/Barney.mdl")
+holoModel(4,"cone")
+
+holoScale(1,vec(3,3,5))
+holoScale(2,vec(-13,-13,-13))
+
+
+holoAng(1,ang(180,0,0))
+holoPos(1,entity():pos()-vec(0,0,13))
+holoPos(2,entity():pos()-vec(0,0,93))
+holoAlpha(1,100)
+holoAlpha(4,50)
+
+holoParent(1,entity())
+holoParent(2,entity())
+holoParent(3,entity())
+holoParent(4,entity())
+
+}
+
+Sound = 1
+
+if(T <= 9){
+T+=0.1
+holoPos(1,holoEntity(1):pos()+vec(0,0,T/4))
+holoScale(1,vec(T,T,T*2))
+holoColor(1,vec(0,T*7,T*10))
+
+holoPos(4,holoEntity(1):pos()+vec(0,0,T/4))
+holoScale(4,vec(-T+1,-T+1,-T*2+1))
+holoColor(4,vec(0,T*8,T*10))
+
+}
+Ang++
+Time++
+
+holoAng(1,ang(180,Ang,0))
+holoAng(4,ang(0,Ang,0))
+
+if(changed(Sound && Sound == 1)){
+    holoEntity(3):soundPlay(5,5,"misc/hologram_start.wav")
+}
+
+if(Time >= 30 && Time <= 49){
+    holoScale(2,vec(Time/29,Time/29,Time/29))
+    holoPos(2,entity():pos()+vec(0,0,Time*1.5))
+    holoAlpha(2,Time*5)
+}
+
+holoAng(2,ang(0,Ang,0))
+holoAng(3,ang(0,-Ang*2,0))
+#lightPos(1,entity():pos())
+

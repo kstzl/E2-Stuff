@@ -1,0 +1,33 @@
+@name Guidon Moto
+@inputs A D
+@outputs LA RA LD RD
+@persist 
+@trigger 
+if(first()){
+    LA = 9.82 
+    RA = 10.88
+}
+runOnTick(1)
+
+AngleDeLaSteering = 35
+Vitesse = 0.5
+
+if(A){
+    LA -= Vitesse
+    RA += Vitesse
+}
+if(D){
+    LA += Vitesse
+    RA -= Vitesse
+}
+
+if(LA == AngleDeLaSteering){
+    LA = AngleDeLaSteering
+    RA = 0
+}
+if(LA == AngleDeLaSteering){
+    RA == AngleDeLaSteering
+    LA == 0
+}
+
+

@@ -1,0 +1,64 @@
+@name Hoverbike
+@inputs Chair:entity
+@persist Float:ranger SpeedMultiplier Angle:angle
+@persist [W A S D Active] [HoverHeight MaxSpeed MinSpeed]
+@model models/hunter/blocks/cube075x2x075.mdl
+
+if (first()|dupefinished()) {
+    Angle = ang(0,0,0)
+
+    SpeedMultiplier = 1
+
+    HoverHeight = 50
+
+    MaxSpeed = 10
+    MinSpeed = -5
+}
+
+
+interval(100)
+
+#If there is a driver in the seat, "Active" returns 1.
+Active = Chair:driver():isValid()
+if(Active) {
+    W = Chair:driver():keyForward()
+    A = Chair:driver():keyLeft()
+    S = Chair:driver():keyBack()
+    D = Chair:driver():keyRight()
+}else{
+    W = A = S = D = 0 #Sets all values to 0 when not in use
+}
+
+local Float = rangerOffset(HoverHeight+5, entity():toWorld(vec(0,0,0)), -entity():up())
+holoCreate(1,Float:pos())
+
+if(Float:hit()) { #Everything in this bracket runs only if the ranger is hitting the ground or an entity
+
+    #Setting the e2's gravity to 0 makes it so that the e2 doesn't jiggle while hovering, also makes it require less force to move it around.
+    #Although there are other applyForce "formulas" that make it so the e2 doesn't jiggle(or atleast makes it so that there's noticably less "jiggle") with or without changing it's gravity.
+    entity():propGravity(0) 
+
+    #Placed before the applyForce because the e2 reads the code from top to bottom.
+    if(W || S) {
+        if(W) {
+            SpeedMultiplier+=1
+        }elseif(S){
+            SpeedMultiplier-=1
+        }
+    }else{SpeedMultiplier = 0}
+    if(changed(W) || changed(S)){
+        SpeedMultiplier = 0
+    }
+    SpeedMultiplier = clamp(SpeedMultiplier, MinSpeed, MaxSpeed) #Clamping a value makes it so that it cannot go above or below a specified value.
+
+    #You can just add onto an "applyForce formula".
+    #You don't really need "intertia" for applyForce, it's main uses is in applyTorque and applyAngForce.
+    entity():applyForce(((vec(0,0, (Float:pos():z() + HoverHeight) - entity():pos():z()) + (entity():forward() * SpeedMultiplier)) - (entity():vel()*vec(0.25,0.25,0.4))) * entity():mass())
+
+    #Adds/subtracts 5 to the yaw when you press a/d.
+    Angle = ang(0,(A-D)*5 + entity():angles():yaw(),0)
+    entity():applyAngForce((entity():toLocal(Angle)*200 - entity():angVel()*20)*shiftL(ang(entity():inertia())))
+
+}else{ #Makes it so that the e2 actually falls when the ranger isn't touching the ground.
+    entity():propGravity(1)
+}

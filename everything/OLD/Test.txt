@@ -1,0 +1,8 @@
+@name test
+
+if(first()||duped()){
+    
+    holoCreate(1)
+    holoParent(1, entity())
+    
+}

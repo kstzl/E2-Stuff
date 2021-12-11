@@ -1,0 +1,99 @@
+@name POO_Portal_Gun
+@persist [ O ]:entity
+
+@persist [ Portal Portal2 Trail ]:table
+
+#include "POO_Lib"
+
+interval(50)
+
+if(first()){
+    
+    Portal = poo_createObject("portal")
+    Portal:poo_setString("Name", "BluePortal")
+    Portal:poo_setVector("Pos", entity():pos())
+    Portal:poo_setVector("Color", vec(0, 50, 255))
+    
+    Portal2 = poo_createObject("portal")
+    Portal:poo_setString("Name", "OrangePortal")
+    Portal2:poo_setVector("Pos", entity():toWorld(vec(0, 150, 0)))
+    Portal2:poo_setVector("Color", vec(255, 100, 0))
+    
+    Trail = poo_createObject("trail")
+    
+    O = owner()
+    
+}
+
+for(I = 0, POO_Objects:count()){
+    
+    Object = POO_Objects[I, table]
+    
+    if(Object:poo_init("portal")){
+        
+        H = Object:poo_objectIndex()
+        H2 = Object:poo_objectIndex() + 1
+
+        PortalColor = Object:poo_getVector("Color")
+        
+        holoCreate(H)
+        holoModel(H, "hqcylinder")
+        holoScaleUnits(H, vec(100, 50, 0.1))
+        holoColor(H, PortalColor)
+        
+        holoCreate(H2)
+        holoModel(H2, "hqcylinder")
+        holoScaleUnits(H2, vec(80, 40, 0.1))
+        
+        
+    }
+    if(Object:poo_loop("portal")){
+        
+        H = Object:poo_objectIndex()
+        H2 = Object:poo_objectIndex() + 1
+        
+        PortalPos = Object:poo_getVector("Pos")
+        
+        holoPos(H, PortalPos)
+        holoPos(H2, PortalPos + vec(0, 0, 1))
+        
+    }
+    
+    if(Object:poo_init("trail")){
+        
+        H = Object:poo_objectIndex()
+        
+        holoCreate(H)
+        holoModel(H, "hqsphere")
+        
+    }
+    
+    if(Object:poo_loop("trail")){
+        
+        H = Object:poo_objectIndex()
+        
+        if(Object:poo_getNumber("Launch") == 1){
+            
+            Object:poo_setNumber("Launch", 0)
+            
+            Object:poo_setVector("Pos", O:pos())
+            Object:poo_setAng("Ang", O:aimNormal():toAngle()+ang(90, 0, 0))
+
+        }
+        
+        Object:poo_setVector("Pos", holoEntity(H):toWorld(vec(1, 0, 0)))
+        
+        holoPos(H, Object:poo_getVector("Pos"))
+        holoAng(H, Object:poo_getAng("Ang"))  
+        
+    }
+    
+    
+}
+
+KeyAttack1 = changed(O:keyAttack1()) && O:keyAttack1() == 1
+KeyAttack2 = changed(O:keyAttack2()) && O:keyAttack2() == 1
+
+if(KeyAttack1){
+    Trail:poo_setNumber("Launch", 1)   
+}

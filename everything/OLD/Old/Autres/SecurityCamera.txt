@@ -1,0 +1,37 @@
+@name SecurityCamera
+@inputs 
+@outputs V:vector A Target:entity
+@persist 
+@trigger 
+
+interval(1000)
+if(first()){
+holoCreate(1)
+holoModel(1,"dome")
+holoScale(1,vec(2.2,2.2,3))
+holoColor(1,vec(0,0,0))
+holoAlpha(1,250)
+holoParent(1,entity())
+entity():setAlpha(0)
+holoAng(1,ang(180,0,0))
+holoPos(1,entity():pos()+vec(0,0,-3))
+
+E = entity():isWeldedTo()
+E:setColor(vec(100,100,100))
+
+holoCreate(2)
+holoModel(2,"dome")
+holoScale(2,vec(2.5,2.5,3.5))
+holoColor(2,vec(0,0,0))
+holoAlpha(2,100)
+holoParent(2,1)
+holoAng(2,ang(180,0,0))
+holoPos(2,entity():pos()+vec(0,0,-3))
+}
+
+Target = findPlayerByName("kec")
+V = Target:pos()
+Target = noentity() 
+
+A = 1
+

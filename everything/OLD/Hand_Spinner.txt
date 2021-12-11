@@ -1,0 +1,36 @@
+@name Hand Spinner
+@inputs 
+@outputs 
+@persist Ang Color:vector S
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+    
+    Color=vec(0,0,255)
+    S=-15
+    
+    holoCreate(0)
+    holoModel(0,"hqcylinder")
+    holoColor(0,Color)
+    holoScale(0,vec(S,S,S/2))
+    
+    holoCreate(1)
+    holoModel(1,"hqcylinder")
+    holoColor(1,Color)
+    holoScale(1,vec(S,S,S/2))
+    holoPos(1,holoEntity(0):pos()+vec(11*S,0,0))
+    holoParent(1,0)
+    
+    holoCreate(2)
+    holoModel(2,"hqcylinder")
+    holoColor(2,Color)
+    holoScale(2,vec(S,S,S/2))
+    holoPos(2,holoEntity(0):pos()-vec(11*S,0,0))
+    holoParent(2,0)
+}
+
+holoAng(0,ang(0,Ang,0))
+holoPos(0,findPlayerByName("phil"):pos())
+Ang+=5          

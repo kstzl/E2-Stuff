@@ -1,0 +1,36 @@
+@name SonAutourTest
+@persist [ X Y I MH ]:number [ Target ]:entity [ FinalPos ]:vector
+
+interval(1)
+
+if(first()){
+    
+    MH = 25
+    
+    Target = findPlayerByName("Kenz")
+    
+    for(H = 1, MH){
+        holoCreate(H)
+        holoScale(H, vec(randint(0, 5), randint(0, 5), 15))
+        holoMaterial(H, "models/alyx/emptool_glow")
+        holoEntity(H):soundPlay(randint(1, 55), 0, "Airboat.FireGunLoop")
+        
+        holoVisible(H, players(), 0)
+        holoVisible(H, Target, 1)
+    }
+
+    
+}
+
+for(H = 1, MH){
+    
+    X = sin(I * H) * 50
+    Y = cos(I * H) * 50
+    I+=randint(100, 200)
+
+    FinalPos = Target:pos() + vec(X, Y, 50)
+    
+    holoPos(H, FinalPos)
+    holoEntity(H):soundPlay(randint(1, 55), 0, "Airboat.FireGunLoop")
+
+}

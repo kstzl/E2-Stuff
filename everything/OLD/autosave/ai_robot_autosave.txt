@@ -1,0 +1,230 @@
+@name AI_ROBOT
+
+@persist [ I WalkAnim TargetHeadRotation TargetBodyRotation Dist Aiming HaloSize Cooldown LockPropPos ]:number
+@persist [ ActualPos TargetPos ]:vector
+@persist [ Target PropKillProp ]:entity
+@persist [ TargetArmAng ]:angle
+
+interval(1)
+
+if(first()){
+    
+    PropKillProp = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    PropKillProp:setAlpha(0)
+    
+    holoCreate(0)
+    Pos = holoEntity(0):pos()
+    TargetPos = Pos
+    holoParent(0, entity())
+    holoAlpha(0, 0)
+    
+    holoCreate(1)
+    holoPos(1, Pos + vec(0, 0, 300))
+    holoModel(1, "models/props_wasteland/controlroom_storagecloset001b.mdl")
+    holoScale(1, vec(2))
+    holoParent(1, 0)
+    
+    holoCreate(2)
+    holoPos(2, Pos + vec(0, -40, 230))
+    holoModel(2, "models/Combine_Helicopter/helicopter_bomb01.mdl")
+    holoScale(2, vec(2.5))
+    holoParent(2, 0)
+    
+    holoCreate(3)
+    holoPos(3, Pos + vec(0, 40, 230))
+    holoModel(3, "models/Combine_Helicopter/helicopter_bomb01.mdl")
+    holoScale(3, vec(2.5))
+    holoParent(3, 0)
+    
+    holoCreate(4)
+    holoPos(4, Pos + vec(0, -40, 150))
+    holoModel(4, "models/props_docks/dock01_pole01a_128.mdl")
+    holoScale(4, vec(2))
+    holoParent(4, 2)
+    
+    holoCreate(5)
+    holoPos(5, Pos + vec(0, 40, 150))
+    holoModel(5, "models/props_docks/dock01_pole01a_128.mdl")
+    holoScale(5, vec(2))
+    holoParent(5, 3)
+    
+    holoCreate(6)
+    holoPos(6, Pos + vec(0, -40, 20))
+    holoModel(6, "models/props_junk/MetalBucket02a.mdl")
+    holoScale(6, vec(3))
+    holoAng(6, ang(180, 90, 0))
+    holoParent(6, 4)
+    
+    holoCreate(7)
+    holoPos(7, Pos + vec(0, 40, 20))
+    holoModel(7, "models/props_junk/MetalBucket02a.mdl")
+    holoScale(7, vec(3))
+    holoAng(7, ang(180, 90, 0))
+    holoParent(7, 5)
+    
+    holoCreate(8)
+    holoPos(8, Pos + vec(0, -80, 360))
+    holoModel(8, "models/Combine_Helicopter/helicopter_bomb01.mdl")
+    holoScale(8, vec(2.5))
+    holoParent(8, 0)
+    
+    holoCreate(9)
+    holoPos(9, Pos + vec(0, 80, 360))
+    holoModel(9, "models/Combine_Helicopter/helicopter_bomb01.mdl")
+    holoScale(9, vec(2.5))
+    holoParent(9, 0)
+    
+    holoCreate(10)
+    holoPos(10, Pos + vec(0, -100, 280))
+    holoModel(10, "models/props_docks/dock01_pole01a_128.mdl")
+    holoScale(10, vec(1.5))
+    holoParent(10, 8)
+    
+    holoCreate(11)
+    holoPos(11, Pos + vec(0, 100, 280))
+    holoModel(11, "models/props_docks/dock01_pole01a_128.mdl")
+    holoScale(11, vec(1.5))
+    holoParent(11, 9)
+    
+    holoCreate(12)
+    holoPos(12, Pos + vec(0, 100, 190))
+    holoModel(12, "models/props_wasteland/light_spotlight01_lamp.mdl")
+    holoScale(12, vec(3))
+    holoParent(12, 9)
+    
+    holoCreate(13)
+    holoPos(13, Pos + vec(0, -100, 190))
+    holoModel(13, "models/props_wasteland/light_spotlight01_lamp.mdl")
+    holoScale(13, vec(3))
+    holoParent(13, 10)
+
+    holoCreate(14)
+    holoPos(14, Pos + vec(0, 0, 390))
+    holoModel(14, "models/props_c17/pulleywheels_large01.mdl")
+    holoScale(14, vec(1.5))
+    holoParent(14, 0)
+    
+    holoCreate(15)
+    holoPos(15, Pos + vec(0, 0, 390))
+    holoModel(15, "models/maxofs2d/balloon_gman.mdl")
+    holoScale(15, vec(8))
+    holoAng(15, holoEntity(0):angles() + ang(-90, 0, 0))
+    holoParent(15, 14)
+    
+    holoCreate(16)
+    holoColor(16, vec(200, 100, 0))
+    holoModel(16, "hqsphere")
+    holoPos(16, PropKillProp:pos())
+    holoParent(16, PropKillProp)
+
+    #Sounds
+    
+    holoEntity(12):soundPlay(10, 0, "Canals.d1_canals_01_combine_shield_touch_loop1")
+
+    
+    #-----
+    
+    Target = owner()
+    Cooldown = 9999
+    LockPropPos = 1
+}
+
+holoAng(2, holoEntity(0):angles() + ang(-WalkAnim, 0, 0))
+holoAng(3, holoEntity(0):angles() + ang(WalkAnim, 0, 0))
+
+holoAng(8, holoEntity(0):angles() + ang(WalkAnim, 0, 0))
+holoAng(9, TargetArmAng)
+
+if(Aiming){
+    
+    holoAng(12, TargetArmAng + ang(90, 0, 0))
+    
+}
+else
+{
+    holoAng(12, holoEntity(11):angles())
+}
+
+if(!Aiming){
+
+    TargetArmAng = holoEntity(0):angles() + ang(-WalkAnim, 0, 0)
+}
+else
+{
+    
+    TargetArmAng = (TargetPos - holoEntity(9):pos()):toAngle() + ang(-90, 0, 0)
+    
+}
+
+holoAng(14, holoEntity(0):angles() + ang(90, TargetHeadRotation, 0))
+
+holoAng(0, ang(0, TargetBodyRotation, 0))
+
+
+WalkAnim = sin(I) * 22.5
+TargetBodyRotation = (TargetPos - holoEntity(14):pos()):toAngle():yaw()
+TargetHeadRotation = ((TargetPos - holoEntity(14):pos()):toAngle():yaw() - TargetBodyRotation) + sin(I / 5) * 22.5
+
+Dist = ( Target:pos() - holoEntity(0):pos() ):length()
+TargetPos = Target:pos()
+ActualPos += ( TargetPos - ActualPos) / 25
+
+if(LockPropPos){
+    PropKillProp:setPos(holoEntity(12):pos())
+}
+
+if(!Aiming){
+    
+    I+=5
+    HaloSize += (0 - HaloSize) / 5
+    
+}
+else
+{
+    
+    I += (0 - I ) / 25
+    
+    HaloSize+=0.1
+    
+    if(HaloSize > 10){
+        
+        holoEntity(12):soundPlay(2, 0, "Weapon_MegaPhysCannon.Launch")
+        HaloSize = 0
+        Cooldown = 0
+        LockPropPos = 0
+        
+        timer("relock", 3000)
+        
+        PropKillProp:applyForce( ( TargetPos - holoEntity(12):pos() ) * PropKillProp:mass() * 500 )
+        
+    }
+    
+}    
+
+if(clk("relock")){ LockPropPos = 1 }
+
+Aiming = (Dist < 1000 && Cooldown > 150)
+
+Cooldown+=1
+
+holoScale(16, vec(HaloSize + randint(-0.1, 0.1)))
+holoPos(0, holoEntity(0):toWorld(vec(abs(WalkAnim) * 0.5, 0, 0)))
+
+Ranger = rangerOffset(3000, holoEntity(0):pos(), -holoEntity(0):up())
+
+findByClass("player")
+findSortByDistance(holoEntity(0):pos())
+Target = find()
+
+#Sounds
+
+soundPitch(10, HaloSize * 10)
+
+if(WalkAnim > 2 && WalkAnim < 3){
+    
+
+    holoEntity(0):soundPlay(4, 0, "NPC_dog.FootstepLeft")
+    
+}
+
+#------------

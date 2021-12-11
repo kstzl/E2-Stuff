@@ -1,0 +1,47 @@
+@name ExplosionEnCercle
+@inputs 
+@outputs 
+@persist W Pos:vector
+@trigger 
+
+interval(1)
+
+Pos = owner():pos()
+
+if(first()){
+    
+    for(I = 0, 18){
+
+        holoCreate(I)
+        
+    }
+    
+    timer("e", 1500)
+    
+}
+
+for(I = 0, 18){
+    
+    X = sin(I * 45/2) * W
+    Y = cos(I * 45/2) * W
+    
+    holoPos(I, Pos + vec(X, Y, 0))
+    holoAng(I, (Pos - holoEntity(I):pos()):toAngle() )
+    
+}
+
+W += 2
+
+if(clk("e")){
+    
+    for(I = 0, 3){
+        
+        P = propSpawn("models/props_phx/ball.mdl", 0)
+        P:setPos(holoEntity(randint(0, 18)):pos())
+        P:propBreak()
+        
+    }
+    
+    timer("e", 1000)
+    
+}

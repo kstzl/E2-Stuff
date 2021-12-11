@@ -1,0 +1,20 @@
+@name Echo
+@inputs 
+@outputs 
+@persist C
+@trigger 
+
+interval(200)
+
+if(first()){ C=2 }
+if(C < 1){
+   C++
+}
+
+if(changed(C))
+{
+    
+holoCreate(C) holoAlpha(C,0)
+holoEntity(C):soundPlay(C,0,"ravebreak.mp3")    
+    
+}

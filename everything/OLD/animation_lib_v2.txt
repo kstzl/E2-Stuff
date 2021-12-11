@@ -1,0 +1,909 @@
+@name animation_lib_v2
+@persist [ CMDS_ CMDSS_ ]:array
+@persist [ ObjectsCount ]:number [ ObjectsInfos ]:table
+@persist [ CanSpace ]:number [ Separation ]:string
+@persist [ Analyse ScriptInfo ]:table [ InAnalyse ]:number
+@persist [ InExecution InExecutionSequence ExecutionIndex ExecutionTime ]:number
+
+@persist [ SequenceMode SequenceIndex SI ]:number [ SequenceName ]:string [ Sequences ]:table
+
+@persist [ Variables ]:table
+
+@persist [ HoloDeco HoloDecoRd ]:number [ HoloDecoAngle ]:angle
+
+@persist [ Interval ]:number
+
+@persist [ Logs ]:number
+
+#include "fastlib"
+ 
+#[
+
+ Expression2
+                 _                 _   _               _      _ _            ___  
+     /\         (_)               | | (_)             | |    (_) |          |__ \ 
+    /  \   _ __  _ _ __ ___   __ _| |_ _  ___  _ __   | |     _| |__   __   __ ) |
+   / /\ \ | '_ \| | '_ ` _ \ / _` | __| |/ _ \| '_ \  | |    | | '_ \  \ \ / // / 
+  / ____ \| | | | | | | | | | (_| | |_| | (_) | | | | | |____| | |_) |  \ V // /_ 
+ /_/    \_\_| |_|_|_| |_| |_|\__,_|\__|_|\___/|_| |_| |______|_|_.__/    \_/|____|
+                                                                                                                                                                                                      
+ By K3CR4FT.:DLL ; 2020
+                                       
+]#
+
+Interval = InExecutionSequence*25
+ 
+interval(Interval)
+
+function al_print_important(String_:string){
+    
+    if(Logs == 0){
+        
+        print("[Animation Lib v2] " + String_)
+        
+    }
+    
+}
+
+function al_print(String_:string, Type_:string){
+
+    if(Logs == 1){
+        
+        if(Type_ == "info"){
+            print("[INFORMATION] " + String_)
+        }
+        elseif(Type_ == "cmd"){
+            print("[CMD] " + String_)
+        }
+        elseif(Type_ == "error"){
+            print("[ERREUR] " + String_)
+        }
+        else
+        {
+            print("[AnimationLibV2] " + String_)
+        }
+    
+    }
+    else
+    {
+        if(Type_ == "error"){
+            print("[ERREUR] " + String_)
+        }    
+    }
+
+    
+}
+
+function al_disable_logs(){
+    
+    Logs = 0
+    
+}
+
+function array al_get_cmd_ptype(CmdName_:string){
+    
+    FinalArray = array()
+
+    for(I = 0, CMDS_:count()){
+
+        if(CMDS_[I, string]:explode(";")[1, string] == CmdName_){
+            
+            Args = CMDS_[I, string]:explode(";")
+            
+            for(I = 2, Args:count()){
+                
+                FinalArray[I-2, string] = Args[I, string]
+            }
+            
+            
+        }
+        
+    }
+    
+    return FinalArray
+    
+}
+
+function number al_get_object_id(ObjectName_:string){
+    
+    Return_ = 0
+    
+    for(I = 0, ObjectsCount){
+        
+        if(ObjectName_ == ObjectsInfos[I, table][2, string]){
+            Return_ = ObjectsInfos[I, table][1, number]
+        }
+        
+    }
+    
+    return Return_ 
+    
+}
+
+function string al_get_type(String_:string){
+    
+    NotNumber = array(";", " ", "\n")
+    IsSpecial = 0
+    
+    for(I = 0, NotNumber:count()){
+        
+        if(NotNumber[I, string] == String_){
+            
+            IsSpecial = 1
+            
+        }
+        
+    }
+
+    if(IsSpecial == 0){
+        
+        if(String_:upper() == String_:lower()){
+            return "number"   
+        }
+        else
+        {
+            return "string"
+        }
+    
+    }
+    else
+    {
+        return "special"   
+    }
+    
+}
+
+function number al_cmd_name_exist(CmdName_:string){
+
+    Exist_ = 0
+    
+    for(I = 0, CMDS_:count()){
+
+        if(CMDS_[I, string]:explode(";")[1, string] == CmdName_){
+            Exist_ = 1   
+        }
+        
+    }
+    
+    return Exist_
+    
+}
+
+function number al_sequence_exist(SequenceName_:string){
+    
+    Exist_ = 0
+    
+    for(I = 0, Sequences:count()){
+        
+        SequenceName = Sequences[I, table][1, string]
+        
+        if(SequenceName == SequenceName_){
+            
+            Exist_ = 1
+            al_print("Sequence trouvee : " + SequenceName, "info")
+            
+        }
+        
+    }
+    
+    return Exist_
+    
+}
+
+function al_set_sequence_mode(SequenceName_:string, Mode_:string, Index_:number){
+    
+    for(I = 0, Sequences:count()){
+        
+        SequenceName = Sequences[I, table][1, string]
+        
+        if(SequenceName == SequenceName_){
+            
+            Sequences[I, table][4, string] = Mode_
+            Sequences[I, table][5, number] = Index_
+            al_print("Mise en place de la sequence '" + SequenceName + "' sur '" + Mode_ + "'.", "info")
+            
+        }
+        
+    }
+    
+}
+
+function al_cmd(Cmd_:string){
+    
+    ECmd = Cmd_:explode(" ")
+    ECmdName = ECmd[1, string]
+    ECmdParameters = array()
+    ECmdParametersInfo = ""
+    ParametersError = 0
+    
+    if(al_cmd_name_exist(ECmdName)){
+ 
+        for(I = 2, ECmd:count()){
+            ECmdParameters[I, string] = ECmd[I, string]
+            ECmdParametersInfo += "<" + ECmdParameters[I, string] + ">"
+   
+            if(ECmdParameters[I, string]:length() == 0){
+                ParametersError = 1
+                al_print(" >> Parametre " + (I-1):toString() + " de la fonction '" + ECmdName + "' vide !", "error")
+            }
+        }
+        
+        #Verification des parametres
+        
+        ParamtersNeeded = al_get_cmd_ptype(ECmdName)
+        ParametersNeededInfo = ""
+        
+        for(I = 0, ParamtersNeeded:count()){
+            
+            ParametersNeededInfo += "<" + ParamtersNeeded[I, string]:replace("string", "TEXTE"):replace("number", "NOMBRE"):replace("empty", "VIDE") + "> "
+            
+        }
+        
+        for(I = 0, ParamtersNeeded:count()){
+            
+            ParameterN = ParamtersNeeded[I, string]
+            ParameterG = ECmdParameters[I+2, string]
+            
+            ParameterGT = al_get_type(ParameterG)
+            
+            if(ParameterN != ParameterGT){
+                
+                if(ParameterN != "empty"){
+                    
+                    ParametersError = 1
+                    al_print(" >> Parametre " + (I+1):toString() + " de la fonction '" + ECmdName + "' incorrecte !", "error")
+                    
+                }
+            }
+            
+            if(ECmdParameters:count()-2 < ParamtersNeeded:count()){
+                
+                if(ParameterN != "empty"){
+                    
+                    ParametersError = 1
+                    al_print(" >> Pas assez de parametres pour la fonction '" + ECmdName + "' !", "error")
+                    
+                }
+                
+            }
+            
+            if(ECmdParameters:count()-2 > ParamtersNeeded:count()){
+                ParametersError = 1
+                al_print(" >> Trop de parametres pour la fonction '" + ECmdName + "' !", "error")
+            }
+            
+        }
+
+        if(ParametersError == 0){
+            
+            for(I = 2, ECmdParameters:count()){
+                
+                Args[I-2, string] = ECmdParameters[I, string]
+                
+            }
+               
+            #Creation d'un objet
+            if(ECmdName == CMDSS_[1, string]){
+                
+                HoloID = ObjectsCount + time()
+                
+                holoCreate(HoloID)
+                holoModel(HoloID, "models/maxofs2d/cube_tool.mdl")
+                
+                ObjectsInfos[ObjectsCount, table] = table(HoloID, Args[0, string])
+    
+                ObjectsCount++
+                
+                al_print("Object '" + Args[0, string] + "' cree avec succes !", "info")
+                
+            }
+            
+            #Changement du model d'un objet
+            if(ECmdName == CMDSS_[2, string]){
+                
+                HoloID = al_get_object_id(Args[0, string])
+                
+                if(HoloID != 0){
+                    
+                    holoModel(HoloID, Args[1, string])
+                    
+                    al_print("Model de l'objet '" + Args[0, string] + "' change pour '" + Args[1, string] + "' avec succes !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+            
+            #Changement de l'animation d'un objet
+            if(ECmdName == CMDSS_[3, string]){
+                
+                HoloID = al_get_object_id(Args[0, string])
+                
+                if(HoloID != 0){
+                    
+                    holoAnim(HoloID, Args[1, string])
+                    
+                    al_print("Animation de l'objet '" + Args[0, string] + "' change pour '" + Args[1, string] + "' avec succes !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+            
+            #Mouvement toworld d'un objet
+            if(ECmdName == CMDSS_[4, string]){
+                
+                HoloID = al_get_object_id(Args[0, string])
+                
+                if(HoloID != 0){
+                    
+                    holoPos(HoloID, holoEntity(HoloID):toWorld(vec(Args[1, string]:toNumber(), Args[2, string]:toNumber(), Args[3, string]:toNumber())))
+             
+                    al_print("Mouvement de l'objet '" + Args[0, string] + "' to world (" + Args[1, string]:toNumber() + "," + Args[2, string]:toNumber() + "," +  Args[3, string]:toNumber() + ") avec succes !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+            
+            #Activation d'une sequence
+            if(ECmdName == CMDSS_[9, string]){
+                
+                SN = Args[0, string]
+                SNT = Args[1, string]
+                
+                if(al_sequence_exist(SN)){
+                    
+                    al_set_sequence_mode(SN, SNT, 0)
+                    
+                    al_print("Sequence '" + SN + "' jouee avec le parametre : '" + SNT + "' !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Sequence '" + SN + "' introuvable !", "error")
+                }
+                
+            }
+            
+            #Stop sequence
+            if(ECmdName == CMDSS_[10, string]){
+                
+                SN = Args[0, string]
+                
+                if(al_sequence_exist(SN)){
+                    
+                    al_set_sequence_mode(SN, "stopped", 0)
+                    
+                    al_print("Sequence '" + SN + "' stoppee", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Sequence '" + SN + "' introuvable !", "error")
+                }
+                
+            }
+            
+            #Pause
+            if(ECmdName == CMDSS_[11, string]){
+                
+                Temps = Args[0, string]
+                ExecutionTime = Temps:toNumber()
+                
+                al_print("Pause de '" + Temps + "' ms", "info")
+                
+                
+            }
+            
+            #Set Ang d'un objet
+            if(ECmdName == CMDSS_[12, string]){
+                
+                HoloID = al_get_object_id(Args[0, string])
+                
+                if(HoloID != 0){
+                    
+                    holoAng(HoloID, ang(Args[1, string]:toNumber(), Args[2, string]:toNumber(), Args[3, string]:toNumber()))
+             
+                    al_print("Angle de l'objet '" + Args[0, string] + "' mit sur (" + Args[1, string]:toNumber() + "," + Args[2, string]:toNumber() + "," +  Args[3, string]:toNumber() + ") avec succes !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+            
+            #Add ang d'un objet
+            if(ECmdName == CMDSS_[13, string]){
+                
+                HoloID = al_get_object_id(Args[0, string])
+                
+                if(HoloID != 0){
+                    
+                    holoAng(HoloID, holoEntity(HoloID):angles() + ang(Args[1, string]:toNumber(), Args[2, string]:toNumber(), Args[3, string]:toNumber()))
+             
+                    al_print("Rotation de l'objet '" + Args[0, string] + "' sur (" + Args[1, string]:toNumber() + "," + Args[2, string]:toNumber() + "," +  Args[3, string]:toNumber() + ") avec succes !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+            
+            #Sfx
+            if(ECmdName == CMDSS_[14, string]){
+                
+                HoloID = al_get_object_id(Args[0, string])
+                
+                if(HoloID != 0){
+                    
+                    holoEntity(HoloID):soundPlay(HoloID, 0, Args[1, string])
+             
+                    al_print("Son sur l'objet '" + Args[0, string] + "' joue '" + Args[1, string] + "' avec succes !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+            
+            #ObjectScale
+            if(ECmdName == CMDSS_[15, string]){
+                
+                HoloID = al_get_object_id(Args[0, string])
+                
+                if(HoloID != 0){
+                    
+                    holoScale(HoloID, vec(Args[1, string]:toNumber(), Args[2, string]:toNumber(), Args[3, string]:toNumber()))
+             
+                    al_print("Taille de l'objet '" + Args[0, string] + "' misesur (" + Args[1, string]:toNumber() + "," + Args[2, string]:toNumber() + "," +  Args[3, string]:toNumber() + ") avec succes !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+            
+            #ObjectParent
+            if(ECmdName == CMDSS_[16, string]){
+                
+                HoloID1 = al_get_object_id(Args[0, string])
+                HoloID2 = al_get_object_id(Args[1, string])
+                
+                if(HoloID1 != 0){
+                    
+                    if(HoloID2 != 0){
+                        
+                        holoParent(HoloID1, HoloID2)
+                        
+                        al_print("Objet '" + Args[0, string] + "' parente a '" + Args[1, string] + "' avec succes", "info")
+                        
+                    }
+                    else
+                    {
+                        al_print("(" + ECmdName + ") Objet '" + Args[1, string] + "' introuvable !", "error")
+                    }
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+            
+            #Sound Pitch
+            if(ECmdName == CMDSS_[17, string]){
+                
+                HoloID = al_get_object_id(Args[0, string])
+                
+                if(HoloID != 0){
+                    
+                    soundPitch(HoloID, Args[1, string]:toNumber())
+             
+                    al_print("Pitch sur l'objet '" + Args[0, string] + "' mit sur '" + Args[1, string] + "' avec succes !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+            #Sound Stop
+            if(ECmdName == CMDSS_[18, string]){
+                
+                HoloID = al_get_object_id(Args[0, string])
+                
+                if(HoloID != 0){
+                    
+                    soundStop(HoloID)
+             
+                    al_print("Son sur l'objet '" + Args[0, string] + "' arrete avec succes !", "info")
+                    
+                }
+                else
+                {
+                    al_print("(" + ECmdName + ") Objet '" + Args[0, string] + "' introuvable !", "error")
+                }
+                
+            }
+        
+        }
+        else 
+        {
+            owner():soundPlay(0, 0, "Buttons.snd10")
+            al_print(" >> Correction : " + ECmdName + " " + ParametersNeededInfo, "error")
+        }
+             
+    }
+    else
+    {
+        owner():soundPlay(0, 0, "Buttons.snd11")
+        al_print("Fonction '" + ECmdName + "' introuvable.", "error")
+    }
+    
+}
+
+function al_start_analyse_execution(Code_:string){
+    
+    if(InAnalyse == 0){
+    
+        #Table Analyse:
+        # Code ; Commandes trouvee ; Index ; Il ; Nom ; Auteur #
+        
+        al_print("----------Analyse du script ... ----------", "info")
+        al_print_important("Analyse du script en cours...")
+        
+        Analyse = table(Code_, array(), 0, 0, "", "")
+        Sequences = table()
+        InAnalyse = 1
+        CanSpace = 0
+        
+        SequenceMode = 0
+        SequenceIndex = 0
+        SequenceName = ""
+    
+    }
+    
+}
+
+function al_start_execution(){
+    
+    InExecution = 1
+    InExecutionSequence = 1
+    ExecutionIndex = 0
+    ExecutionTime = 150
+    
+    al_print("---------- Execution en cours ! ----------", "info")
+    al_print("Execution de '" + ScriptInfo[3, string] + "' par '" + ScriptInfo[4, string] + "' en cours.", "info")
+    al_print_important("Execution du script en cours...")
+
+    
+}
+
+if(first()){
+    
+    HoloDeco = time()
+    Logs = 1
+    
+    holoCreate(HoloDeco)
+    holoModel(HoloDeco, "models/maxofs2d/cube_tool.mdl")
+    
+    hint("Animation Lib v2 by K3CR4FT.:DLL", 3)
+    
+    al_print("Par K3CR4FT.:DLL", "")
+    al_print_important("Par K3CR4FT.:DLL")
+    
+    CMDS_ = 
+    array(
+    "Object;string", 
+    "ObjectModel;string;string", 
+    "ObjectAnim;string;string", 
+    "ObjectMoveToWorld;string;number;number;number", 
+    "ScriptName;string", 
+    "ScriptAuthor;string",
+    "Sequence;string",
+    "End;empty",
+    "SequencePlay;string;string",
+    "SequenceStop;string",
+    "Pause;number",
+    "ObjectAngle;string;number;number;number",
+    "ObjectRotate;string;number;number;number",
+    "Sfx;string;string",
+    "ObjectScale;string;number;number;number",
+    "ObjectParent;string;string",
+    "SoundPitch;string;number",
+    "SoundStop;string"
+    )
+    
+    
+    CMDSS_ = array()
+        
+    for(I = 0, CMDS_:count()){
+            
+        CMDSS_[I, string] = CMDS_[I, string]:explode(";")[1, string]
+            
+    }
+    
+    Separation = ";"
+
+}
+
+#ANALYSE DU SCRIPT#
+
+holoAlpha(HoloDeco, 255 * InAnalyse)
+
+if(InAnalyse == 1){
+    
+    Index = Analyse[3, number]
+    
+    IL = Analyse[4, number]
+    
+    Letter = Analyse[1, string][IL]
+
+    # --- DECO ---------------------------------
+    if(randint(0, 50) == 0){
+        
+        NewRd = randint(1, 3)
+        
+        if(NewRd != HoloDecoRd){
+            HoloDecoRd = NewRd
+        }   
+           
+        holoAng(HoloDeco, ang(0))
+    }
+    
+    if(HoloDecoRd == 1){
+        holoAng(HoloDeco, holoEntity(HoloDeco):angles() + ang(Index, 0, 0))
+    }
+    elseif(HoloDecoRd == 2){
+        holoAng(HoloDeco, holoEntity(HoloDeco):angles() + ang(0, Index, 0))
+    }
+    elseif(HoloDecoRd == 3){
+        holoAng(HoloDeco, holoEntity(HoloDeco):angles() + ang(0, 0, Index))
+    }
+    
+    # --- DECO ---------------------------------
+    
+    #Analyse = table(Code_, array(), 0, 0, "", "", table())
+    
+    if(Letter == " " && CanSpace == 1){
+        
+        if(SequenceMode == 0){
+            
+            Analyse[2, array][Index, string] = Analyse[2, array][Index, string] + " "
+            CanSpace = 0
+        
+        }
+        else
+        { 
+            Nb = Sequences[SequenceIndex, table][3, number]
+            Sequences[SequenceIndex, table][2, array][Nb, string] = Sequences[SequenceIndex, table][2, array][Nb, string] + " "
+            CanSpace = 0
+        }
+        
+    }
+    
+    if(al_get_type(Letter) == "string" || al_get_type(Letter) == "number"){
+        
+        if(SequenceMode == 0){
+            
+            Analyse[2, array][Index, string] = Analyse[2, array][Index, string] + Letter
+            CanSpace = 1
+        
+        }
+        else
+        {
+            Nb = Sequences[SequenceIndex, table][3, number]
+            Sequences[SequenceIndex, table][2, array][Nb, string] = Sequences[SequenceIndex, table][2, array][Nb, string] + Letter
+            CanSpace = 1
+        }
+        
+    }
+    
+    if(Letter == Separation){
+        
+        ActualCommand = Analyse[2, array][Index, string]
+        ActualCommandExploded = ActualCommand:explode(" ")
+        
+        Nb = Sequences[SequenceIndex, table][3, number]
+        
+        ActualCommandSequence = Sequences[SequenceIndex, table][2, array][Nb, string]
+        
+        if(SequenceMode == 0){
+            Analyse[3, number] = Analyse[3, number] + 1
+        }
+        else
+        {
+            Sequences[SequenceIndex, table][3, number] = Sequences[SequenceIndex, table][3, number] + 1
+        }
+        
+        
+        CanSpace = 0
+        
+        if(SequenceMode == 1){
+            al_print("[Sequence " + SequenceName + "] Commande trouvee : '" + ActualCommandSequence + "'.", "info")
+        }
+        else
+        {
+            al_print("Commande trouvee : '" + ActualCommand + "'.", "info")
+        }
+        
+        ################SPECIAL###############
+        
+        if(ActualCommandExploded[1, string] == CMDSS_[5, string]){
+            
+            Analyse[5, string] = ActualCommandExploded[2, string]
+            
+            al_print("Nom du script trouve : '" + Analyse[5, string] + "'.", "info")
+            
+        }
+        if(ActualCommandExploded[1, string] == CMDSS_[6, string]){
+            
+            Analyse[6, string] = ActualCommandExploded[2, string]
+            
+            al_print("Auteur du script trouve : '" + Analyse[6, string] + "'.", "info")
+            
+        }
+        if(ActualCommandExploded[1, string] == CMDSS_[7, string]){                
+            
+            SequenceName = ActualCommandExploded[2, string]
+            
+            al_print("Debut de sequence trouve : '" + SequenceName + "'.", "info")
+            
+            SequenceIndex++                                                       
+            
+                                                                                  #Index
+                                                                                 #|
+                                                                                 #|  #Pause Index
+            Sequences[SequenceIndex, table] = table(SequenceName, array(), 0, "stopped", 0, 0, 0) #Pause Needed ######################################################################### TABLE SEQUENCE
+            
+            SequenceMode = 1  
+            
+        }
+        if(ActualCommandSequence == CMDSS_[8, string]){                
+            
+            al_print("Fin de sequence trouve : '" + SequenceName + "'.", "info")
+            
+            SequenceMode = 0 
+            
+        }
+
+    }
+    
+    if(Analyse[4, number] < Analyse[1, string]:length()){
+        Analyse[4, number] = Analyse[4, number] + 1
+    }
+    else
+    {
+        InAnalyse = 0
+        ScriptInfo = table("Nom", Analyse[2, array], Analyse[5, string], Analyse[6, string])
+        
+        al_print("Nombre de commandes : " + (Analyse[2, array]:count() + 1):toString(), "info")
+        al_print("---------- Analyse terminee ! ----------", "info")
+        al_print_important("Analyse du script terminee !")
+        
+        al_start_execution()
+       
+    } 
+
+}
+
+#EXECUTION DU SCRIPT#
+
+if(InExecution == 1){
+
+    if(every(ExecutionTime)){
+        
+        ExecutionTime = 150
+        
+        C = ScriptInfo[2, array][ExecutionIndex, string]
+        
+        al_cmd(C)
+        
+        if(ExecutionIndex > ScriptInfo[2, array]:count()-1){
+            
+            InExecution = 0
+            al_print("---------- Commandes d'execution principales terminee ! ----------", "info")
+            al_print_important("Commandes d'execution principale du script terminee ! ")
+            
+        }
+        else
+        {
+            ExecutionIndex++
+        }
+        
+    }
+    
+}
+
+if(changed(InExecutionSequence) && InExecutionSequence == 1){
+    SI = 0
+}
+
+if(ops() < maxquota()/2){
+    
+    if(InExecutionSequence == 1){
+        
+            for(I = 1, Sequences:count()){
+                
+                Sequence = Sequences[I, table]
+                
+                if(Sequence[4, string] != "stopped"){
+                              
+                    Command = Sequence[2, array][Sequence[5, number], string]
+                    CommandExploded = Command:explode(" ")
+                    
+                    Arg0 = CommandExploded[1, string]
+                    Arg1 = CommandExploded[2, string]
+                        
+                    #Si Pause Index >= Pause Needed
+                    if(Sequence[6, number] >= Sequence[7, number]){
+                        
+                        #Reset de la pause
+                        Sequence[6, number] = 0
+                        Sequence[7, number] = 0
+                        
+                        if(Arg0 != "Pause"){
+                            al_cmd(Command)    
+                        }
+                        
+                        #On Ajoute 1 a l'index
+                        Sequence[5, number] = Sequence[5, number] + 1
+    
+                            if(Sequence[5, number] >= Sequence[2, array]:count()){
+                                
+                                if(Sequence[4, string] == "loop"){
+                                    
+                                    Sequence[5, number] = 0
+                                    
+                                }
+                                else
+                                {
+                                    
+                                    Sequence[4, string] = "stopped"
+                                     
+                                }
+                            
+                        }
+                        
+                    }
+                    else
+                    {
+                        Sequence[6, number] = Sequence[6, number] + 1
+                    }
+                    
+                    if(Arg0 == "Pause"){
+                        Sequence[7, number] = Arg1:toNumber()/25
+                    }
+                    
+                }
+                
+            }
+        
+    }
+    
+}
+else
+{
+    al_print_important("[!] Trop d'ops detecte, micro-pause impose. !")
+}
+

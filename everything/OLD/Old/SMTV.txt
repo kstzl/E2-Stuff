@@ -1,0 +1,328 @@
+@name SMTV
+@persist [ Active Start ]:number [ LAng I Flicker Ch Up TI Follow ]:number [ Seat Player Player2 ]:entity [ Models ]:array
+
+interval(1)
+
+if(!Seat){
+    
+    findByModel("models/nova/airboat_seat.mdl")
+    findSortByDistance(holoEntity(0):pos())
+    Seat = find()
+
+}
+else
+{
+
+    findByClass("player")
+    findSortByDistance(Seat:pos())
+    Player = find()
+        
+    Seat:setPos(holoEntity(0):toWorld(vec(0, 10, 25 + Up)))
+    Seat:setAng(holoEntity(0):angles())
+    Seat:propFreeze(1)
+    Seat:setAlpha(0)
+    
+}
+
+if(clk("start")){
+    
+    if(Start == 0){
+        
+        #RESET
+        holoPos(0, entity():pos())
+        holoAlpha(24, 0)
+        LAng = 0
+        Ch = 3
+        Up = 0
+        TI = 0
+        Follow = 0
+        Start = 1
+        
+        Models[0, string] = "models/Zombie/Classic_torso.mdl"
+        Models[1, string] = "models/Lamarr.mdl"
+        Models[2, string] = "models/props_c17/FurnitureWashingmachine001a.mdl"
+        
+        #ACTIVE
+        holoEntity(0):streamStart(0, "http://k007.kiwi6.com/hotlink/ukwmxca05y/Les_zinzins_de_l_espace_-_Transformation_15_sec_SMTV_ost.mp3")
+        
+        #TIMER
+        timer("step2", 3000)
+        
+        
+    }
+}
+
+if(clk("step2")){
+    
+    Active = 1
+    holoEntity(21):soundPlay(1, 1, "streetwar.drawbridge_lever_start")
+    
+    timer("step3", 1000)
+
+}
+
+if(clk("step3")){
+    
+    Flicker = 255
+    
+    timer("change", 1500)
+}
+
+if(clk("change")){
+    
+    if(Ch > 0){
+        
+        holoModel(24, Models[TI, string])
+        holoAng(24, holoEntity(0):angles() + ang(0, 90, 0))
+        holoScale(24, vec(1.5, 1.5, 2))
+        holoAlpha(24, 255)
+        
+        if(TI == 0){ holoAnim(24, "attack") }
+        if(TI == 1){ holoAnim(24, "lockerjump01") }
+        
+        Explosion = propSpawn("models/props_phx/ball.mdl", 0)
+        Explosion:setAlpha(0)
+        Explosion:setPos(holoEntity(0):pos())
+        Explosion:propBreak()
+        Ch -= 1
+        Up = -1000
+        TI += 1
+
+        timer("change", 1500)
+    }
+    else
+    {
+        
+        Player2 = Player
+
+        Up = 0
+        Follow = 1
+        Start = 0
+        Flicker = 0
+        Active = 0
+        LAng = 0
+
+    }
+}
+
+if(Active == 1){
+    
+    if(LAng < 45){ LAng += 10 }
+    
+    I += 50
+    
+}
+
+if(Follow == 1){
+    
+    holoPos(24, Player2:pos() + vec(0, 0, 50))
+    
+}
+else
+{
+    
+    holoPos(24, holoEntity(0):toWorld(vec(0, 0, 40)))
+    
+}
+
+holoAng(21, holoEntity(0):angles() + ang(0, 0, LAng))
+holoColor(18, vec(abs(sin(I) * Flicker), 255, 255))
+holoColor(20, vec(abs(sin(I) * Flicker), 255, 255))
+lightDistance(1, abs(sin(I) * Flicker))
+
+
+if(first()){
+    
+    holoCreate(0)
+    holoParent(0, entity())
+    
+    holoCreate(1)
+    holoScaleUnits(1, vec(50, 50, 20))
+    holoPos(1, holoEntity(0):toWorld(vec(0, 0, 10)))
+    holoColor(1, vec(0, 200, 200))
+    holoMaterial(1, "sprops/textures/sprops_chrome")
+    holoParent(1, 0)
+    
+    holoCreate(2)
+    holoScaleUnits(2, vec(50, 50, 10))
+    holoPos(2, holoEntity(1):toWorld(vec(0, 0, 15)))
+    holoColor(2, vec(0, 100, 100))
+    holoMaterial(2, "sprops/textures/sprops_chrome")
+    holoParent(2, 0)
+    
+    holoCreate(3)
+    holoScaleUnits(3, vec(10, 60, 50))
+    holoPos(3, holoEntity(1):toWorld(vec(-30, 5, 15)))
+    holoColor(3, vec(0, 200, 200))
+    holoMaterial(3, "sprops/textures/sprops_chrome")
+    holoParent(3, 0)
+    
+    holoCreate(4)
+    holoScaleUnits(4, vec(10, 60, 50))
+    holoPos(4, holoEntity(1):toWorld(vec(30, 5, 15)))
+    holoColor(4, vec(0, 200, 200))
+    holoMaterial(4, "sprops/textures/sprops_chrome")
+    holoParent(4, 0)
+    
+    holoCreate(5)
+    holoScaleUnits(5, vec(25))
+    holoPos(5, holoEntity(1):toWorld(vec(50, 0, 0)))
+    holoAng(5, holoEntity(1):angles() - ang(0, 10, 0))
+    holoModel(5, "models/items/car_battery01.mdl")
+    holoParent(5, 0)
+    
+    holoCreate(6)
+    holoScaleUnits(6, vec(10, 60, 10))
+    holoPos(6, holoEntity(1):toWorld(vec(-30, 5, 50)))
+    holoAng(6, holoEntity(1):angles() - ang(0, 0, -5))
+    holoColor(6, vec(0, 200, 200))
+    holoMaterial(6, "sprops/textures/sprops_chrome")
+    holoParent(6, 0)
+    
+    holoCreate(7)
+    holoScaleUnits(7, vec(5, 25, 10))
+    holoPos(7, holoEntity(1):toWorld(vec(-30, 5, 45)))
+    holoColor(7, vec(0, 200, 200))
+    holoMaterial(7, "sprops/textures/sprops_chrome")
+    holoParent(7, 0)
+    
+    holoCreate(8)
+    holoScaleUnits(8, vec(15, 55, 5))
+    holoPos(8, holoEntity(1):toWorld(vec(-30, 5, 50)))
+    holoAng(8, holoEntity(1):angles() - ang(0, 0, -5))
+    holoColor(8, vec(255, 200, 0))
+    holoMaterial(8, "sprops/textures/sprops_chrome")
+    holoParent(8, 0)
+    
+    holoCreate(9)
+    holoScaleUnits(9, vec(10, 60, 10))
+    holoPos(9, holoEntity(1):toWorld(vec(30, 5, 50)))
+    holoAng(9, holoEntity(1):angles() - ang(0, 0, -5))
+    holoColor(9, vec(0, 200, 200))
+    holoMaterial(9, "sprops/textures/sprops_chrome")
+    holoParent(9, 0)
+    
+    holoCreate(10)
+    holoScaleUnits(10, vec(5, 25, 10))
+    holoPos(10, holoEntity(1):toWorld(vec(30, 5, 45)))
+    holoColor(10, vec(0, 200, 200))
+    holoMaterial(10, "sprops/textures/sprops_chrome")
+    holoParent(10, 0)
+    
+    holoCreate(11)
+    holoScaleUnits(11, vec(15, 55, 5))
+    holoPos(11, holoEntity(1):toWorld(vec(30, 5, 50)))
+    holoAng(11, holoEntity(1):angles() - ang(0, 0, -5))
+    holoColor(11, vec(255, 200, 0))
+    holoMaterial(11, "sprops/textures/sprops_chrome")
+    holoParent(11, 0)
+    
+    holoCreate(12)
+    holoModel(12, "hqtorus")
+    holoScaleUnits(12, vec(40, 40, 20))
+    holoPos(12, holoEntity(1):toWorld(vec(30, 5, 4)))
+    holoColor(12, vec(0))
+    holoParent(12, 0)
+    
+    holoCreate(13)
+    holoModel(13, "hqcylinder")
+    holoScaleUnits(13, vec(5, 5, 125))
+    holoPos(13, holoEntity(1):toWorld(vec(25, -30, 62.5)))
+    holoAng(13, holoEntity(1):angles() + ang(-5, 0, 10))
+    holoColor(13, vec(0, 200, 200))
+    holoMaterial(13, "sprops/textures/sprops_chrome")
+    holoParent(13, 0)
+    
+    holoCreate(14)
+    holoModel(14, "hqsphere")
+    holoScaleUnits(14, vec(5, 35, 10))
+    holoPos(14, holoEntity(1):toWorld(vec(21, -25, 110)))
+    holoAng(14, holoEntity(1):angles() + ang(0, 0, 0))
+    holoColor(14, vec(0, 200, 200))
+    holoMaterial(14, "sprops/textures/sprops_chrome")
+    holoParent(14, 0)
+    
+    holoCreate(15)
+    holoModel(15, "dome")
+    holoScaleUnits(15, vec(50, 50, 100))
+    holoPos(15, holoEntity(1):toWorld(vec(0, 0, 100)))
+    holoColor(15, vec(0, 200, 200))
+    holoMaterial(15, "sprops/textures/sprops_chrome")
+    holoParent(15, 0)
+    
+    holoCreate(16)
+    holoModel(16, "hqcylinder")
+    holoScaleUnits(16, vec(55, 55, 5))
+    holoPos(16, holoEntity(1):toWorld(vec(0, 0, 99)))
+    holoColor(16, vec(0, 255, 255))
+    holoMaterial(16, "sprops/textures/sprops_chrome")
+    holoParent(16, 0)
+    
+    holoCreate(17)
+    holoModel(17, "hqcylinder")
+    holoScaleUnits(17, vec(15, 15, 5))
+    holoPos(17, holoEntity(1):toWorld(vec(20, 0, 125)))
+    holoAng(17, holoEntity(1):angles() + ang(75, 0, 0))
+    holoColor(17, vec(200, 200, 200))
+    holoMaterial(17, "sprops/textures/sprops_chrome")
+    holoParent(17, 0)
+    
+    holoCreate(18)
+    holoModel(18, "dome")
+    holoScaleUnits(18, vec(13, 13, 25))
+    holoPos(18, holoEntity(1):toWorld(vec(20, 0, 125)))
+    holoAng(18, holoEntity(1):angles() + ang(75, 0, 0))
+    holoParent(18, 0)
+    
+    holoCreate(19)
+    holoModel(19, "hqcylinder")
+    holoScaleUnits(19, vec(15, 15, 5))
+    holoPos(19, holoEntity(1):toWorld(vec(-20, 0, 125)))
+    holoAng(19, holoEntity(1):angles() - ang(75, 0, 0))
+    holoColor(19, vec(200, 200, 200))
+    holoMaterial(19, "sprops/textures/sprops_chrome")
+    holoParent(19, 0)
+    
+    holoCreate(20)
+    holoModel(20, "dome")
+    holoScaleUnits(20, vec(13, 13, 25))
+    holoPos(20, holoEntity(1):toWorld(vec(-20, 0, 125)))
+    holoAng(20, holoEntity(1):angles() - ang(75, 0, 0))
+    holoColor(20, vec(0, 255, 255))
+    holoParent(20, 0)
+    
+    holoCreate(21)
+    holoPos(21, holoEntity(1):toWorld(vec(-30, 10, 50)))
+    holoAlpha(21, 0)
+    holoParent(21, 0)
+    
+    holoCreate(22)
+    holoModel(22, "hqcylinder")
+    holoScaleUnits(22, vec(2.5, 2.5, 30))
+    holoPos(22, holoEntity(21):toWorld(vec(0, 0, 15)))
+    holoMaterial(22, "sprops/textures/sprops_chrome")
+    holoParent(22, 21)
+    
+    holoCreate(23)
+    holoModel(23, "hqsphere")
+    holoScaleUnits(23, vec(10))
+    holoPos(23, holoEntity(21):toWorld(vec(0, 0, 30)))
+    holoMaterial(23, "sprops/textures/sprops_chrome")
+    holoParent(23, 21)
+    
+    holoCreate(24)
+    holoAlpha(24, 0)
+    holoParent(24, 0)
+    
+    lightCreate(1)
+    lightParent(1, holoEntity(0))
+    lightDistance(1, 500)
+    lightBrightness(1, 15)
+    
+}
+
+if(changed(Player:keyAttack2()) && Player:keyAttack2() == 1 && Player:pos():distance(Seat:pos()) <= 100){
+    
+    timer("start", 0)
+    
+}

@@ -1,0 +1,67 @@
+@name Ragdoll Template
+@inputs
+@outputs 
+@persist [Target Ragdoll]:entity [L_hand_id R_hand_id L_foot_id R_foot_id Head_id Ass_id]:bone [I I2]:number [S]:array
+@trigger 
+
+interval(1)
+
+if(first()){   
+     
+    Ragdoll = entity():isWeldedTo() 
+    Target = findPlayerByName("kec")
+    entity():propFreeze(0)
+    holoCreate(0)
+    holoAlpha(0,0)
+    holoPos(0,entity():pos())
+    holoParent(0,entity())
+
+    S[1, string] = "npc_alyx.hurt04"
+    S[2, string] = "npc_alyx.hurt05"
+    S[3, string] = "npc_alyx.hurt06"
+    S[4, string] = "npc_alyx.hurt08"
+    S[5, string] = "npc_citizen.pain01"
+    S[6, string] = "npc_citizen.pain02"
+    S[7, string] = "npc_citizen.pain03"
+    S[8, string] = "npc_citizen.pain04"
+    S[9, string] = "npc_citizen.pain05"
+    S[10, string] = "npc_citizen.pain06"
+    S[11, string] = "npc_citizen.pain07"
+    S[12, string] = "npc_citizen.pain08"
+    S[13, string] = "npc_citizen.pain09"
+
+}
+    L_hand_id=Ragdoll:bone(7) 
+    R_hand_id=Ragdoll:bone(5) 
+    L_foot_id=Ragdoll:bone(13) 
+    R_foot_id=Ragdoll:bone(14) 
+    Body_id=Ragdoll:bone(1) 
+    Head_id=Ragdoll:bone(10) 
+    Ass_id=Ragdoll:bone(0)
+
+
+function applyRagdollForce(Bone:bone, Vec:vector, Force:number){
+    Bone:applyForce((Vec-Bone:massCenter()-Bone:vel()/2) * Bone:mass() * Force)
+}
+function applyRagdollAng(Bone:bone, Ang:angle, Force:number){
+    Bone:applyAngForce(Ang*Force)
+}
+
+    applyRagdollForce(Body_id, Target:pos() + vec(0, 0, 35), 1)
+    applyRagdollForce(Head_id, Target:pos() + vec(0, 0, 120), 6)
+    applyRagdollForce(L_hand_id, Target:pos() + vec(sin(I)*55+30, 0, 100), 2)
+    applyRagdollForce(R_hand_id, Target:pos() + vec(sin(I)*-55-30, 0, 100), 2)
+    applyRagdollForce(L_foot_id, Target:pos() + vec(sin(I)*15, 0, 0), 2)
+    applyRagdollForce(R_foot_id, Target:pos() + vec(sin(I)*-15, 0, 0), 2)
+    applyRagdollForce(Ass_id, Target:pos() + vec(sin(I*5)*50, cos(I*5)*50, 50), 2)
+    Ragdoll:setAng(Target:angles() - ang(0, 90, -50))
+
+    I2 += 1
+
+if(I2 >= 20){
+     I2 = 0 
+     holoEntity(0):soundPlay(1,0,S[randint(1,S:count()),string]) 
+     soundPitch(1,randint(90,100))
+}
+
+I += 5

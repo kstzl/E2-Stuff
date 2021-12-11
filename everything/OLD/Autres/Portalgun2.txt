@@ -1,0 +1,144 @@
+@name Portalgun2
+@inputs 
+@outputs 
+@persist Vel:vector Ang:angle Portal1 Portal2
+@trigger 
+
+if(first()){
+    
+    holoCreate(1)
+    holoModel(1,"hqtube")
+    holoScale(1,vec(10,5,0.1))
+    holoColor(1,vec(0,0,255))
+    holoPos(1,vec(0,0,-999))
+
+    holoCreate(2)
+    holoModel(2,"hqtube")
+    holoScale(2,vec(10,5,0.1))
+    holoColor(2,vec(255,100,0))
+    holoPos(2,vec(0,0,-999))
+    
+    
+    holoCreate(3)
+    holoModel(3,"cylinder")
+    holoScale(3,vec(8,4,0.1))
+    holoColor(3,vec(0,0,200))
+    holoMaterial(3,"debug/env_cubemap_model")
+    holoParent(3,1)
+    holoPos(3, holoEntity(1):pos())
+    
+    holoCreate(4)
+    holoModel(4,"cylinder")
+    holoScale(4,vec(8,4,0.1))
+    holoColor(4,vec(255,120,0))
+    holoMaterial(4,"debug/env_cubemap_model")
+    holoParent(4,2)
+    holoPos(4, holoEntity(2):pos())
+    
+    holoCreate(5)
+    holoAlpha(5,0)
+    holoCreate(6)
+    holoAlpha(6,0)
+}
+
+runOnTick(1)
+
+if(owner():keyAttack1()){
+    
+    Portal1 = 1
+    
+    Ang = owner():aimNormal():toAngle()+ang(90,0,0)
+    Et = owner():aimPos()
+    Ett = owner():aimEntity()
+    
+    holoPos(1, Et)
+    holoAng(1, Ang)
+    
+    holoEntity(5):setTrails(50,0,1,"trails/physbeam",vec(0,0,255),255)
+    holoPos(5,owner():pos())
+    timer("fb",200)
+    
+
+}
+
+if(owner():keyAttack2()){
+    
+    Portal2 = 1
+    
+    Ang2 = owner():aimNormal():toAngle()+ang(90,0,0)
+    Et2 = owner():aimPos()
+    Ett2 = owner():aimEntity()
+    
+    holoPos(2, Et2)
+    holoAng(2, Ang2)
+    holoEntity(6):setTrails(50,0,1,"trails/physbeam",vec(255,100,0),255)
+    holoPos(6,owner():pos())
+    timer("fb2",200)
+    
+
+
+}
+
+if(holoEntity(3):pos():distance(owner():pos()) <=20 && Portal1 == 1 && Portal2 == 1){
+
+    owner():plySetPos(holoEntity(2):toWorld(vec(0,0,110)))
+    timer("force",1)
+    
+    holoEntity(1):soundPlay(0,0,"HL2Player.SprintStart")
+    holoEntity(1):soundPlay(0,0,"Player.Swim")
+    
+}
+
+if(holoEntity(4):pos():distance(owner():pos()) <=20 && Portal1 == 1 && Portal2 == 1){
+    
+    owner():plySetPos(holoEntity(1):toWorld(vec(0,0,110)))
+    timer("force2",1)
+        
+    holoEntity(2):soundPlay(0,0,"HL2Player.SprintStart")
+    holoEntity(2):soundPlay(0,0,"Player.Swim")
+    
+}
+
+if(clk("force")){
+  
+    interval(1)
+    owner():plyApplyForce(holoEntity(2):up()*5 + Vel/5)
+    
+}
+
+if(clk("force2")){
+
+    interval(1)
+    owner():plyApplyForce(holoEntity(1):up()*5 + Vel/5)
+
+}
+
+if(clk("fb")){
+    
+    holoPos(5, owner():aimPos())
+    holoEntity(5):soundPlay(0,0,"Airboat.FireGunHeavy")
+    soundPitch(5,randint(100,200))
+
+}
+
+if(clk("fb2")){
+    
+    holoPos(6, owner():aimPos())
+    holoEntity(5):soundPlay(0,0,"Airboat.FireGunHeavy")
+    soundPitch(5,randint(100,200))
+
+}
+
+        Vel = owner():vel()
+
+if(Portal1 == 1 && Portal2 == 1){
+    holoMaterial(3,"debug/env_cubemap_model")
+    holoMaterial(4,"debug/env_cubemap_model")
+}
+
+#[
+holoParent(1,Ett)
+holoParent(2,Ett2)
+
+
+

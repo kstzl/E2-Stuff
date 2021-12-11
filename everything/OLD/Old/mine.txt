@@ -1,0 +1,50 @@
+@name Mine
+@persist [ O ]:entity [ H DeadH ]:number
+
+interval(ops() / 45)
+
+if(first()){
+    
+    O = owner()
+    
+}
+
+if(changed(O:keyAttack2()) && O:keyAttack2() == 1){
+    
+    holoCreate(H)
+    holoModel(H, "models/props_combine/combine_mine01.mdl")
+    holoPos(H, O:aimPos())
+    holoEntity(H):soundPlay(H, 0, "NPC_CombineMine.ActiveLoop")
+    
+    lightCreate(H)
+    lightPos(H, holoEntity(H):pos() + vec(0, 0, 50))
+    lightColor(H, vec(255, 0, 0))
+    lightBrightness(H, 50)
+    lightDistance(H, 50)
+    
+    H += 1
+    
+}
+
+for(I = DeadH, H){
+    
+    Index = I - 1
+    
+    findByClass("player")
+    findSortByDistance(holoEntity(Index):pos())
+    Player = find()
+    
+    if(Player:pos():distance(holoEntity(Index):pos()) <= 50){
+        
+        Prop = propSpawn("models/props_phx/ball.mdl", 0)
+        Prop:setPos(holoEntity(Index):pos())
+        Prop:propBreak()
+        
+        holoDelete(Index)
+        
+        DeadH += 1
+    }
+    
+    holoAng(Index, holoEntity(Index):angles() + ang(0, 1, 0))
+    
+}

@@ -1,0 +1,10 @@
+@name Cours
+@inputs
+@outputs Lumiere:vector
+@persist I
+@trigger 
+
+interval(1)
+if(first()){ Lumiere = vec(0) }
+Lumiere = Lumiere + vec(sin(I)*15)
+I += 5

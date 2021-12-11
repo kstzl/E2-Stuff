@@ -1,0 +1,15 @@
+@name E2 Avion
+@inputs PodActive Vitesse
+@outputs Lum:vector VitesseBIP
+@persist 
+@trigger 
+
+if(PodActive == 1){
+entity():soundPlay(0,0,"Airboat_engine_start")
+Lum = vec(255,255,255)
+}
+
+if(PodActive == 0){
+   entity():soundPlay(0,0,"Airboat_engine_stop")
+Lum = vec(0,0,0)
+}

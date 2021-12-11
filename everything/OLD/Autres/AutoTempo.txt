@@ -1,0 +1,9 @@
+@name AutoTempo
+@inputs A
+@outputs Lum:vector
+@persist 
+@trigger 
+
+if(A == 1){
+    Lum = vec(0,0,255)
+}

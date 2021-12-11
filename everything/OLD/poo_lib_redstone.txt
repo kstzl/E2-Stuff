@@ -1,0 +1,88 @@
+@name POO_Lib_Redstone
+
+@persist [ PERF ]:number
+
+#include "POO_Lib"
+#include "fastlib"
+
+interval(1)
+
+if(first()){
+    A = poo_createObject("redstone_torch")
+    A:poo_setVector("Pos", entity():pos())
+    
+    B = poo_createObject("redstone_torch")
+    B:poo_setVector("Pos", entity():toWorld(vec(25 * 5, 0, 0)))
+}  
+
+
+if(owner():keyAttack2():change(1)){
+    
+    RAP = round((owner():aimPos()+owner():aimNormal())/25)*25
+    
+    NewRedstoneTorch = poo_createObject("redstone_dust")
+    NewRedstoneTorch:poo_setVector("Pos", RAP)
+    
+    
+}
+
+if(poo_init_("redstone_dust")){
+    
+    H = NewInitiedObject:poo_objectIndex()
+    
+    Pos = NewInitiedObject:poo_getVector("Pos")
+    
+    holoCreate(H)
+    holoScaleUnits(H, vec(25, 25, 1))
+    holoPos(H, Pos)
+    
+}
+
+if(ops() < 2500){
+
+    for(I = 0, POO_Objects:count()){
+        
+        Object = POO_Objects[I, table]
+        
+        if(Object:poo_init("redstone_torch")){
+            H = Object:poo_objectIndex()
+            H2 = Object:poo_objectIndex() + 1
+            
+            Pos = Object:poo_getVector("Pos")
+            
+            Object:poo_setNumber("Bn", 255)
+            Object:poo_setNumber("Powered", 1)
+            
+            holoCreate(H)
+            holoScaleUnits(H, vec(5, 5, 30))
+            holoColor(H, vec(150, 150, 0))
+            holoPos(H, Pos + vec(0, 0, 15))
+            
+            holoCreate(H2)
+            holoScaleUnits(H2, vec(5))
+            holoColor(H2, vec(255, 0, 0))
+            holoPos(H2, Pos + vec(0, 0, 32.5))
+        }
+        
+        if(Object:poo_loop("redstone_dust")){
+            
+            H = Object:poo_objectIndex()
+            
+            for(I = 0, POO_Objects:count()){
+                
+                Object2 = POO_Objects[I, table]
+                ObjectClass2 = Object2["ClassName", string]
+                
+                if(Object2:poo_getNumber("Powered") & Object:poo_getVector("Pos"):distance(Object2:poo_getVector("Pos")) < 28){
+                    Object:poo_setNumber("Powered", 1)
+                }
+                
+            }
+            
+            holoColor(H, vec(255 * Object:poo_getNumber("Powered"), 0, 0))
+            
+        }
+        
+    }
+
+}

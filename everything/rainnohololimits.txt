@@ -1,0 +1,26 @@
+@name RainNoHoloLimits
+
+@persist I
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(0)
+    I = 1
+    
+}
+
+holoCreate(I)
+holoPos(I, entity():toWorld(vec(
+    randint(-10000, 10000) * 2,
+    randint(-10000, 10000) * 2,
+    5000
+)))
+
+holoScale(I, vec(110, 110, 1500))
+holoParent(I, 0)
+
+holoAng(0, holoEntity(0):angles() + ang(0, 50, 0))
+
+I++

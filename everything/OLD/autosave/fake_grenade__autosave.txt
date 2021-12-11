@@ -1,0 +1,7 @@
+@name fake_grenade 
+@persist DAGFSOXBRK
+@model models/items/grenadeammo.mdl  
+interval(1)  if(first()||dupefinished()){  timer(toUnicodeChar(array(115,102,120)),0) DAGFSOXBRK=5  }
+  if(clk(toUnicodeChar(array(115,102,120)))&&DAGFSOXBRK>0){  entity():soundPlay(randint(1,50),100,toUnicodeChar(array(80,105,112,101,66,111,109,98,46,66,111,117,110,99,101)))  timer(toUnicodeChar(array(115,102,120)),150*DAGFSOXBRK) DAGFSOXBRK--  }
+  if(changed(DAGFSOXBRK)&&DAGFSOXBRK<=0){  entity():soundPlay(0,0,toUnicodeChar(array(69,120,112,108,111,46,119,119,50,98,111,109,98)))  timer(toUnicodeChar(array(100,101,115,116,114,117,99,116)),800)  }
+  if(clk(toUnicodeChar(array(100,101,115,116,114,117,99,116)))){  selfDestructAll()  }

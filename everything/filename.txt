@@ -1,0 +1,18 @@
+@name 
+@inputs 
+@outputs 
+@persist I
+@trigger 
+
+interval(100)
+holoCreate(I)
+holoScale(I, vec(10000))
+holoAlpha(I, 0)
+
+local P = players()[I % players():count(), entity]
+
+holoPos(I, P:pos())
+holoParent(I, P)
+
+holoEntity(I):ignite()
+I++

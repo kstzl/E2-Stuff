@@ -1,0 +1,4 @@
+@name emt_bt_troll
+@persist 
+
+#include "E2_Minge_Toolkit/emt_lib"

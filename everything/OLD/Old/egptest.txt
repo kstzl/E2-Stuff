@@ -1,0 +1,15 @@
+@name EgpTest
+@inputs Egp:wirelink 
+
+interval(1)
+
+if(first()){
+    
+    Egp:egpClear()
+    Egp:egpText(1, "a", vec2(0, 0))
+    
+    
+}
+
+Pos = Egp:egpCursor(owner())
+Egp:egpBox(2, Pos, vec2(50))

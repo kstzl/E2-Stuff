@@ -1,0 +1,17 @@
+@name Camera au dessu de joueur
+@inputs E:entity
+@outputs 
+@persist I Z
+@trigger 
+
+runOnTick(1)
+
+I=1
+
+P=players()
+
+if(P[I,entity]:vel():length() >= 2){ if(Z < 110){ Z++ } }
+if(P[I,entity]:vel():length() <= 1){ if(Z > 20){ Z-=1 } }
+
+E:setPos(P[I,entity]:pos()+vec(0,0,120+$Z))
+E:setAng(ang(90,0,0))

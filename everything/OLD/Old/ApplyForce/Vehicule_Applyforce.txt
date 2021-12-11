@@ -1,0 +1,10 @@
+@name Vehicule Applyforce
+@inputs A It:entity X Y Z 
+@outputs 
+@persist 
+@trigger 
+
+interval(1)
+if(A == 1){
+    It:applyForce(vec(X,Y,Z))
+}

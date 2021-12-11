@@ -1,0 +1,142 @@
+@name Cube3
+@persist [ P_SCALE P_ALPHA Delay I W W2 Flash Active Scale ]:number
+@persist [ P_POS Color ]:vector
+@persist [ Target ]:entity
+
+runOnTick(1)
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos()) 
+
+Target = find()
+Ranger = rangerOffset(3000, holoEntity(0):pos(), -holoEntity(0):up())
+
+function cubeStart(){
+    
+    #PARAMS#
+    P_SCALE = 500
+    Delay = 150
+    
+    Scale = 1 
+
+    entity():setAlpha(0)
+    
+    holoDeleteAll()
+    
+    holoCreate(0)
+    holoAlpha(0, 0)
+    holoEntity(0):soundPlay(0, 0, "d3_citadel.weapon_zapper_beam_loop1")
+    
+    holoCreate(1)
+    holoParent(1, 0)
+    
+    holoCreate(2)
+    holoMaterial(2, "models/props_combine/tpballglow")
+    holoParent(2, 0)
+    
+    holoCreate(3)
+    holoEntity(3):setTrails(500, 250, 5, "trails/electric", vec(255, 0, 255), 255)
+    holoAlpha(3, 0)
+    
+    
+}
+
+function moveCube(Entity:entity){
+    
+    holoAng(0, ang(0, (Entity:pos() - holoEntity(0):pos()):toAngle():yaw(), 0) )
+    holoPos(0, holoEntity(0):toWorld(vec(Delay * 1.5, 0, 0)))
+    holoPos(0, holoEntity(0):pos():setZ(Ranger:pos():z() + (Scale / 2) ) )
+    
+    holoEntity(0):soundPlay(0, 0, "Doors.FullOpen10")
+    
+}
+
+if(first()){
+    
+    cubeStart()
+    
+}
+
+holoPos(3, holoEntity(3):pos() + ( holoEntity(0):pos() - holoEntity(3):pos() ) )
+
+holoScaleUnits(1, vec(Scale))
+holoScaleUnits(2, vec( Scale * 1.05) )
+
+holoColor(1, Color + (vec(255, 0, 255) * Flash) )
+holoColor(2, Color)
+
+if(Scale >= P_SCALE){
+    
+    if(Active == 0){
+        
+        soundStop(0)
+        holoEntity(0):soundPlay(0, 0, "Doors.FullOpen10")
+        
+        
+        #[
+        propSpawnEffect(0)
+        P = propSpawn("models/props_c17/oildrum001_explosive.mdl", 1)
+        P:setAlpha(0)
+        P:setPos(holoEntity(0):pos())
+        P:propBreak()
+        ]#
+        
+              
+    }
+    
+    Active = 1
+    
+}
+else
+{
+    P_POS = (entity():pos() + vec(0, 0, Scale * 2)):setZ(Ranger:pos():z() + (P_SCALE / 2) )
+
+    holoPos(0, holoEntity(0):pos() + ( P_POS - holoEntity(0):pos() ) / 25 )
+
+    if(W >= 6000){
+        
+        holoPos(3, holoEntity(0):pos() + vec(randint(-Scale, Scale), randint(-Scale, Scale), randint(-Scale, Scale)) * 10)
+        
+        Flash = 1
+        
+        W = 0
+        
+    }
+    
+    W += Scale
+    Scale += 0.5
+    
+}
+
+if(Flash > 0){
+    
+    Flash -= 0.1
+    
+}
+
+if(Active == 1){
+    
+    Color = vec(255, 0, abs( sin( I ) * 255 ) )
+    
+    if(W2 >= Delay){
+        
+        moveCube(Target)
+        
+        W2 = 0
+           
+    }
+    
+    W2 += 1
+
+}
+else
+{
+    Color = vec(0)
+    
+    holoAng(0, ang(I * (Scale / 150 )) )
+    soundPitch(0, Scale / 10)
+    
+}
+
+I += 1
+

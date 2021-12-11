@@ -1,0 +1,12 @@
+@name  Apply Force
+@inputs Entity:entity
+@outputs 
+@persist 
+@trigger 
+
+Entity = entity():isWeldedTo()
+
+runOnTick(1)
+
+
+    Entity:applyForce(-Entity:forward()*Entity:mass()*999)

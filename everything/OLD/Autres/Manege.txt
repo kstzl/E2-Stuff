@@ -1,0 +1,38 @@
+@name Manege
+@inputs Button
+@outputs Thruster_One Thruster_Two T1 T2 Spark
+@persist Running
+@trigger 
+
+
+if(Button & ~Button){
+    if(!Running){
+        timer("first_step", 10000)
+        Thruster_One = 1
+        T1 = 0
+        Spark = 1
+        Running = 1
+    }
+    else{
+        Thruster_One = 0
+        Thruster_Two = 0
+        stoptimer("first_step")
+        stoptimer("second_step")
+    }
+}
+
+if(clk("first_step")){
+    Thruster_One = 0
+    Thruster_Two = 1
+    T1 = 1
+    T2 = 0
+    timer("second_step", 10000)
+}
+
+
+if(clk("second_step")){
+    Thruster_Two = 0
+    Running = 0
+    T2 = 1
+    Spark = 0
+}

@@ -1,0 +1,281 @@
+@name Machine qui tue blablabla
+@inputs EGP:wirelink User:entity Damage
+@outputs SaveEntity:entity On Reset ChipFound Ignite1
+@persist Ignite Ignite1 Death1 Blind Blind1 Random Damage1 A Fly Test Die ChipFound ReCheck Distance Implanted SaveEntity:entity KeyG 
+@trigger 
+runOnTick(1)
+
+if(first()|dupefinished())
+{
+On = 1
+EGP:egpClear()    
+Random = 0
+
+}
+
+
+
+Cursor = EGP:egpCursor(User)
+
+function number button (Num)
+{
+ULC = EGP:egpPos(Num)-EGP:egpSize(Num)
+BLC = EGP:egpPos(Num)+EGP:egpSize(Num)
+
+return inrange(Cursor,ULC,BLC)    
+}
+
+Distance = owner():pos():distance(owner():aimEntity():pos())
+
+#this lets the player implant the chip
+if(!Implanted&owner():keyAttack2())
+{
+Implanted = 1
+SaveEntity = owner()
+print("Chip implanted inside: ")
+Reset = 1
+Death1 = 1
+timer("Reset",100)
+timer("Death",1000)
+printColor(vec(155,255,0),SaveEntity:name())
+
+    
+    
+}
+
+if(owner():keyPressed("G")&!KeyG)
+{
+KeyG = 1
+timer("KeyG",500)
+print("Chip inside: ")
+printColor(vec(155,255,0),SaveEntity:name())
+
+   
+}
+
+if(clk("KeyG"))
+{
+KeyG = 0   
+}
+
+
+
+#EGP Stuff
+
+if(!SaveEntity:isValid()&!ChipFound)
+{
+    EGP:egpRoundedBox(1,vec2(250,50),vec2(250,50))
+    EGP:egpColor(2,vec(0,0,0))
+    EGP:egpSize(2,25)
+    
+    EGP:egpCircle(3,vec2(250,300),vec2(100,100))
+    EGP:egpColor(3,vec(255,255,255))
+    if(!ReCheck)
+    {
+        EGP:egpText(2,"Implant the Chip!",vec2(160,40))
+        EGP:egpMaterial(3,"vgui/notices/error")
+    }
+}
+elseif(SaveEntity:isValid()&clk("ReCheck")&!ChipFound)
+{
+    
+        EGP:egpText(2,"Chip found!",vec2(180,40))
+        EGP:egpMaterial(3,"vgui/notices/generic")
+        timer("chipfound",2000)
+    
+}
+
+if(ChipFound)
+{
+
+#EGP STUFF WOW
+
+EGP:egpRoundedBox(1,vec2(250,50),vec2(350,50))
+EGP:egpText(2,"Now you have control!",vec2(130,40))
+EGP:egpColor(2,vec(0,0,0))
+EGP:egpSize(2,25)    
+
+EGP:egpRoundedBox(3,vec2(150,150),vec2(150,50))    
+EGP:egpText(4,"Fly",vec2(130,140))
+EGP:egpColor(4,vec(0,0,0))
+EGP:egpSize(4,25)      
+
+EGP:egpRoundedBox(5,vec2(350,150),vec2(150,50))    
+EGP:egpText(6,"Die",vec2(330,140))
+EGP:egpColor(6,vec(0,0,0))
+EGP:egpSize(6,25)    
+
+EGP:egpRoundedBox(7,vec2(350,250),vec2(150,50))    
+EGP:egpText(8,"Blind",vec2(320,240))
+EGP:egpColor(8,vec(0,0,0))
+EGP:egpSize(8,25)    
+
+EGP:egpRoundedBox(9,vec2(150,250),vec2(150,50))    
+EGP:egpText(10,"Ignite",vec2(120,240))
+EGP:egpColor(10,vec(0,0,0))
+EGP:egpSize(10,25)    
+
+  
+
+   
+EGP:egpRoundedBox(99,vec2(250,450),vec2(350,50))
+EGP:egpText(100,"Destroy the Chip",vec2(150,440))
+EGP:egpColor(100,vec(0,0,0))
+EGP:egpSize(100,30) 
+
+
+#When the chip is destroyed
+
+if(changed(SaveEntity:deaths())&!Death1)
+{
+timer("Death",500)
+SaveEntity = findPlayerByName("::::::::THISSHOULDCLEARSAVEENTITY:::::::::")#
+ChipFound = 0
+Implanted = 0
+print("The Chip got destroyed!")
+print("Cause: death!")
+}
+
+if(Damage&!Damage1)
+{
+Damage1 = 1
+Random = random(100)
+
+if(Random <= 10)
+{
+SaveEntity = findPlayerByName("::::::::THISSHOULDCLEARSAVEENTITY:::::::::")
+ChipFound = 0
+Implanted = 0
+print("The Chip got destroyed!")
+print("Cause: too much damage!")
+EGP:egpClear()    
+}
+timer("RESET",1000)
+Reset = 1
+
+ 
+}
+#Some other stuff
+
+if(Blind1)
+{
+holoPos(1,SaveEntity:pos()+vec(0,0,65))
+}
+
+#ALL THE BUTTONS and the not so exciting timers
+
+if(button(3)&!Fly)
+{
+EGP:egpColor(3,vec(0,255,0))
+Fly = 1
+timer("Fly",500)  
+propSpawn("models/hunter/misc/shell2x2a.mdl",SaveEntity:pos(),ang(0,0,0),1):setAlpha(0)
+  
+}
+
+if(button(5)&!Die)
+{
+Die = 1
+timer("Die",500) 
+EGP:egpColor(4,vec(0,255,0))
+propSpawn("models/props_phx/ww2bomb.mdl",SaveEntity:pos()-vec(0,0,10),ang(0,0,0),1):propBreak()
+    
+}
+
+if(button(7)&!Blind&!Blind1)
+{
+Blind = 1
+Blind1 = 1
+timer("Blind",1000)
+holoCreate(1,SaveEntity:pos()+vec(0,0,65),vec(-2,-2,-2))
+holoColor(1,vec(0,0,0))
+EGP:egpColor(7,vec(0,255,0))
+}
+
+if(button(7)&!Blind&Blind1)
+{
+Blind = 1
+Blind1 = 0
+timer("Blind",1000)
+holoDeleteAll()
+EGP:egpColor(7,vec(255,255,255))
+}
+
+if(button(9)&!Ignite1)
+{
+Ignite=1
+propSpawn("models/props_junk/MetalBucket02a.mdl",entity():pos()+vec(0,-10,-10),1):setPos(SaveEntity:pos()+vec(0,0,50))
+
+    
+}
+
+
+
+if(button(99))
+{
+EGP:egpColor(99,vec(255,0,0))
+print("The Chip got destroyed!")
+reset()
+    
+}
+
+
+#oh look... some timers... HEY OVER THERE IS SOMETHING MORE EXCITING
+if(clk("Fly"))
+{
+Fly = 0
+EGP:egpColor(3,vec(255,255,255))
+propDeleteAll()    
+}
+
+if(clk("Die"))
+{
+Die = 0
+EGP:egpColor(4,vec(255,255,255))
+propDeleteAll()    
+}
+if(clk("RESET"))
+{
+Reset = 0
+Damage1 = 0
+}
+if(clk("Blind"))
+{
+Blind = 0
+}
+if(clk("Death"))
+{
+Death1 = 0
+}
+if(clk("Ignite"))
+{
+Ignite1 = 0
+EGP:egpColor(9,vec(255,255,255))
+propDeleteAll()
+}
+
+
+}
+
+
+# recheck button and timers
+
+if(button(3)&!ReCheck&!ChipFound)
+{
+ReCheck = 1
+EGP:egpText(2,"Searching for a Chip...",vec2(140,40))
+EGP:egpMaterial(3,"vgui/notices/hint")
+timer("ReCheck",1500)
+}
+
+
+if(clk("ReCheck"))
+{
+ReCheck = 0  
+}
+
+if(clk("chipfound"))
+{
+EGP:egpClear()
+ChipFound = 1    
+}

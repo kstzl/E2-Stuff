@@ -1,0 +1,29 @@
+@name glados_morality_core_base
+@persist [ CORE_CONNECTED ]:number
+@model models/props_bts/glados_ball_reference.mdl
+
+interval(1)
+
+if(first() || dupefinished()){
+    
+    dsJoinGroup("glados")
+    entity():soundPlay(0, 0, "k_lab.printer")
+    
+    timer("positive", 0)
+    
+    CORE_CONNECTED = 1
+    
+}
+
+if(clk("positive")){
+    
+    if(CORE_CONNECTED){
+        
+        dsSend("positive", "glados", randint(1, 2))
+        print("Sending ..")
+        
+    }
+    
+    timer("positive", randint(500, 1000))
+    
+}

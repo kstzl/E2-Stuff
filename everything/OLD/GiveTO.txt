@@ -1,0 +1,19 @@
+@name GiveTO
+@inputs 
+@outputs 
+@persist Target:entity
+@trigger 
+
+ runOnTick(1)
+ runOnChat(1)
+
+ if (chatClk(owner())) {
+    M = lastSaid():explode(" ")
+
+ if (M:string(1) == "-giveto") {
+    
+        Target = findPlayerByName(M:string(2))
+        owner():aimEntity():setPos(Target:toWorld(vec(55, 0, 0)))
+        
+ }
+ }

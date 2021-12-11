@@ -1,0 +1,46 @@
+@name blockchain
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+
+function table createBlock(Index, Time, Data:string, PreviousHash){
+    
+    return table(
+        "index"             = Index,
+        "time"              = Time,
+        "data"              = Data,
+        "previous_hash"     = PreviousHash
+    )
+       
+}
+
+function number table:getHash(){
+    
+    return hash(This["index", number]:toString() + This["time", number]:toString() + This["data", string] + This["previous_hash", number]:toString())
+       
+}
+
+
+
+function table createBlockchain(){
+    
+    return table(
+        
+        #Creating the Genesis Block
+        "chain" = table( createBlock(0, 0, "Genesis Block", 0) )
+        
+    )
+    
+}
+
+function table table:getLatestBlock(){
+    
+    return This["chain", table][This["chain", table]:count(), table]
+       
+}
+
+
+BC = createBlockchain()
+printTable(BC:getLatestBlock())

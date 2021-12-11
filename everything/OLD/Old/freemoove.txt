@@ -1,0 +1,36 @@
+@name FreeMoove
+@persist Active Key Key2 Vec:vector
+
+runOnTick(1)
+
+if(first()){
+    
+    Vec = owner():pos()
+    
+    entity():setName("e2 voiture")
+    
+    holoCreate(1)
+    holoAlpha(1, 0)
+    
+}
+
+Key = owner():keyUse()
+Key2 = owner():keyPressed("m")
+
+if(Key){
+    
+    Vec = holoEntity(1):toWorld(vec(100, 0, 0))
+       
+}
+
+if(changed(Key2) && Key2 == 1){
+    Active = !Active
+    
+    print("Active : " + Active)
+}
+
+if(Active){
+    owner():plySetPos( owner():pos() + (Vec - owner():pos()) / 2)
+}
+holoPos(1, owner():pos())
+holoAng(1, owner():eye():toAngle())

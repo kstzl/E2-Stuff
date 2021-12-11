@@ -1,0 +1,64 @@
+@name DoorTest
+@persist [ Ent ]:entity [ Open M ]
+
+interval(1)
+
+if(first()){
+    
+    Ent = entity()
+    
+    holoCreate(0)
+    holoParent(0, entity())
+    holoAlpha(0, 0)
+    
+    Ent = holoEntity(0)
+    
+    holoCreate(1)
+    holoModel(1, "models/props_doors/door03_slotted_left.mdl")
+
+    holoCreate(2)
+    holoModel(2, "models/props_doors/door03_slotted_left.mdl")
+    
+    Open = 0
+    
+}
+
+holoPos(1, Ent:toWorld(vec(-M, -1, 50)))
+holoPos(2, Ent:toWorld(vec(M, 1, 50)))
+holoAng(1, Ent:angles() + ang(0, 90, 0))
+holoAng(2, Ent:angles() + ang(0, 90, 0))
+
+
+if(changed(Open) && Open == 0){
+    
+    holoEntity(0):soundPlay(1, 0, "Doors.Move12")
+    
+}
+if(changed(Open) && Open == 1){
+    
+    holoEntity(0):soundPlay(1, 0, "Doors.Move12")
+    
+}
+
+if(Open == 0){
+    
+    if(M > 0){ M -= 1 }else{ SFXfull = 1 }
+    
+}
+else
+{
+    if(M < 50){ M += 1 }else{ SFXfull = 1 }
+    
+}
+
+if(changed(SFXfull) && SFXfull == 1){
+    
+    holoEntity(0):soundPlay(1, 0, "Doors.FullOpen7")
+    
+}
+
+findByClass("player")
+findSortByDistance(Ent:pos())
+Dist = find():pos():distance(Ent:pos())
+
+Open = (Dist < 100)

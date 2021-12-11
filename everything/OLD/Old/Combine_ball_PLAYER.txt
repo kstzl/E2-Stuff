@@ -1,0 +1,39 @@
+@name Combine ball PLAYER
+@inputs 
+@outputs 
+@persist I A:array T:entity
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){ T = findPlayerByName("gui") }
+
+ Weapon = owner():weapon():type()
+
+ if (Weapon == "weapon_ar2"){
+    Class = "prop_combine_ball"
+ }
+ elseif(Weapon == "weapon_frag"){
+    Class = "npc_grenade_frag"
+ }
+ else{
+    Class = "energy_pulse"
+ }
+
+ A=findToArray()
+ I=0
+
+ if(changed(owner():keyUse()) && owner():keyUse() == 1){ T=owner():aimEntity() print(T) }
+
+ findByClass(Class)
+
+ while(I < A:count()){
+        I++
+        RD=randint(0,5)
+        
+        if(RD == 2 || 3){
+        A[I,entity]:setPos(T:pos()+vec(0,0,randint(-5,5)))
+        }
+        else{ A[I,entity]:setPos(vec(randint(-90,90),randint(-90,90),randint(-90,90))) }
+ }
+ 

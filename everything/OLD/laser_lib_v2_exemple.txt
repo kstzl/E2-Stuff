@@ -1,0 +1,24 @@
+@name laser_lib_v2_exemple
+@inputs 
+@outputs 
+@persist Plys:array
+@trigger 
+
+#include "laser_projeact2/laser_lib_v2"
+
+interval(1)
+
+if(first()){
+    
+    Plys = players()
+    
+    foreach(K, Player:entity = Plys){
+        lb_create(K)
+        lb_color(K, vec(255), 255)
+    }
+    
+}
+
+foreach(K, Player:entity = Plys){
+    lb_pos(K, entity():pos(), Player:pos())
+}

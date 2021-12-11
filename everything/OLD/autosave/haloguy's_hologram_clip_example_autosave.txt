@@ -1,0 +1,72 @@
+@name Haloguy's Hologram Clip Example
+@inputs
+@outputs
+@persist Pos:vector Dist
+@trigger
+#Haloguy's Hologram Clip Example
+interval(10)
+ 
+if (first()) {
+    #create plate 1
+    holoCreate(1)
+    holoScaleUnits(1,vec(50,50,1))
+ 
+    #create plate 2
+    holoCreate(2)
+    holoScaleUnits(2,vec(50,50,1))
+ 
+    #spawn the cube
+    holoCreate(3)
+ 
+    #turn on clipping for the cube
+    holoClipEnabled(3,1)
+ 
+    #assign a distance between the two plates
+    Dist=25
+ 
+    #position and angle the plates
+    holoPos(1,entity():pos()+vec( Dist,0,0))
+    holoAng(1,ang()+ang(90,0,0))
+    holoPos(2,entity():pos()+vec(-Dist,0,0))
+    holoAng(2,ang()+ang(90,0,0))
+    Pos=entity():pos()
+    holoAng(3,ang())
+}
+ 
+#position our cube hologram
+holoPos(3,entity():pos())
+ 
+#check if the X of our cube is greater then our initial X pos
+if (holoEntity(3):pos():x()>Pos:x()) {
+    #switch the clipping plane
+    holoClip(3,holoEntity(1):pos(),holoEntity(1):up(),1)
+}
+ 
+#check if the X of our cube is less then our initial X pos
+if (holoEntity(3):pos():x()<Pos:x()) {
+    #switch the clipping plane
+    holoClip(3,holoEntity(2):pos(),holoEntity(2):up()*-1,1)
+}
+ 
+#Is the cube between the two plates? If so then enable clipping
+if (inrange(holoEntity(3):pos(),Pos-vec(Dist+10,25,25),Pos+vec(Dist+10,25,25))) {
+    holoClipEnabled(3,1)
+} else {
+    holoClipEnabled(3,0)
+}
+ 
+#Tips:
+#You can only clip a hologram once at a time.
+#When you execute holoClip, your assigning a plane in the world is the last argument is set to 1
+#Imagine a flat plane
+#holoClip(Index, Plane center pos, Plane Directional Vector, Global?)
+#first we give it the index of the hologram we want to clip
+#then we give it the center of the imaginary clipping plane
+#next we give it a direction that the place will cut in
+#finally, we ask if the plane is local to the chip or global to the world
+#holoClipEnabled(Index, 1/0) will turn on clipping if true, or stop clipping if false
+#When you use holoClip, remember that you only have to assign it once, the clipping plane will remain there until the chip is reloaded,delted, or you change it again
+ 
+ 
+ 
+#Haloguy's Hologram Clip Example

@@ -1,0 +1,141 @@
+@name ToolgunMinge
+@persist [ AimPoss Poss AimAngg Models ]:array [ Walk I I2 RD ]:number [ Target ]:entity [ Alpha ]:number
+
+interval(1)
+
+#include "E2_Minge_Toolkit/emt_lib"
+
+function flash(A_:vector, B_:vector){
+    
+    Dist = A_:distance(B_)
+    Alpha = 255
+    
+    findIncludePlayerProps(Target)
+    findByClass("prop_*")
+    Props = findToArray()
+    
+    local Model = ""
+    
+    if(Props:count() > 0){
+        
+        Model = Props[randint(0, Props:count()), entity]:model()
+        
+        if(Model == ""){
+            
+            Model = Models[randint(0, Models:count()), string]
+            
+        }
+        
+    }
+    else
+    {
+        Model = Models[randint(0, Models:count()), string]
+    }
+
+    
+    holoPos(0, A_ + (B_ - A_) / 2 )
+    holoAng(0, (B_ - A_):toAngle() + ang(90, 0, 0))
+    holoEntity(0):soundPlay(0, 0, "Airboat.FireGunRevDown")
+    
+    holoScaleUnits(0, vec(2, 2, Dist))
+    
+    holoCreate(I)
+    holoModel(I, Model)
+    holoPos(I, B_)
+    holoScale(I, vec(1))
+    holoDelete(I - 10)
+    
+    holoAng(I, AimAngg[I2 - 50 - RD, angle])
+    
+    findByClass("prop_*")
+    findSortByDistance(B_)
+    holoParent(I, find())
+    
+    I += 1
+    
+}
+
+
+if(first()){
+    
+    Target = findPlayerByName("A sna")
+    I = 3 + 10
+    
+    Models[0, string] = "models/props_building_details/Storefront_Template001a_Bars.mdl"
+    Models[1, string] = "models/props_c17/fence01b.mdl"
+    Models[2, string] = "models/props_c17/fence01a.mdl"
+    Models[3, string] = "models/props_junk/TrafficCone001a.mdl"
+    Models[4, string] = "models/props_junk/watermelon01.mdl"
+    Models[5, string] = "models/props_lab/workspace003.mdl"
+    Models[6, string] = "models/maxofs2d/button_03.mdl"
+    Models[7, string] = "models/maxofs2d/thruster_projector.mdl"
+    Models[8, string] = "models/props_phx/construct/metal_wire1x1x1.mdl"
+    Models[9, string] = "models/props_phx/construct/metal_plate_curve360x2.mdl"
+    Models[10, string] = "models/props_phx/construct/metal_plate2x2.mdl"
+    
+    RD = 0
+    
+    holoCreate(0)
+    holoModel(0, "hqcylinder")
+    holoMaterial(0, "models/alyx/emptool_glow")
+    
+    holoCreate(1)
+    holoModel(1, "models/Police.mdl")
+    holoAnim(1, "pistolidle1")
+    
+    timer("flash", 0)
+}
+
+if(clk("flash")){
+    
+    if(Walk == 0){
+        
+        Pos = Target:aimPos()
+        
+        flash(holoEntity(1):toWorld(vec(0, 0, 50)), Pos)
+    
+    }
+    timer("flash", randint(1, 1000))
+    
+}
+
+if(Walk == 0){
+    
+    holoAng(1, ( Target:aimPos() - holoEntity(1):pos() ):toAngle():setPitch(0))
+    
+}
+else
+{
+    holoAng(1, ( Target:pos() - holoEntity(1):pos() ):toAngle():setPitch(0))
+}
+
+Ranger = rangerOffset(3000, holoEntity(1):toWorld(vec(0, 0, 50)), -holoEntity(1):up())
+Alpha *= 0.9
+Dist2 = Target:pos():distance(holoEntity(1):pos())
+if(Dist2 > 200){
+    
+    if(Walk < 1){ Walk += 0.1 }
+    
+}
+else
+{
+    Walk = 0
+    
+}
+
+if(changed(Walk) && Walk == 0){ holoAnim(1, "man_gun") }
+if(changed(Walk) && Walk*5 > 1){ holoAnim(1, "run_all") }
+
+holoAlpha(0, Alpha)
+
+if(Walk == 1){
+    
+    holoPos(1, (holoEntity(1):pos() + ( Poss[I2 - 50 - RD, vector] - holoEntity(1):pos() ) / 15):setZ(Poss[I2 - 50 - RD, vector]:z()) )
+    
+}
+Poss[I2, vector] = Target:pos()
+AimPoss[I2, vector] = Target:aimPos()
+AimAngg[I2, angle] = Target:aimNormal():toAngle() + ang(90, 0, 0)
+I2 += 1
+
+

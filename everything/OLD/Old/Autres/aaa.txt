@@ -1,0 +1,10 @@
+@name ApplyAngForce
+@inputs E:entity
+@outputs 
+@persist 
+@trigger 
+
+runOnTick(1)
+E:applyForce(vec(0,0,50)*E:mass()*5)
+
+

@@ -1,0 +1,16 @@
+@name NPC
+@inputs E:entity 
+@outputs 
+@persist 
+@trigger 
+
+interval(100)
+
+    findByClass("player")
+    findSortByDistance(entity():pos())
+    
+    if(E){
+    entity():setPos(E:pos())
+}
+
+E:npcGoRun(find():pos())

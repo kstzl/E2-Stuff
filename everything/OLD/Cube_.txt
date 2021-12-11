@@ -1,0 +1,11 @@
+@name Cube 
+@inputs 
+@outputs 
+@persist Ang
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){ holoCreate(1) holoModel(1,"models/props_phx/construct/wood/wood_dome360.mdl") holoScale(1,vec(330)) holoColor(1,vec(0,0,255)) holoParent(1,entity()) }
+              holoAng(1,ang(0,Ang,0))
+                              Ang++

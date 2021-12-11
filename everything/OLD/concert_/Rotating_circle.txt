@@ -1,0 +1,19 @@
+@name Rotating circle
+@inputs 
+@outputs 
+@persist Ang
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+holoCreate(1)
+holoModel(1,"models/props_phx/construct/metal_plate_curve360x2.mdl")
+holoScale(1,vec(90))
+holoMaterial(1,"models/vortigaunt/pupil")
+holoParent(1,entity())
+holoColor(1,vec(255))
+}
+
+entity():setAng(ang(0,Ang,0))
+                      Ang+=0.1

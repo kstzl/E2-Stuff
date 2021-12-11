@@ -1,0 +1,44 @@
+@name ChenilleTroll
+@persist [ Target ]:entity [ Objects ]:table
+
+interval(1)
+
+if(first()){
+    
+    Target = findPlayerByName("GBrace")
+    
+    holoCreate(-1)
+    holoAlpha(-1, 0)
+    
+    for(I = 0, 20){
+        
+        holoCreate(I)
+        holoScaleUnits(I, vec(15))
+        
+        Objects:pushTable(table(
+        "Self" = I,
+        "Target" = I-1
+        ))
+        
+    }
+
+    
+}
+
+for(I = 0, Objects:count()){
+    
+    Object = Objects[I, table]
+    
+    if( holoEntity(Object["Self", number]):pos():distance( holoEntity(Object["Target", number]):pos()) > 15){
+        
+        SH = Object["Self", number]
+        TH = Object["Target", number]
+        
+        holoPos(SH, holoEntity(SH):pos() + ( holoEntity(TH):pos() - holoEntity(SH):pos() ) / 5 )
+        holoAng(SH, ( holoEntity(SH):pos() - holoEntity(TH):pos() ):toAngle() )
+        
+    }
+    
+}
+
+holoPos(-1, Target:toWorld(vec(30, 0, 0)))

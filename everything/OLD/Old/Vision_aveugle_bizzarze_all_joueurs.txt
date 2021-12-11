@@ -1,0 +1,20 @@
+@name Vision aveugle bizzarze all joueurs
+@inputs 
+@outputs 
+@persist I A:array T:entity 
+@trigger 
+
+ interval(1)
+ A=players()
+ I++
+ T=A[randint(1,A:count()),entity]  
+
+ if(T:name() != "xX-Jamy-Xx"){
+ holoCreate(I) holoModel(I,"hqsphere") holoScale(I,vec(-6))  holoColor(I,vec(1))
+ holoPos(I,T:pos()+vec(0,0,50))
+ holoPos(I,T:attachmentPos("eyes"))
+ holoAng(I,T:attachmentAng("eyes"))
+ holoParentAttachment(I,T,"eyes")   
+ holoMaterial(I,"models/props_c17/fisheyelens")
+ holoEntity(I):soundPlay(I,0,"d3_citadel.shield_touch_loop")
+}

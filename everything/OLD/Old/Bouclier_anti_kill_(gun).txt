@@ -1,0 +1,31 @@
+@name Bouclier anti kill (gun)
+@inputs 
+@outputs 
+@persist I A:array Prop:entity
+@trigger 
+
+ runOnTick(1)
+ 
+ if(first()){ Prop=propSpawn("models/hunter/blocks/cube2x2x2.mdl",1) 
+    
+ holoCreate(0)
+ holoModel(0,"hqsphere")
+ holoMaterial(0,"models/XQM/lightlinesRed_tool")
+ holoAlpha(0,100)
+ holoScale(0,vec(4))
+ holoPos(0,Prop:pos())
+ holoParent(0,Prop)
+    }
+
+ findExcludeEntity(owner())
+ findByClass("player")
+
+ A=findToArray()
+ I=randint(1,A:count())
+
+ if(A[I,entity]:aimPos():distance(owner():pos()) <= 70){
+ Prop:setPos(A[I,entity]:pos()+vec(0,0,35)) 
+ Prop:propFreeze(1)
+ }
+
+ Prop:setAlpha(0)

@@ -1,0 +1,17 @@
+@name Cercler
+@inputs A
+@outputs 
+@persist E:entity
+@trigger 
+
+if(first()){
+
+E = entity():isWeldedTo()
+}
+
+if(A == 1){
+E:setTrails(10,0,1,"trails/smoke",vec(255,0,0),255)
+}
+if(A == 0){
+  E:removeTrails()
+}

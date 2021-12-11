@@ -1,0 +1,64 @@
+@name ProWelder
+@inputs 
+@outputs 
+@persist W EW1:entity EW2:entity NB
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+
+    holoCreate(1)
+    holoPos(1,owner():pos())
+    holoAlpha(1,0)
+    
+}
+
+if(owner():keyAttack2()){
+Weld=1
+}
+    if(owner():keyPressed("x")){
+    
+    soundPitch(1,120)
+    holoEntity(1):soundPlay(1,3,"Airboat.FireGunRevDown")
+    print("ok")
+    selfDestructAll()
+        
+    }
+
+if(changed(Weld) && Weld == 1){
+    W+=1
+    NB+=2
+    holoEntity(1):soundPlay(1,3,"Airboat.FireGunRevDown")
+    
+    if(W == 1){
+
+    EW1=owner():aimEntity()
+    
+    holoCreate(NB)
+    holoScale(NB,vec(1.1,1.1,1.1))
+    holoColor(NB,vec(255,0,0))
+    holoModel(NB,EW1:model())
+    holoPos(NB,EW1:pos())
+    holoAlpha(NB,100)
+    holoParent(NB,EW1)
+    holoAng(NB,EW1:angles())
+      
+    }
+    if(W >= 2){
+        
+    EW2=owner():aimEntity()
+    weld(EW1,EW2)
+    
+    holoCreate(NB)
+    holoScale(NB,vec(1.1,1.1,1.1))
+    holoColor(NB,vec(255,255,0))
+    holoModel(NB,EW2:model())
+    holoPos(NB,EW2:pos())
+    holoAlpha(NB,100)
+    holoParent(NB,EW2)
+    holoAng(NB,EW2:angles())
+    
+    }
+}
+

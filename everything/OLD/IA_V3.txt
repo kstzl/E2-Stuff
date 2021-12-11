@@ -1,0 +1,62 @@
+@name IA_V3
+@persist Max T Pos:vector P:array [Target Prop]:entity
+
+interval(1)
+
+function create_holos(){
+    
+    Max = 35
+    
+    for(I = 0, Max){
+        
+        holoCreate(I)
+        holoModel(I, "models/hunter/blocks/cube075x075x075.mdl")
+ 
+    }
+    
+}
+
+function reload_holos(){
+    
+    findByClass("player")
+    findSortByDistance(holoEntity(0):pos())
+    Target = find()
+
+    holoPos(0, holoEntity(0):toWorld(vec(15, 0, 0)))
+    holoAng(0, (find():pos() - holoEntity(0):pos()):toAngle() + ang(sin(T)*50, 0, 0))
+    holoAlpha(0, 0)
+    
+    for(I = 1, Max){
+        
+            Pos = holoEntity(I - 1):pos() + vec(0, 0, 0)
+
+            Ang = ang(0, 0, I*15 +  T)
+            holoPos(I, holoEntity(I):pos() + ( Pos - holoEntity(I):pos() ) / 3 )
+            holoAng(1 + I-1, (holoEntity(I):pos() - holoEntity(I-1):pos()):toAngle() + Ang)
+            holoColor(I, vec(abs(sin(T*I)*255), 0, 0))
+        
+    }
+    
+}
+
+if(first()){
+    
+    holoCreate(-1)
+    holoScaleUnits(-1, vec(500, 500, 0.1))
+    holoMaterial(-1, "models/effects/portalrift_sheet")
+    
+    Prop = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    
+    create_holos()
+    
+}
+
+reload_holos()
+T += 5
+Prop:setAlpha(0)
+Prop:applyAngForce(ang(1,1,701)*Prop:mass()*30)
+Prop:setPos(holoEntity(0):pos())
+
+holoPos(-1, holoEntity(0):pos())
+
+holoAng(-1, (Target:pos() - holoEntity(-1):pos()):toAngle() + ang(90, 0, 0))

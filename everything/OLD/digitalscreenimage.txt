@@ -1,0 +1,70 @@
+@name DigitalScreenImage
+@inputs DS:wirelink
+@persist Res X Y I Code:string Readed
+
+interval(1)
+runOnFile(1)
+
+if(first() || dupefinished()){
+    
+    fileLoad("egp.txt")
+
+    Res = 64
+    
+    function wirelink:initScreen(Res){
+        
+        This[1048574] = 0 #Reset Screen and whatever was on it will be cleared.
+        This[1048569] = 3 #Set color mode to 3
+        This[1048575] = 1 #Apply changes
+        This[1048572] = Res #Set new resolution on Y (Height)
+        This[1048573] = Res #Set new resolution on X (Width)
+    }  
+    
+    function wirelink:drawPixel(X,Y,Color:vector,Res){
+        
+        This[X + Y * Res] = rgb2digi(Color, 3)
+        
+    }
+    
+    X = -1
+    
+    DS:initScreen(Res)
+
+}
+
+if(fileClk() && fileLoaded()){
+    
+    Code = fileRead()
+    Readed = 1
+    
+    print("File Ok")
+       
+}
+
+if(Readed){
+
+    if(I <= (Res * Res) ){
+        
+        Ex1 = Code:explode("|")
+        Colors = Ex1[I, string]
+        R = Colors:explode(",")[1, string]:toNumber()
+        G = Colors:explode(",")[2, string]:toNumber()
+        B = Colors:explode(",")[3, string]:toNumber()
+        
+        DS:drawPixel(X, Y, vec(R, G, B), Res)
+        
+        if(X < Res){
+            
+            X++
+            
+        }
+        else
+        {
+            X = 1
+            Y++
+        }
+        
+        I+=1
+        
+    }
+}

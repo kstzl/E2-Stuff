@@ -1,0 +1,152 @@
+@name MapGenerator
+@inputs 
+@outputs 
+@persist Line B X Y Z OK MapZ Zok ZTime Random1 Random2 Arbre MaxX MaxY Zmin Zmax TreeRandom TreePercent WTime WaterCenter Arbre2
+@trigger
+
+## By k3 ##
+
+interval(ops())
+
+
+#### Config #####
+Random1 = 190
+Random2 = 610
+
+#Map size
+MaxX = 15
+MaxY = 15
+# # # # #
+
+
+Zmin = 0.5
+Zmax = 10.2
+
+TreePercent = 20
+
+Water = 1 
+
+#################
+
+if(first()){
+    OK = 1
+    Zok = 1
+holoCreate(1)
+holoScale(1,vec(5,5,5))
+
+print("")
+print("")
+print("-- Map Creator By k3 --")
+print("Creating Map..")
+print("Size = "+MaxX*MaxY)
+print("Random1 = "+Random1)
+print("Random2 = "+Random2)
+print("MaxX = "+MaxX)
+print("MaxY = "+MaxY)
+print("Zmin = "+Zmin)
+print("Zmax = "+Zmax)
+print("TreePercent = "+TreePercent)
+print("---------------------------------")
+    print("Building Map..")
+print("")
+print("")
+print("")
+
+}
+#################
+
+#### FUNCTIONS ##
+
+function tree(){
+
+if(OK == 1){
+
+  Arbre+=random(9999,999999)
+  Arbre2 = Arbre*random(999999,999999999)
+    
+    holoCreate(Arbre)
+    holoScale(Arbre,vec(1,1,20))
+    holoModel(Arbre,"cylinder")
+    holoColor(Arbre,vec(250,150,0))
+    holoPos(Arbre,holoEntity(B):pos()+vec(0,0,randint(80,100)))
+
+    holoCreate(Arbre2)
+    holoScale(Arbre2,vec(randint(6,8),randint(6,8),randint(6,8)))
+    holoModel(Arbre2,"icosphere")
+    holoPos(Arbre2,holoEntity(Arbre):pos()+vec(0,0,100))
+    holoColor(Arbre2,vec(0,255,0))
+    
+    holoParent(Arbre,entity())
+    holoParent(Arbre2,entity())
+    
+}
+}
+## END OF FUNCTIONS ##
+
+TreeRandom = randint(1,102)
+if(TreeRandom <= TreePercent/2){
+    tree()
+      TreeSound = 1
+}
+
+B+=1
+X+=1
+
+if(OK == 1){
+holoCreate(B)
+holoScale(B,vec(5,5,5))
+holoColor(B,vec(255,0,0))
+holoPos(B,holoEntity(1):pos()+vec(60*X-60,Y,Z))
+holoColor(B,vec(0,randint(190,255),50))
+
+holoEntity(B):soundPlay(100,100,"Grass.StepLeft")
+
+holoParent(B,entity())
+
+}
+
+if(Zok == 1){
+MapZ = randint(0,750)
+}
+
+if(MapZ >= Random1 & MapZ <= Random2){
+    Zok = 0
+    Z=1*randint(Zmin,Zmax)
+    ZTime++
+}
+
+if(ZTime >= randint(5,10)){
+    Zok = 1
+    Z=0
+    ZTime = 0
+}
+
+if(X >= MaxX){
+    Y+=1*60
+    X = 0
+}
+
+if(Y >= MaxY*60){
+    OK = 0
+    WTime++
+}
+
+if(TreeSound == 1 && OK == 1){
+    holoEntity(Arbre):soundPlay(100,100,"Wood_Panel.StepRight")
+    TreeSOund = 0
+}
+
+if(WTime <= randint(2,3) && Y >= MaxY*60 && Water >= 1){
+    
+    WaterCenter = randint(MaxY*60/2,B*3)
+    
+    holoColor(randint(WaterCenter),vec(0,100,255))
+    holoColor(randint(WaterCenter+randint(0,3)),vec(0,100,255))
+    holoColor(randint(WaterCenter-randint(0,3)),vec(0,100,255))
+    holoColor(randint(WaterCenter*randint(0,3)),vec(0,100,255))
+    holoColor(randint(WaterCenter/randint(0,3)),vec(0,100,255))
+
+    WTime++
+     print("Done !")
+}
+

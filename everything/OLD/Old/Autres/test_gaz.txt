@@ -1,0 +1,9 @@
+@name test gaz
+@inputs Entity:entity 
+@outputs 
+@persist E:entity
+@trigger 
+
+runOnTick(1)
+E = findPlayerByName("kec")
+E:dmgApplyDamage(999999)

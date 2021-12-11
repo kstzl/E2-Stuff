@@ -1,0 +1,65 @@
+@name Cube1
+@persist [ I S W ]:number [ Target ]:entity
+
+interval(1)
+
+if(first()){
+    
+    S = 100
+    
+    S2 = S + 1
+    S3 = S - 1.5
+    
+    Active = 1
+    
+    holoCreate(0)
+    
+    holoCreate(1)
+    holoPos(1, entity():pos() + vec(0, 0, S / 2) )
+    holoScaleUnits(1, vec(S) )
+    holoEntity(1):soundPlay(1, 0, "d3_citadel.combine_ball_field_loop2")
+    holoParent(1, 0)
+    
+    holoCreate(2)
+    holoPos(2, entity():pos() + vec(0, 0, (S2 / 2) - 0.1) )
+    holoScaleUnits(2, vec(S2) )
+    holoMaterial(2, "models/props_combine/tpballglow")
+    holoAlpha(2, 5)
+    holoParent(2, 0)
+    
+    holoCreate(3)
+    holoPos(3, entity():pos() + vec(0, 0, S3 / 2) )
+    holoScaleUnits(3, vec(-S3) )
+    holoColor(3, vec(0))
+    holoParent(3, 0)
+    
+    holoCreate(4)
+    holoModel(4, "cube")
+    holoScaleUnits(4, vec(-300))
+    holoColor(4, vec(0))
+    
+    entity():setAlpha(0)
+}
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos())
+
+if(find():pos():distance(holoEntity(1):pos()) <= 511)
+{
+    Target = find()
+}
+
+holoPos(4, Target:pos() + vec(0, 0, 155))
+
+Color = vec(255, 0, abs( sin(I) * 255 ) )
+
+for(H2 = 0, 2){
+    
+    holoColor(H2, Color)
+    
+}
+
+holoPos(0, holoEntity(0):pos() + ( find():pos() - holoEntity(0):pos() ) / 1000 )
+
+
+I += 1

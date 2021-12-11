@@ -1,0 +1,88 @@
+@name laser_lib_v2
+@persist [ Laser ]:table
+
+#[
+
+ Expression2 
+  _                       _ _ _            ___  
+ | |                     | (_) |          |__ \ 
+ | | __ _ ___  ___ _ __  | |_| |__   __   __ ) |
+ | |/ _` / __|/ _ \ '__| | | | '_ \  \ \ / // / 
+ | | (_| \__ \  __/ |    | | | |_) |  \ V // /_ 
+ |_|\__,_|___/\___|_|    |_|_|_.__/    \_/|____|
+                                                                                                                                                                                                                                                    
+ By K3CR4FT.:DLL ; 2019
+                                                        
+]#
+
+interval(1)
+
+function lb_notify(Text_:string, Type_:string){
+    
+    Sound = ""
+    
+    if(Type_ == "hint"){ Sound = "Buttons.snd14" }
+    if(Type_ == "error"){ Sound = "Buttons.snd10" }
+    
+    if(Sound != ""){
+        owner():soundPlay(0, 0, Sound)
+    }
+    
+    hint("[LaserLib V2] " + Text_, 3)
+    
+}
+
+function lb_verify(ID_:number, ErrorMessage_:string){
+    
+    local LaserID = Laser[ID_, table][1, number]
+    
+    if(LaserID == 0){
+        
+        lb_notify(ErrorMessage_, "error")
+        error(ErrorMessage_)
+    }
+    
+}
+
+function lb_create(ID_:number){
+    
+    local LaserID = time() + ID_
+    
+    holoCreate(LaserID)
+    holoModel(LaserID, "hqcylinder")
+    holoMaterial(LaserID, "models/alyx/emptool_glow")
+    
+    lb_notify("Creation du laser " + ID_ + ". (ID: " + LaserID + ").", "hint")
+    
+    Laser[ID_, table] = table(LaserID)
+    
+}
+
+function lb_pos(ID_:number, A_:vector, B_:vector){
+    
+    lb_verify(ID_, "Laser " + ID_ + " non trouve ! ")
+    
+    local LaserID = Laser[ID_, table][1, number]
+    
+    holoPos(LaserID, (A_ + B_)/2)
+    holoAng(LaserID, (A_ - B_):toAngle() + ang(90, 0, 0))
+    holoScaleUnits(LaserID, vec(5, 5, A_:distance(B_)))
+    
+}
+
+function lb_color(ID_:number, Color_:vector, Alpha_:number){
+    
+    lb_verify(ID_, "Laser " + ID_ + " non trouve ! ")
+    
+    local LaserID = Laser[ID_, table][1, number]
+    
+    holoColor(LaserID, Color_)
+    holoAlpha(LaserID, Alpha_)
+    
+}
+
+if(first()){
+    
+    lb_notify("Par k3 / K3CR4FT.:DLL", "hint")
+    
+}

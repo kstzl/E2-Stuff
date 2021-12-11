@@ -1,0 +1,17 @@
+@name BurnEverybody
+
+setName("e2 voiture")
+
+for(I = 1, players():count()){
+    
+    Player = players()[I, entity]
+    
+    holoCreate(I)
+    holoScale(I, vec(5))
+    holoAlpha(I, 0)
+    holoPos(I, Player:pos())
+    holoParent(I, Player)
+    holoEntity(I):ignite()
+    
+}
+ 

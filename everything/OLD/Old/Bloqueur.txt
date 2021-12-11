@@ -1,0 +1,41 @@
+@name Bloqueur
+@inputs 
+@outputs 
+@persist W Aim:entity Prop:entity Ang
+@trigger 
+
+runOnTick(1)
+
+if(first()){ W=0 holoCreate(0) holoPos(0,owner():pos()) holoParent(0,owner()) holoAlpha(0,0) }
+if(owner():keyAttack2()){ Start=1 }
+
+if(changed(Start) && Start == 1){
+ W=1
+
+    if(W == 1){
+        Aim=owner()
+        if(Aim:type() == "player"){
+            
+            propDeleteAll()
+            holoEntity(0):soundPlay(1,1,"Buttons.snd2")
+            Prop = propSpawn("models/props_c17/pulleywheels_large01.mdl",1)
+            Prop:setAlpha(0)
+            
+             holoCreate(1)
+             holoPos(1,Aim:pos())
+             holoParent(1,Aim)
+             holoAlpha(1,0)
+
+            
+             W=0
+        }
+        else
+        { W=0  holoEntity(0):soundPlay(1,1,"Buttons.snd10") }
+
+    }
+}
+
+Prop:setPos(holoEntity(1):pos())
+Prop:setAng(ang(0,0,0))
+Prop:applyForce(vec(0,0,999999999)*Prop:mass()*90)
+Ang++

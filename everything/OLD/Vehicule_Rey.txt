@@ -1,0 +1,158 @@
+@name Vehicule_Rey
+@inputs 
+@outputs 
+@persist Color:vector E:entity Vitesse SpeedM RPGMode A Force
+@trigger 
+
+ #Par k3 ou "Jamy" - 2017 v2 pour Rey
+
+ runOnTick(1)
+
+ findByClass("player")
+ findExcludeEntity(E:driver())
+ findSortByDistance(E:driver():aimPos())
+
+ if(first())
+ {
+    
+  ##CONFIGURATION##  
+    
+  Vitesse=25  
+  Force=9999999
+  Color=vec(random(255),random(255),random(255))
+
+  ##FIN CONFIG##
+
+  E=entity():isWeldedTo()
+  E:setAlpha(0)
+  E:setMass(50000)  
+  entity():setAlpha(0)
+
+  if(E:model() != "models/nova/airboat_seat.mdl"){ selfDestructAll() }
+
+
+  holoCreate(1)
+  holoModel(1,"hqsphere")
+  holoScale(1,vec(8))
+  holoColor(1,Color)
+  holoPos(1,E:pos())
+  holoParent(1,E)
+  holoAlpha(1,253)
+  holoMaterial(1,"models/wireframe")
+
+  holoEntity(1):soundPlay(1,3,"coast.thumper_startup")
+
+  holoCreate(2)
+  holoModel(2,"hqsphere")
+  holoScale(2,vec(1))
+  holoColor(2,Color)
+  holoPos(2,E:pos()+vec(60,0,0))
+  holoParent(2,1)
+  holoEntity(2):setTrails(50,2,1,"trails/laser",Color,255)
+  holoMaterial(2,"models/wireframe")
+
+  holoCreate(3)
+  holoModel(3,"hqsphere")
+  holoScale(3,vec(1))
+  holoColor(3,Color)
+  holoPos(3,E:pos()+vec(-60,0,0))
+  holoParent(3,1)
+  holoEntity(3):setTrails(50,2,1,"trails/laser",Color,255)
+  holoMaterial(3,"models/wireframe")
+
+  holoCreate(4)
+  holoPos(4,E:pos())
+  holoParent(4,E)
+  holoAlpha(4,0)
+  holoMaterial(4,"models/wireframe")
+
+  holoCreate(5)
+  holoModel(5,"hqsphere")
+  holoColor(5,vec(255,0,0))
+  holoAlpha(5,100)
+  holoMaterial(5,"models/wireframe")
+
+#  holoCreate(6)
+  holoModel(6,"hqcylinder")
+  holoScale(6,vec(1,1,3))
+  holoColor(6,Color)
+  holoPos(6,E:pos()+vec(0,0,65))
+  holoParent(6,E)
+  holoAng(6,ang(0,0,180))
+  holoMaterial(6,"models/wireframe")
+
+  holoCreate(7)
+  holoModel(7,"hqcylinder")
+  holoScale(7,vec(2,2,5))
+  holoColor(7,Color)
+  holoPos(7,E:pos()+vec(0,0,90))
+  holoParent(7,E)
+  holoMaterial(7,"models/wireframe")
+
+ }
+
+        Dri = E:driver()
+        W = Dri:keyForward()
+        A = Dri:keyLeft()
+        S = Dri:keyBack()
+        D = Dri:keyRight()
+        Shi = Dri:keySprint()
+        Spc = Dri:keyJump()
+        R = Dri:keyReload()
+        M1 = Dri:keyAttack1()
+        M2 = Dri:keyAttack2()
+        
+        SpeedM=(Shi*30)
+
+  holoAng(1,holoEntity(1):angles()+ang(0,5,0))
+  holoAng(4,E:driver():eye():toAngle())
+  holoAng(7,(holoEntity(5):pos() - holoEntity(7):pos()):toAngle()+ang(90,0,0))
+
+ if(W)
+ {
+  E:setPos(holoEntity(4):toWorld(vec(Vitesse+SpeedM,0,0)))
+ }
+ if(S)
+ {
+  E:setPos(holoEntity(4):toWorld(vec(-Vitesse-SpeedM,0,0)))
+ }
+ if(A)
+ {
+  E:setPos(holoEntity(4):toWorld(vec(0,Vitesse+SpeedM,0)))
+  E:setAng(E:angles()+ang(0,5,0))
+ }
+ if(D)
+ {
+  E:setPos(holoEntity(4):toWorld(vec(0,-Vitesse-SpeedM,0)))
+ E:setAng(E:angles()-ang(0,5,0))
+ }
+
+ if(changed(M1) && M1 == 1)
+ {
+    
+  P2=propSpawn("models/props_c17/furnitureStove001a.mdl",0)
+  P2:setPos(E:pos()+vec(0,0,60))
+  P2:setMass(50000)
+  P2:setMaterial("models/wireframe")
+  P2:setColor(Color)
+  P2:applyForce(((holoEntity(5):pos()-vec(10,0,80)-P2:massCenter())*P2:mass()*Force))
+
+  holoEntity(4):soundPlay(4,2,"Weapon_RPG.Single")
+
+  timer("del",1300)
+ }
+ if(changed(M2) && M2 == 1)
+ {
+    
+  P=propSpawn("models/props_c17/oildrum001_explosive.mdl",0)
+  P:setPos(holoEntity(5):pos())
+  P:propBreak()
+
+  holoEntity(4):soundPlay(4,2,"Weapon_RPG.Single")
+
+ }
+ if(changed(Spc) && Spc == 1){ timer("s1",10) timer("s2",900) RPGMode+=1 if(RPGMode > 1){ RPGMode=0 } holoEntity(4):soundPlay(4,2,"Buttons.snd9") }
+ if(RPGMode == 0){ holoPos(5,find():pos()+vec(0,0,100)) }
+ if(RPGMode == 1){ holoPos(5,E:driver():aimPos()) }
+ 
+ if(clk("del")){ propDeleteAll() }

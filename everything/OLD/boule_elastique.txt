@@ -1,0 +1,40 @@
+@name boule elastique
+@inputs 
+@outputs 
+@persist P:entity Distance Speed Ang:angle
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+    
+ holoCreate(0)
+ holoPos(0,entity():pos()+vec(0,0,530))
+ holoEntity(0):soundPlay(0,0,"d3_citadel.small_elevator_move")
+ holoModel(0,"models/Combine_Helicopter/helicopter_bomb01.mdl")
+
+ holoCreate(1)
+ holoEntity(1):setTrails(50,5,99999,"trails/laser",vec(255,0,0),255)
+ holoModel(1,"hqsphere") holoScale(1,vec(5)) holoColor(1,vec(100,0,0))
+
+ P=propSpawn("models/XQM/Rails/gumball_1.mdl",0)
+ P:setPos(holoEntity(0):pos()+vec(0,0,0))
+ P:setAlpha(0)
+
+ Distance=500
+
+ holoPos(1,P:pos())
+ holoParent(1,P)
+}
+
+Speed=P:vel():length()/10
+Ang = (P:pos() - holoEntity(0):pos()):toAngle()+ang(90,0,0)
+
+holoAng(0,Ang)
+soundPitch(0,P:vel():length()/2)
+
+if(P:pos():distance(holoEntity(0):pos()) > 10)
+{
+ P:applyForce((holoEntity(0):pos()+vec(0,0,0)-P:massCenter())*P:mass()/Speed)
+}
+

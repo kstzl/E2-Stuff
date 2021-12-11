@@ -1,0 +1,17 @@
+@name Advacned AimPos Receiver
+@inputs 
+@outputs SurfacePOS:vector SurfacePOS_S:string SurfaceANG:angle SurfaceANG_S:string SurfaceET:entity SurfaceET_S:string Dist Dist_S:string
+@persist 
+@trigger 
+@model models/jaanus/wiretool/wiretool_range.mdl
+
+ runOnTick(1)
+ SurfacePOS = owner():aimPos()
+ SurfaceANG = owner():aimNormal():toAngle()+ang(90,0,0)
+ SurfaceET  = owner():aimEntity()
+ Dist = owner():aimPos():distance(entity():pos())
+
+ SurfacePOS_S = owner():aimPos():toString()
+ SurfaceANG_S = owner():aimNormal():toAngle()+ang(90,0,0):toString()
+ SurfaceET_S  = owner():aimEntity():toString()
+ Dist_S = owner():aimPos():distance(entity():pos()):toString()

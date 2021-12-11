@@ -1,0 +1,47 @@
+@name MC Cube
+@inputs 
+@outputs 
+@persist Count Ang S
+@trigger 
+
+runOnTick(1)
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos())
+holoScale(1,vec(S,S,S))
+
+if(first()){
+    
+holoCreate(1)
+#holoModel(1,"models/props_borealis/bluebarrel001.mdl")
+holoScale(1,vec(S,S,S))
+entity():setAlpha(0)    
+    
+}
+
+Count += 0.01
+N = 5
+
+Z1 = N*cosr(3.3*Count)
+
+Ang++
+
+if(holoEntity(1):pos():distance(find():pos()) <= 50){
+    
+    if(S >=0.1){
+    S-=0.1
+    }
+    if(S <=0.1){
+    
+    holoPos(1,find():pos())
+    holoParent(1,find())
+}
+}
+else
+{
+    S=1
+    holoPos(1,entity():pos()+vec(0,0,Z1+11))
+    holoAng(1,ang(0,Ang,0))
+}
+
+

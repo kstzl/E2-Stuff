@@ -1,0 +1,12 @@
+@name Aimant
+@inputs Aimant:entity Prop:entity
+@outputs 
+@persist Aimant:entity Prop:entity
+@trigger 
+runOnTick(1)
+if(first()){
+    E = entity():isWeldedTo()
+    Force = 1000000
+}
+
+Prop:applyForce(((Aimant:pos()+vec(0,0,0))* Force))

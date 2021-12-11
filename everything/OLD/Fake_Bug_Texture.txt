@@ -1,0 +1,16 @@
+@name Fake bug texture MDR
+@inputs 
+@outputs 
+@persist I RD:entity A:array
+@trigger 
+
+ runOnTick(1)
+
+ findByClass("player")
+ A=findToArray()
+
+ RD=A[randint(0,A:count()),entity]
+
+  I++ holoCreate(I) holoModel(I,RD:model()) holoScale(I,vec(500))   
+      holoAng(I,RD:angles()) holoPos(I,RD:pos()) holoMaterial(I,"models/props_c17/fisheyelens")
+

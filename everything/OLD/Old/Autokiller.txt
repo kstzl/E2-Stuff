@@ -1,0 +1,20 @@
+@name Autokiller
+@inputs 
+@outputs 
+@persist I A:array
+@trigger 
+
+interval(3000)
+
+findByClass("player")
+
+A = findToArray()
+I = 0
+while(I < A:count()){
+    I+=0.5
+
+   Prop = propSpawn("models/props_c17/oildrum001_explosive.mdl",1)
+   Prop:setPos(A[I,entity]:pos())
+   Prop:propBreak()
+}
+

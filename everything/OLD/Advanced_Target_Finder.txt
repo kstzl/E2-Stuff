@@ -1,0 +1,28 @@
+@name Advanced Target Finder
+@inputs  NextTarget
+@outputs TargetNAME_P:string TargetNAME:string TargetPOS:vector TargetANG:angle TargetET:entity
+@persist I A:array
+@trigger 
+@model models/beer/wiremod/targetfinder.mdl
+
+
+ interval(1)
+
+ if(first()){ I=1 }
+
+ findByClass("player") 
+ A=findToArray()
+
+ if(NextTarget == 1){ Next=1 }
+ if(changed(Next) && Next == 1){
+    I+=1
+ }
+if(I > A:count()){ I=1 } 
+
+ TargetNAME_P = A[I,entity]:name()
+ TargetNAME = A[I,entity]:toString()
+ TargetPOS = A[I,entity]:pos()
+ TargetANG = A[I,entity]:angles()
+ TargetET = A[I,entity]
+  
+

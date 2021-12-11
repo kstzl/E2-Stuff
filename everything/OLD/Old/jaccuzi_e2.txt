@@ -1,0 +1,8 @@
+@name Jaccuzi_E2
+@inputs [ BT_Fontaines ]:number
+@outputs [ Fontaines ]:number
+@persist 
+
+interval(1)
+
+Fontaines = BT_Fontaines

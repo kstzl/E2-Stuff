@@ -1,0 +1,13 @@
+@name son
+@inputs  B A:array I
+@outputs 
+@persist
+@trigger
+
+
+
+    streamDisable3D(1)
+    streamVolume(1,9999)
+    
+entity(3):streamStart(1,"http://k003.kiwi6.com/hotlink/pm17g08k2a/JMPALECOLV2.mp3",1)
+

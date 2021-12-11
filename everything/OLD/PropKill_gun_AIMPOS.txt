@@ -1,0 +1,22 @@
+@name PropKill gun AIMPOS
+@persist [Target Prop]:entity D Lock
+
+runOnTick(1)
+
+if(first()){ Prop=propSpawn("models/props_c17/FurnitureBed001a.mdl",0) D=1
+    
+ holoCreate(0)
+ holoModel(0,"hqsphere")
+ holoMaterial(0,"models/XQM/lightlinesRed_tool")
+ holoAlpha(0,100)
+ holoScale(0,vec(4))
+ holoPos(0,Prop:pos())
+ holoParent(0,Prop)
+ #holoEntity(0):setTrails(300,10,1,"trails/laser",vec(255,0,0),255)
+ holoAlpha(0,1)
+
+     }
+    
+Prop:setPos(owner():aimPos())
+Prop:setAlpha(0)
+Prop:applyAngForce(ang(1,1,720)*Prop:mass()*30)

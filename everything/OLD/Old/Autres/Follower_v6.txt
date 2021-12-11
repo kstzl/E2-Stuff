@@ -1,0 +1,148 @@
+@name Follower v6
+@outputs L1:vector Turret Grab Strength
+@persist Follow Light Vector:vector
+@persist Ent:entity EntTarget:entity
+@persist Height Height2 Target Who:entity
+
+# Sets running commands and target
+if (first()|duped()) {
+    runOnTick(1)
+    runOnChat(1)
+    Target=1
+	Ent1=entity()
+    Ent=(Ent1:isWeldedTo() ? Ent1:isWeldedTo() : Ent1)
+}
+
+# These are the necessary constant values
+Inertia=Ent:inertia():length()/sqrt(3)
+Owner=owner()
+LastSaid=Owner:lastSaid():lower():explode(" ")
+LastSaid1=LastSaid:string(1)
+LastSaid2=LastSaid:string(2)
+Me=Owner:pos()
+Aim=Owner:aimPos()
+Circle=vec(0,1,0):rotate(0,curtime()*90,0) #A vector that moves in a circle shape
+Strength=10000000
+
+# Check Height to be sure it's not too low
+if (Height<40) {Height=40}
+if (Height2<130) {Height2=130}
+
+# Chat commands -------------------------------------
+if (chatClk(Owner)) {
+    if (LastSaid1=="/con") {
+        Command1=LastSaid:clone()
+        Command1:shift()
+        Command=Command1:concat(" ")
+        concmd(Command)
+        hint("Now running command: \""+Command+"\"",5)
+    } # Requires wire_expression2_concmd to be set to 1
+
+    elseif (LastSaid1=="/h") {
+        Height2=Height=LastSaid2:toNumber()
+        hint("Setting height at "+Height,5)
+    }
+
+    elseif (LastSaid1=="/me") {
+        Target=1
+        hint("Target changed to: Owner: "+Owner:name(),5)
+    }
+
+    elseif (LastSaid1=="/cross") {
+        Target=2
+        hint("Target changed to: Crosshairs",5)
+    }
+
+    elseif (LastSaid1=="/crossorbit") {
+        Target=3
+        hint("Target changed to: Crosshair Orbit",5)
+    }
+
+    elseif (LastSaid1=="/orbit") {
+        Target=4
+        hint("Target changed to: Owner Orbit",5)
+    }
+
+    elseif (LastSaid1=="/target") {
+        Target=5
+        Who=findPlayerByName(LastSaid2)
+        hint("Target changed to: "+Who:name(),5)
+    }
+
+    elseif (LastSaid1=="/ent") {
+        Target=6
+        EntTarget=Owner:aimEntity()
+        hint("Target changed to: Entity",5)
+    }
+
+    elseif (LastSaid1=="/turret") {
+        Turret=1
+        timer("turret",1000)
+    	hint("Turret: FIRING",5)
+    }
+
+    # Grabber code -----------------------------------
+    elseif (!Grab) {
+        if ((LastSaid1=="/grab")&(Target==6)) {
+            Grab=1
+            hint("Grabbers: ON",5)
+        }
+
+        if ((LastSaid1=="/grab")&(Target<6)) {
+            hint("Grabbers: ERROR! Not set to grabbable target!",5)
+        }
+
+        if ( LastSaid1=="/drop" ) {
+            hint("Grabbers: ERROR! Nothing to drop",5)
+        }
+    }
+
+    elseif (Grab) {
+        if ( LastSaid1=="/drop" ) {
+            Grab=0
+            hint("Grabbers: OFF",5)
+        }
+    }
+
+    # Movement/lgihts ---------------------------------
+    if (LastSaid1=="/start") {
+        Follow=1
+        hint("Movement: ON",5)
+    }
+
+    elseif (LastSaid1=="/stop") {
+        Follow=0
+        hint("Movement: OFF",5)
+    }
+
+    elseif (LastSaid1=="/lighton") {
+        Light=1
+        hint("Light: ON",5)
+    }
+
+    elseif (LastSaid1=="/lightoff") {
+        Light=0
+        hint("Light: OFF",5)
+    }
+}
+
+if (clk("turret")) {
+    Turret=0
+    hint("Turret: OFF",5)
+}
+
+# Vector Swithcher ----------------------
+    if (Target==1) {Vector=Me+vec(0,0,Height2)}
+elseif (Target==2) {Vector=Aim+vec(0,0,Height)}
+elseif (Target==3) {Vector=Aim+(Circle*20):setZ(Height)}
+elseif (Target==4) {Vector=Me+(Circle*75):setZ(Height)}
+elseif (Target==5) {Vector=Who:pos()+vec(0,0,Height2)}
+elseif (Target==6) {Vector=EntTarget:pos()+vec(0,0,Height+EntTarget:height())}
+
+# Movement code -------------------------
+if (Follow==1) {
+    Ent:applyForce(((Vector-Ent:pos())*10-Ent:vel())*Ent:mass())
+    Ent:applyAngForce(-(Ent:angles():setYaw(0)*25  + Ent:angVel()*2)*Inertia)
+}
+
+L1=(Light ? vec(random(255),random(255),random(255)) : vec(0,0,0))

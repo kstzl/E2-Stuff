@@ -1,0 +1,48 @@
+@name Enculade Gratuite
+@inputs 
+@outputs 
+@persist E:entity Spos:vector I I2 S:array
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+    
+    S[1, string] = "npc_alyx.hurt04"
+    S[2, string] = "npc_alyx.hurt05"
+    S[3, string] = "npc_alyx.hurt06"
+    S[4, string] = "npc_alyx.hurt08"
+
+}
+
+if(first()){
+    
+    holoCreate(1) 
+    holoAlpha(1, 0)
+    
+    holoCreate(2)
+    holoScale(2, vec(5, 1, 1))
+    holoColor(2, vec(0))
+    
+    holoCreate(3)
+    holoScale(3, vec(5, 1, 0.5))
+    holoColor(3, vec(50))
+
+    E=propSpawn("models/props_c17/GasPipes006a.mdl", 1) 
+    Spos = E:pos() + vec(30, 0, -20) 
+    E:propNotSolid(1)
+
+    holoPos(2, Spos + vec(-30, 0, 4))
+    
+}
+    E:setPos(Spos + vec(sin(I) * 10, 0, 0)) E:propFreeze(1)
+    E:setAng(ang(cos(I) * 5 + -90, 0, 0))
+    I += 55
+    I2 += 1
+    
+if(I2 >= 10){ 
+    
+    I2=0 
+    holoEntity(1):soundPlay(1, 0, S[randint(1, 4),string]) 
+    soundPitch(1, randint(100, 120))
+}

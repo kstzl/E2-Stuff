@@ -1,0 +1,27 @@
+@name Segents
+@inputs S0 S1 S2 S3 S4 S5 S6 S7 S8 S9
+@outputs HautG HautD BasG BasD Haut Mileu Bas 
+
+if(S0 == 1){
+    HautG = 1
+    HautD = 1
+    BasG = 1
+    BasD = 1
+    Haut = 1
+    Haut = 1
+    Bas = 1
+}
+
+    if(S1 == 1){
+        HauG = 1
+        BasG = 1
+    }
+    
+        if(S2 == 1){
+            Haut = 1
+            HautD = 1
+            Mileu = 1
+            BasG = 1
+            Bas = 1
+        }
+

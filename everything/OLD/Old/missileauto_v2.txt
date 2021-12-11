@@ -1,0 +1,73 @@
+@name MissileAuto_V2
+@persist [ H A ]:number [ Missile ]:array [ MissileTarget ]:array
+
+interval(1)
+
+function create_missile(Target_:entity){
+    
+    if(Missile:count() < 5){
+        
+        holoCreate(H)
+        holoModel(H, "models/weapons/w_missile.mdl")
+        holoScale(H, vec(5))
+        
+        holoPos(H, owner():pos() + vec(0, 0, 80))
+        
+        holoEntity(H):soundPlay(H, 0, "Missile.Ignite")
+        
+        holoEntity(H):setTrails(1, 50, 1, "trails/smoke", vec(100), 255)
+    
+        Missile[H, number] = H
+        MissileTarget[H, entity] = Target_
+        
+        H += 1
+    
+    }
+    
+}
+
+if(changed(owner():keyAttack2()) && owner():keyAttack2() == 1){
+    
+    findExcludeEntity(owner())
+    findByClass("player")
+    findSortByDistance(owner():aimPos())
+    
+    create_missile(find())
+    
+}
+
+foreach(I, M:number=Missile){
+    
+    Index = M
+    Target = MissileTarget[Index, entity]
+    
+    if(Target){
+        
+        holoAng(Index, (Target:pos() - holoEntity(Index):pos()):toAngle() + ang(0, 0, A))
+        holoPos(Index, holoEntity(Index):toWorld(vec(35, 0, 0)))
+        
+        if(Target:pos():distance(holoEntity(Index):pos()) <= 30){
+            
+            P = propSpawn("models/props_phx/cannonball_solid.mdl", 1)
+            P:setAlpha(0)
+            P:setPos(holoEntity(Index):pos())
+            P:propBreak()
+            
+            holoDelete(Index)
+            
+            Missile:removeNumber(Index)
+            MissileTarget:removeNumber(Index)
+            
+        }
+    
+    }
+    else
+    {
+        holoDelete(Index)     
+        Missile:removeNumber(Index)
+        MissileTarget:removeNumber(Index)
+            
+    }
+}
+
+A += 3

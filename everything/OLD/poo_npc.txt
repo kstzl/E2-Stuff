@@ -1,0 +1,53 @@
+@name POO_NPC
+
+#include "POO_Lib"
+#include "fastlib"
+
+interval(ops() / 100)
+
+if(first()){
+
+    for(I = 0, 10){
+        
+        Model = chooseString(array(
+        "models/mossman.mdl",
+        "models/alyx.mdl",
+        "models/Barney.mdl",
+        "models/breen.mdl",
+        "models/Eli.mdl",
+        "models/gman_high.mdl",
+        "models/Kleiner.mdl",
+        "models/monk.mdl",
+        "models/odessa.mdl"
+        ))
+        
+        NewNPC = poo_createObject("cube")
+        NewNPC:poo_setString("Name", "Kevin")
+        NewNPC:poo_setString("Model", Model)
+        NewNPC:poo_setVector("Pos", entity():pos() + vec(I * 30, 0, 0))
+        
+    }
+    
+    
+    
+    
+}
+
+for(I = 0, POO_Objects:count()){
+    
+    Object = POO_Objects[I, table]
+    
+    if(Object:poo_init("cube")){
+        
+        Holo = Object:poo_objectIndex()
+        
+        holoCreate(Holo)
+        holoModel(Holo, Object:poo_getString("Model"))
+        holoPos(Holo, Object:poo_getVector("Pos"))
+  
+    }
+    if(Object:poo_loop("cube")){
+        
+    }
+    
+}

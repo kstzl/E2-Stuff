@@ -1,0 +1,11 @@
+@name JetPack
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+interval(1)
+if(owner():keyJump()){
+    owner():plyApplyForce(owner():eye()*20)
+    owner():plyApplyForce(vec(0,0,30))
+}

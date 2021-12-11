@@ -1,0 +1,55 @@
+@name animation_kleinerdoor
+#include "animation_lib"
+
+al_play("
+    Object ground;
+    Object npc;
+    Object keypad;
+    Object door;
+    Object pivot;
+    ObjectModel ground models/props_junk/TrashDumpster02b.mdl;
+    ObjectModel npc models/Kleiner.mdl;
+    ObjectModel keypad models/props_lab/keypad.mdl;
+    ObjectModel door models/props_c17/door01_left.mdl;
+    ObjectScale keypad 5 5 5;
+    ObjectLocalPos keypad 120 -30 50;
+    ObjectAng keypad 0 90 0;
+    ObjectLocalPos door 160 0 60;
+    ObjectLocalPos pivot 160 0 60;
+    ObjectParent door pivot;
+    ObjectScale pivot 0 0 0;
+    ObjectAnim npc lineidle01;
+    ObjectAnim npc run_all;
+    ObjectMove npc forward 15;
+    Pause 500;
+    ObjectMoveStop npc;
+    ObjectAnim npc lineidle01;
+    Pause 1500;
+    ObjectAnim npc keypad_g;
+    Sfx keypad Buttons.snd18;
+    Pause 300;
+    Sfx keypad Buttons.snd18;
+    Pause 300;
+    Sfx keypad Buttons.snd18; 
+    Pause 1500;
+    ObjectAng npc 0 90 0;
+    ObjectAnim npc lineidle01;
+    ObjectRotate pivot 0 -5 0;
+    Sfx door Doors.FullOpen2;
+    Pause 1500;
+    ObjectRotateStop pivot;
+    ObjectAng npc 0 0 0;
+    ObjectAnim npc run_all;
+    ObjectMove npc forward 15;
+    Pause 500;
+    ObjectRotate pivot 0 5 0;
+    Sfx door Doors.FullOpen2;
+    Pause 1500;
+    ObjectRotateStop pivot;
+    Pause 500;
+    ObjectMoveStop npc;
+    ObjectAnim npc lineidle01;
+    "
+)
+
+

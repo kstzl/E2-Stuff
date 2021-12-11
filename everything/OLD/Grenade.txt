@@ -1,0 +1,58 @@
+@name Grenade
+@inputs 
+@outputs 
+@persist NB Pos:vector P:entity Force Exp Etime
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+
+NB=0  
+Force=90
+}
+
+Pos = owner():pos()+vec(0,0,60) 
+
+if(owner():keyAttack2() && Exp !=1){
+Push=1
+}
+
+if(changed(Push) && Push == 1){
+
+holoCreate(NB)
+holoPos(NB,Pos)
+holoEntity(NB):soundPlay(1,100,"Grenade.ImpactHard")
+holoScale(NB,vec(1,1,1))
+holoAlpha(NB,0)
+
+P=propSpawn("models/XQM/Rails/gumball_1.mdl",0)
+P:setTrails(1,1,1,"trails/smoke",vec(255,0,0),255)
+P:setPos(Pos)
+P:applyForce(owner():eye()*P:mass()*Force^1.2)
+P:setAlpha(0)
+
+Exp=1
+}
+
+if(owner():keyPressed("z")){
+    holoDeleteAll()
+    propDeleteAll()
+}
+holoPos(NB,P:pos())
+
+if(Exp==1){
+   Etime+=0.5
+    
+    if(Etime >= 30 && Etime <= 31){
+        
+        P2=propSpawn("models/props_c17/oildrum001_explosive.mdl",0)
+        P2:setPos(holoEntity(NB):pos())
+        P2:propBreak()
+
+    }
+    if(Etime >= 33){
+        propDeleteAll()
+        reset()
+}
+}

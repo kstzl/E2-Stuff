@@ -1,0 +1,10 @@
+@name d_ligh1
+
+@persist
+
+if(first() || dupefinished()){
+    
+    interval(1)
+    
+    
+}

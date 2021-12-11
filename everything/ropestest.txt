@@ -1,0 +1,25 @@
+@name RopesTest
+@persist HolosSpawned
+@model models/maxofs2d/hover_classic.mdl
+
+# original concept by Sixmax, re-implementation by Fasteroid
+# client cpu eater
+# abuses embedded ropes
+
+# Ameliorations by K3CR4FT.:DLL
+
+interval(1)
+
+HolosSpawned++
+holoCreate(HolosSpawned)
+holoPos(HolosSpawned,entity():pos())
+holoModel(HolosSpawned,"models/props_lab/teleportbulk.mdl")
+holoScale(HolosSpawned,vec(1000))    
+
+holoBoneScale(HolosSpawned,1,vec(1000))
+holoAlpha(HolosSpawned,0)
+holoParent(HolosSpawned,entity())
+
+for(I=1,HolosSpawned){
+    #holoAng(I,ang(random()*360,random()*360,random()*360))
+}

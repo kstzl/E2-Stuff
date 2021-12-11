@@ -1,0 +1,10 @@
+@name Distributeur
+@inputs Bt
+@outputs Can
+@persist 
+@trigger 
+
+if(Bt == 1){
+    soundPlay(0,1,"Buttons.snd17")
+    Can == 1
+    }

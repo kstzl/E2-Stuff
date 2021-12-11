@@ -1,0 +1,70 @@
+@name CubeNoir
+@outputs [ Wait ]:number [ Target ]:entity
+
+interval(100)
+
+if(first()){
+    
+    holoCreate(1)
+    holoColor(1, vec(0))
+    holoScaleUnits(1, vec(-300))
+    holoPos(1, entity():toWorld(vec(0, 0, 150)))
+    holoDisableShading(1, 1)
+    
+    
+    holoCreate(2)
+    holoColor(2, vec(0))
+    holoScaleUnits(2, vec(-300))
+    holoPos(2, entity():toWorld(vec(0, 0, 150)))
+    holoDisableShading(2, 2)
+    holoModel(2, "hqsphere")
+    holoScale(2, vec(-6))
+    
+    entity():setAlpha(0)
+
+}
+
+if(clk("reset")){
+    
+    Ranger = rangerOffset(3000, Target:pos(), -Target:up())
+    Target = entity()
+    
+    holoPos(1, Ranger:pos() + vec(0, 0, 150))  
+    
+    Wait = 1
+    
+}
+
+if(changed(Target)){
+    
+    holoPos(2, Target:attachmentPos("eyes"))
+    holoAng(2, Target:attachmentAng("eyes"))
+    holoParentAttachment(2, Target, "eyes")   
+    
+}
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos())
+Dist = holoEntity(1):pos():distance(find():pos())
+
+if(Dist < 300){
+
+    if(Wait == 0){
+    Target = find()
+    timer("reset", 15000)
+}
+
+    
+}
+if(Dist > 400){
+    
+    if(Wait == 1){
+        
+        Target = entity()
+        Wait = 0
+        
+    }
+}
+    
+
+

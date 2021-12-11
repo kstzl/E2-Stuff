@@ -1,0 +1,30 @@
+@name SelfBScooter
+@inputs Avancer Reculer Droite Gauche
+@outputs RG RD SMG SMD
+@persist 
+@trigger 
+
+if(Avancer == 1){
+    RG = 1
+    RD = 1
+    SMG = 100
+    SMD = 100
+}
+if(Reculer == 1){
+    RG = 1
+    RD = 1
+    SMG = -100
+    SMD = -100
+}
+if(Droite == 1){
+    RG = 1
+    RD = 1
+    SMG = 100
+    SMD = -100
+}
+if(Gauche == 1){
+    RG = 1
+    RD = 1
+    SMG = -100
+    SMD = 100
+}

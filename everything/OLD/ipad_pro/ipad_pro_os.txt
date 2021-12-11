@@ -1,0 +1,1339 @@
+@name ipad_pro_os
+
+@inputs [ Egp ]:wirelink
+@inputs [ ServicesE2 ]:entity
+@inputs [ Button_Lock ]:number
+
+@persist [ Current_App AppContext ]:string
+@persist [ Size SinColor I Use Started ]:number
+@persist [ ColorBG ColorTXT ]:vector4
+@persist [ AppPos Cursor ]:vector2
+@persist [ Config ]:table
+@persist [ User ]:entity
+
+@persist [ TelegramUsers TelegramMessages ]:table
+
+@persist [ Musique_index ]:number
+@persist [ Musique_list ]:table
+
+runOnTick(1)
+runOnFile(1)
+runOnLast(1)
+
+#[
+
+
+  _ _____          _   _____              ____   _____                               
+ (_)  __ \        | | |  __ \            / __ \ / ____|                              
+  _| |__) |_ _  __| | | |__) | __ ___   | |  | | (___                                
+ | |  ___/ _` |/ _` | |  ___/ '__/ _ \  | |  | |\___ \                               
+ | | |  | (_| | (_| | | |   | | | (_) | | |__| |____) |                              
+ |_|_|   \__,_|\__,_|_|_|   |_|__\___/_  \____/|_____/ _______  _____  _      _      
+ |  _ \        | |/ /___ \ / ____|  __ \| || | |  ____|__   __||  __ \| |    | |     
+ | |_) |_   _  | ' /  __) | |    | |__) | || |_| |__     | | (_) |  | | |    | |     
+ |  _ <| | | | |  <  |__ <| |    |  _  /|__   _|  __|    | |   | |  | | |    | |     
+ | |_) | |_| | | . \ ___) | |____| | \ \   | | | |       | |_ _| |__| | |____| |____ 
+ |____/ \__, | |_|\_\____/ \_____|_|  \_\  |_| |_|       |_(_|_)_____/|______|______|
+         __/ |                                                                       
+        |___/                                                                        
+
+
+
+  ___   ___ ___   ___  
+ |__ \ / _ \__ \ / _ \ 
+    ) | | | | ) | | | |
+   / /| | | |/ /| | | |
+  / /_| |_| / /_| |_| |
+ |____|\___/____|\___/ 
+                       
+                       
+
+
+
+]#
+
+
+
+
+
+
+
+
+
+
+
+#[
+  _____                       ______                    
+ |  __ \                     |  ____|                   
+ | |  | |_ __ __ ___      __ | |__ _   _ _ __   ___ ___ 
+ | |  | | '__/ _` \ \ /\ / / |  __| | | | '_ \ / __/ __|
+ | |__| | | | (_| |\ V  V /  | |  | |_| | | | | (__\__ \
+ |_____/|_|  \__,_| \_/\_/   |_|   \__,_|_| |_|\___|___/
+
+]#
+
+function void wirelink:box(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpBox(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+}
+function void wirelink:boxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+    This:egpSize(Index,1)
+}
+function void wirelink:boxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4,Outline:number){
+    This:egpBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+    This:egpSize(Index,Outline)
+}
+function void wirelink:roundbox(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpRoundedBox(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+}
+function void wirelink:roundboxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpRoundedBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)  
+    This:egpSize(Index,1)
+}
+function void wirelink:roundboxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4,S:number){
+    This:egpRoundedBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)  
+    This:egpSize(Index,S)
+}
+function void wirelink:line(Index:number,Pos1:vector2,Pos2:vector2,Color:vector4,Size:number){
+    This:egpLine(Index,Pos1,Pos2)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+}
+function void wirelink:line(Index:number,Pos1:vector2,Pos2:vector2,Color:vector4){
+    This:egpLine(Index,Pos1,Pos2)
+    This:egpColor(Index,Color)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector,Size:number){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    This:egpAlign(Index,1,1)
+    This:egpFont(Index, "Coolvetica")
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector4,Size:number){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    This:egpAlign(Index,1,1)
+    This:egpFont(Index, "Coolvetica")
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector,Size:number,Align:string){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    This:egpFont(Index, "Coolvetica")
+    if(Align == "c"){
+        This:egpAlign(Index,1,1)
+    }
+    elseif(Align == "l"){
+        This:egpAlign(Index,2,1)
+    }
+    elseif(Align == "r"){
+        This:egpAlign(Index,0,1)
+    }
+    else{
+        This:egpAlign(Index,1,1)
+    }
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector4,Size:number,Align:string){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    This:egpFont(Index, "Coolvetica")
+    if(Align == "c"){
+        This:egpAlign(Index,1,1)
+    }
+    elseif(Align == "l"){
+        This:egpAlign(Index,2,1)
+    }
+    elseif(Align == "r"){
+        This:egpAlign(Index,0,1)
+    }
+    else{
+        This:egpAlign(Index,1,1)
+    }
+}
+function number wirelink:button(ID:number,Cursor:vector2){
+    local BPos = This:egpPos(ID)
+    local BSize = This:egpSize(ID)/2
+    local Pressed = inrange(Cursor,BPos-BSize,BPos+BSize)
+    return Pressed
+}
+
+
+
+function string lang(String_:string){
+    
+    local R = Config[Config["lang", string] + "_" + String_, string]
+    
+    if(R == ""){
+        
+        RR = "?" + String_
+        
+    }
+    else
+    {
+        
+        RR = R
+        
+    }
+    
+    return RR
+    
+}
+
+
+
+function draw_app(Index:number, AppName:string, Pos:vector2){
+    
+    AppNameLang = lang(AppName)
+
+    Egp:roundbox(Index, Pos, vec2(128), vec4(255))
+    Egp:text(Index + 1, AppNameLang, Pos + vec2(1, 86), vec(0), 25)
+    Egp:text(Index + 2, AppNameLang, Pos + vec2(0, 85), vec(255), 25)
+    
+    if(AppName == "horloge"){
+        
+        Egp:egpColor(Index, vec4(45, 45, 45, 255))
+        Egp:egpCircle(Index + 3, Pos, vec2(50))
+        Egp:box(Index + 4, Pos + vec2(20, 0), vec2(40, 2), vec4(0, 0, 0, 255))
+        Egp:box(Index + 5, Pos + vec2(0, -20), vec2(2, 40), vec4(0, 0, 0, 255))
+        
+    }
+    
+    if(AppName == "printers"){
+        
+        Egp:egpColor(Index, vec4(35, 35, 35, 255))
+        Egp:roundbox(Index + 3, Pos, vec2(100, 20), vec4(255))
+        Egp:roundbox(Index + 4, Pos + vec2(40, 0), vec2(15), vec4(0, 0, 0, 255))
+        Egp:text(Index + 5, "10,000 kr", Pos, vec4(0, 0, 0, 255), 15)
+        
+    }
+    
+    if(AppName == "parametres"){
+        
+        Egp:egpColor(Index, vec4(100, 100, 100, 255))
+        Egp:roundbox(Index + 3, Pos, vec2(80, 80), vec4(50, 50, 50, 255))
+        Egp:roundbox(Index + 4, Pos, vec2(80, 80), vec4(50, 50, 50, 255))
+        Egp:egpAngle(Index + 4, 45)
+        Egp:egpCircle(Index + 5, Pos, vec2(35))
+        Egp:egpColor(Index + 5, vec4(100, 100, 100, 255))
+        
+    }
+
+    if(AppName == "telegram"){
+        
+        Egp:egpColor(Index, vec4(0, 150, 255, 255))
+        Egp:text(Index + 1, "T", Pos, vec4(255), 150)
+        
+    }
+    
+    if(AppName == "metiers"){
+        
+        Egp:egpColor(Index, vec4(0, 50, 255, 255))
+        Egp:egpCircle(Index + 3, Pos + vec2(0, -25), vec2(30))
+        Egp:roundbox(Index + 4, Pos + vec2(0, 30), vec2(55, 60), vec4(255))
+        Egp:text(Index + 5, "?", Pos + vec2(0, -25), vec4(0, 50, 255, 255), 40)
+        
+        
+    }
+    
+    if(AppName == "musiques"){
+        
+        Egp:egpColor(Index, vec4(255))
+        Egp:text(Index + 1, "M", Pos, vec4(255, 55, 150, 255), 150)
+        
+    }
+    
+}
+
+#[
+   ____   _____   ______                    
+  / __ \ / ____| |  ____|                   
+ | |  | | (___   | |__ _   _ _ __   ___ ___ 
+ | |  | |\___ \  |  __| | | | '_ \ / __/ __|
+ | |__| |____) | | |  | |_| | | | | (__\__ \
+  \____/|_____/  |_|   \__,_|_| |_|\___|___/
+
+]#                                                                                        
+
+function number app_init(App_:string){ return clk(App_) }
+function number app_loop(App_:string){ return Current_App == App_ }
+function number app_quit(App_:string){ return changed(Current_App) && Current_App != App_ && Current_App != "" && Started || (Current_App == App_ && last()) }
+
+function app(App_:string){ Current_App = App_ Egp:egpClear() timer(App_, 0) I=0 }
+
+function init_color_mode(){
+    
+    if(Config["colormode", string] == "dark"){
+        
+        ColorBG = vec4(0, 0, 0, 255)
+        ColorTXT = vec4(255)  
+        
+    }
+    else
+    {
+        ColorBG = vec4(255)
+        ColorTXT = vec4(0, 0, 0, 255)
+    }
+    
+}
+
+function init(){
+    
+        fileLoad("ipad_pro_data.txt")
+        dsJoinGroup("wifi")
+
+        Size = 512 / 2
+        AppPos = vec2(Size / 3, Size / 2.5)
+    
+}
+
+function print_notification(AppName_:string, Color_:vector, Message_:string){
+    
+    if(Config[AppName_ + "_notifications", number] == 1){
+        
+         printColor(Color_, "[" + AppName_ + "] ", vec(255), Message_)
+        
+    }
+    
+}
+
+function show_help(){
+    
+    AppContext = Current_App
+    
+    app("help")
+        
+}
+
+
+function config_save(){ fileWrite("ipad_pro_data.txt", jsonEncode(Config)) timer("reload", 500) }
+function save(){ fileWrite("ipad_pro_data.txt", jsonEncode(Config)) }
+
+function number click(Button_){ return ((changed(Use) & Use == 1) && Egp:button(Button_, Cursor)) }
+
+function number wait(){ return (I > 15) }
+
+#[
+   ____   _____ 
+  / __ \ / ____|
+ | |  | | (___  
+ | |  | |\___ \ 
+ | |__| |____) |
+  \____/|_____/ 
+                
+]#
+
+User = Egp["User", entity]
+Cursor = Egp:egpCursor(User)
+Use = User:keyUse()
+
+if(fileClk()){
+    
+    Config = jsonDecode(fileRead())
+    
+    app("bootscreen")
+}
+
+if( clk("after_bootscreen") || clk("reload") ){
+    
+    if(Config:count() < 1){
+        
+        app("config")
+        
+    }
+    else
+    {
+        app("springboard")
+        
+    }
+
+}
+
+if( (first() & Egp) || (dupefinished() & Egp) || !Egp){
+    
+    init()
+    
+}
+    
+
+if(app_init("bootscreen")){
+    
+    Size = 512 / 2
+    
+    init_color_mode()
+
+    Egp:egpClear()
+    
+    Egp:egpBox(1, vec2(512/2), vec2(512))
+    Egp:egpColor(1, ColorBG)
+    
+    Egp:egpCircle(2, vec2(Size), vec2(80))
+    Egp:egpColor(2, ColorTXT)
+    
+    Egp:egpCircle(3, vec2(Size + 85, Size - 10), vec2(50))
+    Egp:egpColor(3, ColorBG)
+    
+    Egp:egpCircle(4, vec2(Size, Size + 120), vec2(50))
+    Egp:egpColor(4, ColorBG)
+    
+    Egp:egpCircle(5, vec2(Size, Size - 120), vec2(50))
+    Egp:egpColor(5, ColorBG)
+    
+    Egp:egpCircle(6, vec2(Size + 15, Size - 110), vec2(10, 30))
+    Egp:egpAngle(6, -45)
+    Egp:egpColor(6, ColorTXT)
+    
+    timer("after_bootscreen", 2000)
+    
+}
+
+if(app_init("config")){
+    
+    Config = table(
+    
+        "lang" = "",
+        "protection" = "",
+        "background" = "console/background03",
+        "colormode" = "light",
+        "version" = "2.0.0",
+        "ipad-name" = "",
+        
+        "fr_ipad_name" = "iPad de",
+        "en_ipad_name" = "iPad of",
+        
+        "fr_janvier" = "Janvier",
+        "fr_fevrier" = "Fevrier",
+        "fr_mars" = "Mars",
+        "fr_avril" = "Avril",
+        "fr_mai" = "Mai",
+        "fr_juin" = "Juin",
+        "fr_juillet" = "Juillet",
+        "fr_aout" = "Aout",
+        "fr_septembre" = "Septembre",
+        "fr_octobre" = "Octobre",
+        "fr_novembre" = "Novembre",
+        "fr_decembre" = "Decembre",
+        
+        "en_janvier" = "January",
+        "en_fevrier" = "February",
+        "en_mars" = "March",
+        "en_avril" = "April",
+        "en_mai" = "May",
+        "en_juin" = "June",
+        "en_juillet" = "July",
+        "en_aout" = "August",
+        "en_septembre" = "September",
+        "en_octobre" = "October",
+        "en_novembre" = "November",
+        "en_decembre" = "December",
+        
+        "fr_config_protection" = "Protegez votre iPad",
+        "en_config_protection" = "Protect your iPad",
+        
+        "fr_config_back" = "<Retour",
+        "en_config_back" = "<Back",
+        
+        "fr_help" = "Aide>",
+        "en_help" = "Help>",
+        
+        "fr_config_protection_withcode" = "Avec un code",
+        "fr_config_protection_withfaceid" = "Avec FaceID",
+        "fr_config_protection_nothing" = "Je ne veux pas proteger mon iPad",
+        
+        "en_config_protection_withcode" = "With a code",
+        "en_config_protection_withfaceid" = "With FaceID",
+        "en_config_protection_nothing" = "I don't want to protect my iPad",
+        
+        "fr_config_code" = "Entrez un mot de passe avec le clavier",
+        "en_config_code" = "Enter a password with the keyboard",
+        
+        "fr_config_end" = "Bienvenue sur votre nouvel iPad",
+        "fr_config_end_start" = "Demarrer",
+        
+        "en_config_end" = "Welcome to iPad",
+        "en_config_end_start" = "Start",
+        
+        "fr_lockscreen" = "L'iPad est verrouille",
+        "fr_lockscreen_code" = "Tappez le code sur le clavier",
+        "fr_lockscreen_faceid" = "Deverrouiller avec FaceID",
+        "fr_lockscreen_nothing" = "Deverrouiller",
+        
+        "en_lockscreen" = "iPad is locked",
+        "en_lockscreen_code" = "Type the code on keyboard",
+        "en_lockscreen_faceid" = "Unlock with FaceID",
+        "en_lockscreen_nothing" = "Unlock",
+        
+        "fr_horloge" = "Horloge",
+        "fr_printers" = "Printers",
+        "fr_parametres" = "Parametres",
+        "fr_telegram" = "Telegram",
+        "fr_metiers" = "Metiers",
+        "fr_musiques" = "Musiques",
+        
+        "en_horloge" = "Clock",
+        "en_printers" = "Printers",
+        "en_parametres" = "Parameters",
+        "en_telegram" = "Telegram",
+        "en_metiers" = "Jobs",
+        "en_musiques" = "Musics",
+        
+        "fr_printers_title" = "Detecteur de printers",
+        "en_printers_title" = "Printers detector",
+        
+        "fr_printers_normal" = "Printer(s) trouve(s)",
+        "fr_printers_vip" = "Printer(s) vip trouve(s)",
+        
+        "en_printers_normal" = "Printer(s) found",
+        "en_printers_vip" = "Vip printer(s) found",
+        
+        "fr_telegram_keyboard" = ">Envoyez un message avec le clavier<",
+        "fr_telegram_join" = "A rejoint le chat",
+        "fr_telegram_leave" = "A quitter le chat",
+        
+        "en_telegram_keyboard" = ">Send a message with the keyboard<",
+        "en_telegram_join" = "join the chat",
+        "en_telegram_leave" = "leaved the chat",
+        
+        "fr_metiers_title" = "Detecteur de metiers",
+        "en_metiers_title" = "Jobs detector",
+        
+        "fr_jobs_citizens" = "Citoyen(s)",
+        "fr_jobs_gangsters" = "Gangster(s)",
+        "fr_jobs_cops" = "Policier(s)",
+        "fr_jobs_mercs" = "Mercenaire(s)",
+        "fr_jobs_others" = "Autre(s)",
+        
+        "en_jobs_citizens" = "Citizen(s)",
+        "en_jobs_gangsters" = "Gangster(s)",
+        "en_jobs_cops" = "Cop(s)",
+        "en_jobs_mercs" = "Mercenary(s)",
+        "en_jobs_others" = "Other(s)",
+        
+        "fr_help_title" = "Aide pour l'app",
+        "en_help_title" = "Help for the app",
+        
+        "fr_help_printers_1" = "Cette application permet de detecter les printers a proximite",
+        "fr_help_printers_2" = "Si cela ne fonctionne pas, verifiez que le trigger est bien",
+        "fr_help_printers_3" = "connecte, et bougez le.",
+        
+        "fr_help_metiers_1" = "Cette application permet de detecter les metiers a proximite",
+        "fr_help_metiers_2" = "Si cela ne fonctionne pas, verifiez que le trigger est bien",
+        "fr_help_metiers_3" = "connecte, et bougez le.",
+        
+        "en_help_printers_1" = "This application allows you to detect printers in close",
+        "en_help_printers_2" = "proximity. If this doesn't work, check that",
+        "en_help_printers_3" = "the trigger is connected and move it.",
+        
+        "en_help_metiers_1" = "This application allows you to detect jobs in close proximity.",
+        "en_help_metiers_2" = "If this doesn't work, check that the trigger is connected",
+        "en_help_metiers_3" = "and move it.",
+        
+        "fr_parametres_affichage" = "Affichage",
+        "fr_parametres_restaurer" = "Restaurer",
+        "fr_parametres_informations" = "Informations",
+        
+        "en_parametres_affichage" = "Display",
+        "en_parametres_restaurer" = "Restore",
+        "en_parametres_informations" = "Informations",
+        
+        "fr_parametres_affichage_activate" = "Activer le mode sombre",
+        "fr_parametres_affichage_desactivate" = "Desactiver le mode sombre",
+        "fr_parametres_affichage_1" = "Activez le mode sombre pour",
+        "fr_parametres_affichage_2" = "une experience visuelle exceptionnelle.",
+        
+        "en_parametres_affichage_activate" = "Activate Dark Mode",
+        "en_parametres_affichage_desactivate" = "Desactivate Dark Mode",
+        "en_parametres_affichage_1" = "Activate the dark mode to",
+        "en_parametres_affichage_2" = "an exceptional visual experience.",
+        
+        "fr_parametres_affichage_background" = "Fonds d'ecrans",
+        "en_parametres_affichage_background" = "Backgrounds",
+        
+        "fr_parametres_restaurer" = "Restaurer",
+        "fr_parametres_restaurer_code" = "Tappez votre code sur le clavier",
+        
+        "en_parametres_restaurer" = "Restore",
+        "en_parametres_restaurer_code" = "Type your code on the keyboard",
+        
+        "fr_restore" = "Restauration ...",
+        "en_restore" = "Restoring ...",
+        
+        "fr_warning_trigger" = "N'oubliez pas de bouger le trigger !",
+        "en_warning_trigger" = "Don't forget to move the trigger !",
+        
+        "telegram_notifications" = 1
+        
+    
+    )
+    
+    Egp:egpBox(1, vec2(512/2), vec2(512))
+    Egp:egpColor(1, vec4(255))
+    
+    Egp:text(2, "Bonjour", vec2(Size), vec(0), 50)
+    Egp:text(3, "Appuyez pour deverrouiller", vec2(Size) + vec2(0, 200), vec(0), 30)
+    
+    I = -255
+    
+}
+if(app_loop("config")){
+    
+    if(dsClk("keyboard")){
+        
+        print(dsGetString() + " received !")
+    }
+    
+    local RdW = table(
+    
+        table("Bonjour", "Appuyez pour deverrouiller"),
+        table("Hello", "Click to unlock"),
+        table("Hola", "Haga clic para desbloquear"),
+        table("Ola", "Clique para desbloquear"),
+        table("Buongiorno", "Clicca per sbloccare"),
+        table("Hallo", "Klik om te ontgrendelen"),
+        table("Hallo", "Zum Entsperren anklicken")
+        
+    )
+    
+    Egp:egpColor(2, vec(SinColor))
+    Egp:egpColor(3, vec(SinColor))
+    
+    if(SinColor >= 255){
+        
+        RdT = RdW[randint(1, RdW:count()), table]
+        
+        Egp:egpSetText(2, RdT[1, string])
+        Egp:egpSetText(3, RdT[2, string])
+        
+    }
+    
+    if(Use){ app("config_lang") }
+    
+}
+if(app_init("config_lang")){
+    
+    Egp:egpBox(1, vec2(512/2), vec2(512))
+    Egp:egpColor(1, ColorBG)
+    
+    Egp:box(2, vec2(Size, Size / 2), vec2(200, 50), vec4(0))
+    Egp:box(3, vec2(Size, Size / 2) + vec2(0, 50), vec2(200, 50), vec4(0))
+    
+    Egp:text(4, "Francais", vec2(Size, Size / 2), vec(0, 150, 255), 30)
+    Egp:text(5, "English", vec2(Size, Size / 2) + vec2(0, 50), vec(0, 150, 255), 30)
+    
+}
+if(app_loop("config_lang") && wait()){
+
+    if((changed(Use) & Use == 1) && Egp:button(2, Cursor)){ Config["lang", string] = "fr" app("config_protection") }
+    if((changed(Use) & Use == 1) && Egp:button(3, Cursor)){ Config["lang", string] = "en" app("config_protection") }
+    
+}
+
+if(app_init("config_protection")){
+    
+    Config["ipad-name", string] = lang("ipad_name") + " " + owner():name()
+    
+    Egp:egpBox(1, vec2(512/2), vec2(512))
+    Egp:egpColor(1, ColorBG)
+    
+    Egp:text(2, lang("config_protection"), vec2(Size, Size / 3), ColorTXT, 50)
+    
+    Egp:box(3, vec2(Size / 15), vec2(400, 25), vec4(0))
+    Egp:box(4, vec2(Size, Size - 40), vec2(400, 25), vec4(0))
+    Egp:box(5, vec2(Size, Size), vec2(400, 25), vec4(0))
+    Egp:box(6, vec2(Size, Size + 225), vec2(400, 25), vec4(0))
+    
+    Egp:text(7, lang("config_back"), vec2(Size / 15), vec(0, 150, 255), 25, "r")
+    Egp:text(8, lang("config_protection_withcode"), vec2(Size, Size - 40), vec(0, 150, 255), 40)
+    Egp:text(9, lang("config_protection_withfaceid"), vec2(Size, Size), vec(0, 150, 255), 40)
+    Egp:text(10, lang("config_protection_nothing"), vec2(Size, Size + 225), vec(0, 150, 255), 25)
+
+}
+if(app_loop("config_protection")){
+    
+    if((changed(Use) & Use == 1) && Egp:button(3, Cursor)){ app("config_lang") }
+    
+    if((changed(Use) & Use == 1) && Egp:button(4, Cursor)){ Config["protection", string] = "code" app("config_code") }
+    if((changed(Use) & Use == 1) && Egp:button(5, Cursor)){ Config["protection", string] = "faceid" app("config_end") }
+    if((changed(Use) & Use == 1) && Egp:button(6, Cursor)){ Config["protection", string] = "nothing" app("config_end") }
+    
+}
+
+if(app_init("config_code")){
+    
+    Egp:egpBox(1, vec2(512/2), vec2(512))
+    Egp:egpColor(1, vec4(255))
+    
+    Egp:box(2, vec2(Size / 15), vec2(400, 25), vec4(0))
+    Egp:text(3, lang("config_back"), vec2(Size / 15), vec(0, 150, 255), 25, "r")
+    Egp:text(4, lang("config_code"), vec2(Size, Size), vec(0), 25)
+    
+}
+
+if(app_loop("config_code")){
+    
+    if((changed(Use) & Use == 1) && Egp:button(2, Cursor)){ app("config_protection") }
+    
+    if(dsClk("keyboard")){
+        
+        Config["code", string] = dsGetString()
+        
+        app("config_end")
+        
+    }
+    
+}
+
+if(app_init("config_end")){
+    
+    Egp:egpBox(1, vec2(512/2), vec2(512))
+    Egp:egpColor(1, ColorBG)
+    
+    Egp:box(2, vec2(Size), vec2(400, 25), vec4(0))
+    
+    Egp:text(3, lang("config_end"), vec2(Size, Size / 3), ColorTXT, 40)
+    Egp:text(4, lang("config_end_start"), vec2(Size), vec(0, 150, 255), 35)
+    
+}
+if(app_loop("config_end")){
+    
+    if((changed(Use) & Use == 1) && Egp:button(2, Cursor)){ config_save() }
+    
+}
+
+
+
+if(changed(Button_Lock) && Button_Lock == 1 && Started == 1){ app("lockscreen") }
+
+if(app_init("lockscreen")){
+    
+    Egp:egpBox(5, vec2(512/2), vec2(512))
+    Egp:egpColor(5, ColorBG)
+    
+    Egp:text(1, lang("lockscreen"), vec2(Size, Size - 150), ColorTXT, 100)
+    
+    Egp:roundbox(2, vec2(Size), vec2(400, 80), vec4(0, 100, 255, 255))
+    
+    Egp:text(3, lang("lockscreen_" + Config["protection", string]), vec2(Size), ColorTXT, 35)
+    
+    Egp:text(4, "", vec2(Size, Size - 90), ColorTXT, 30)
+    
+}
+if(app_loop("lockscreen")){
+    
+    Egp:egpSetText(1, ServicesE2:wirelink():string("HMS"))
+    Egp:egpSetText(4, ServicesE2:wirelink():string("Date"):replace(ServicesE2:wirelink():string("Mois"), lang(ServicesE2:wirelink():string("Mois"):lower())))
+    
+    if(dsClk("keyboard")){
+        
+        if(dsGetString() == Config["code", string]){
+            
+            app("springboard")
+            
+        }
+        else
+        {
+            dsSendDirect("sound", ServicesE2, "error")  
+        }
+        
+    }
+    
+    if((changed(Use) & Use == 1) && Egp:button(2, Cursor)){
+        
+        if(Config["protection", string] == "faceid"){
+            
+            if(User == owner()){
+                
+                app("springboard")
+                
+            }
+            else
+            {
+                dsSendDirect("sound", ServicesE2, "error")   
+            }
+            
+        }
+        elseif(Config["protection", string] == "nothing"){
+            
+            app("springboard")   
+        }
+        
+    }
+        
+}
+
+if(app_init("springboard")){
+    
+    Egp:egpBox(0, vec2(512/2), vec2(512))
+    Egp:egpMaterial(0, Config["background", string])
+    
+    draw_app(10, "horloge", AppPos)
+    draw_app(20, "printers", AppPos + vec2(170, 0))
+    draw_app(30, "parametres", AppPos + vec2(170 * 2, 0))
+    draw_app(40, "telegram", AppPos + vec2(0, 170))
+    draw_app(50, "metiers", AppPos + vec2(170, 170))
+    draw_app(60, "musiques", AppPos + vec2(170 * 2, 170))
+    
+    Egp:text(110, "x", vec2(Size, Size / 13) + vec2(1, 1), vec4(0, 0, 0, 255), 30)
+    Egp:text(111, "x", vec2(Size, Size / 13), vec4(255), 30)
+
+    Started = 1
+    
+}
+
+if(app_loop("springboard")){
+    
+    if((changed(Use) & Use == 1) && Egp:button(10, Cursor)){ app("horloge") }
+    if((changed(Use) & Use == 1) && Egp:button(20, Cursor)){ app("printers") }
+    if((changed(Use) & Use == 1) && Egp:button(30, Cursor)){ app("parametres") }
+    if((changed(Use) & Use == 1) && Egp:button(40, Cursor)){ app("telegram") }
+    if((changed(Use) & Use == 1) && Egp:button(50, Cursor)){ app("metiers") }
+    if((changed(Use) & Use == 1) && Egp:button(60, Cursor)){ app("musiques") }
+    
+    Egp:egpSetText(110, ServicesE2:wirelink():string("HMS") + "                                                 " + "wifi")
+    Egp:egpSetText(111, ServicesE2:wirelink():string("HMS") + "                                                 " + "wifi")
+    
+}
+
+if(app_init("printers")){
+    
+    Egp:box(1, vec2(Size), vec2(Size * 2), ColorBG)
+    
+    Egp:text(2, lang("printers_title"), vec2(Size, Size / 3), ColorTXT, 60)
+    
+    P1 = vec2(Size) - vec2(130, 50)
+    P2 = vec2(Size) - vec2(130, -50)
+    
+    Egp:roundbox(3, P1, vec2(120, 40), ColorTXT)
+    Egp:roundbox(4, P1, vec2(100, 20), ColorBG)
+    Egp:roundbox(5, P1 + vec2(40, 0), vec2(15), ColorTXT)
+    Egp:text(6, "10,000 kr", P1, ColorTXT, 15)
+
+    Egp:roundbox(7, P2, vec2(120, 40), ColorTXT)
+    Egp:roundbox(8, P2, vec2(100, 20), ColorBG)
+    Egp:roundbox(9, P2 + vec2(40, 0), vec2(15), ColorTXT)
+    Egp:text(10, "30,000 kr", P2, ColorTXT, 15)
+    
+    Egp:text(11, "?", P1 + vec2(80, 0), ColorTXT, 25, "r")
+    Egp:text(12, "?", P2 + vec2(80, 0), ColorTXT, 25, "r")
+    Egp:text(13, lang("warning_trigger"), vec2(Size, Size + 200), ColorTXT, 25)
+    
+    Egp:box(14, vec2(Size * 1.95, Size / 7), vec2(400, 25), vec4(0))
+    Egp:text(15, lang("help"), vec2(Size * 1.95, Size / 7), vec(0, 150, 255), 25, "l")
+    
+    Egp:roundbox(100, vec2(Size, Size * 1.9), vec2(400, 20), ColorTXT)
+    
+    
+}
+
+if(app_loop("printers")){
+    
+    Egp:egpSetText(11, ServicesE2:wirelink():number("PrinterCount"):toString() + " " + lang("printers_normal"))
+    Egp:egpSetText(12, ServicesE2:wirelink():number("PrinterCountVip"):toString() + " " + lang("printers_vip"))
+    
+    if((changed(Use) & Use == 1) && Egp:button(14, Cursor)){ show_help() }
+    
+}
+
+if(app_init("telegram")){
+    
+    dsSend("telegram_join", "wifi", owner())
+    
+    Egp:box(1, vec2(Size), vec2(Size * 2), ColorBG)
+    Egp:box(3, vec2(Size, Size * 0.3), vec2(Size * 2, 5), ColorTXT)
+    
+    Egp:text(4, "Telegram", vec2(Size * 0.7, Size * 0.15), ColorTXT, 25)
+    
+    Egp:text(5, "?", vec2(Size * 1.7, Size * 0.15), ColorTXT, 25)
+    
+    Egp:text(6, lang("telegram_keyboard"), vec2(Size, Size + 220), ColorTXT, 20)
+    
+    Egp:text(10, "-", vec2(Size * 0.7, Size - 150), ColorTXT, 25)
+    Egp:text(11, "-", vec2(Size * 0.7, Size - 120), ColorTXT, 25)
+    Egp:text(12, "-", vec2(Size * 0.7, Size - 90), ColorTXT, 25)
+    Egp:text(13, "-", vec2(Size * 0.7, Size - 60), ColorTXT, 25)
+    Egp:text(14, "-", vec2(Size * 0.7, Size - 30), ColorTXT, 25)
+    Egp:text(15, "-", vec2(Size * 0.7, Size), ColorTXT, 25)
+    Egp:text(16, "-", vec2(Size * 0.7, Size + 30), ColorTXT, 25)
+    Egp:text(17, "-", vec2(Size * 0.7, Size + 60), ColorTXT, 25)
+    Egp:text(18, "-", vec2(Size * 0.7, Size + 90), ColorTXT, 25)
+    Egp:text(19, "-", vec2(Size * 0.7, Size + 120), ColorTXT, 25)
+    Egp:text(20, "-", vec2(Size * 0.7, Size + 150), ColorTXT, 25)
+    
+    TelegramMessages = table()
+    TelegramUsers = table()
+    
+    dsSend("telegram_check_co", "wifi", entity())
+    
+    Egp:roundbox(100, vec2(Size, Size * 1.95), vec2(400, 20), ColorTXT)
+
+}
+
+if(app_quit("telegram")){
+    
+    dsSend("telegram_quit", "wifi", owner())
+    
+}
+if(app_loop("telegram")){
+    
+    Egp:egpSetText(5, TelegramUsers:count() + " co")
+    
+    Egp:egpSetText(10, TelegramMessages[TelegramMessages:count() - 10, string])
+    Egp:egpSetText(11, TelegramMessages[TelegramMessages:count() - 9, string])
+    Egp:egpSetText(12, TelegramMessages[TelegramMessages:count() - 8, string])
+    Egp:egpSetText(13, TelegramMessages[TelegramMessages:count() - 7, string])
+    Egp:egpSetText(14, TelegramMessages[TelegramMessages:count() - 6, string])
+    Egp:egpSetText(15, TelegramMessages[TelegramMessages:count() - 5, string])
+    Egp:egpSetText(16, TelegramMessages[TelegramMessages:count() - 4, string])
+    Egp:egpSetText(17, TelegramMessages[TelegramMessages:count() - 3, string])
+    Egp:egpSetText(18, TelegramMessages[TelegramMessages:count() - 2, string])
+    Egp:egpSetText(19, TelegramMessages[TelegramMessages:count() - 1, string])
+    Egp:egpSetText(20, TelegramMessages[TelegramMessages:count(), string])
+    
+    if(dsClk("telegram_check_co")){
+        
+        dsSendDirect("telegram_yes", dsGetEntity(), owner())
+        
+    }
+    
+    if(dsClk("telegram_yes")){
+        
+        TelegramUsers:pushEntity(dsGetEntity())
+        
+    }
+    
+    if(dsClk("telegram_join")){
+        
+        TelegramUsers:pushEntity(dsGetEntity())
+        TelegramMessages:pushString(dsGetEntity():name() + " " + lang("telegram_join"))
+        
+        dsSendDirect("sound", ServicesE2, "garrysmod/save_load1.wav")           
+    }
+    
+    if(dsClk("keyboard")){
+        
+        Msg = owner():name() + ": " + dsGetString()
+        
+        TelegramMessages:pushString(Msg)
+        dsSend("telegram_msg", "wifi", Msg)
+        
+    }
+    
+    if(dsClk("telegram_msg")){
+        
+        dsSendDirect("sound", ServicesE2, "garrysmod/content_downloaded.wav")
+        
+        TelegramMessages:pushString(dsGetString())
+        
+    }
+    
+    if(dsClk("telegram_quit")){
+
+        TelegramMessages:pushString(dsGetEntity():name() + " " + lang("telegram_leave"))
+        
+        dsSendDirect("sound", ServicesE2, "garrysmod/save_load2.wav")     
+        
+        for(I = 0, TelegramUsers:count()){
+            
+            if(TelegramUsers[I, entity] == dsGetEntity()){
+
+                TelegramUsers:removeEntity(I)
+                
+            }
+            
+        }
+        
+    }
+
+}
+else
+{
+    if(dsClk("telegram_join")){
+        
+        print_notification("telegram", vec(0, 150, 255), dsGetEntity():name() + " " + lang("telegram_join"))
+        
+    }
+}
+
+if(app_init("metiers")){
+    
+    Egp:box(1, vec2(Size), vec2(Size * 2), ColorBG)
+    
+    Egp:text(2, lang("metiers_title"), vec2(Size, Size / 3), ColorTXT, 60)
+    
+    Egp:text(3, "-", vec2(Size, Size - 70), ColorTXT, 25)
+    Egp:text(4, "-", vec2(Size, Size - 40), ColorTXT, 25)
+    Egp:text(5, "-", vec2(Size, Size - 10), ColorTXT, 25)
+    Egp:text(6, "-", vec2(Size, Size + 20), ColorTXT, 25)
+    Egp:text(7, "-", vec2(Size, Size + 50), ColorTXT, 25)
+    
+    Egp:text(8, lang("warning_trigger"), vec2(Size, Size + 200), ColorTXT, 25)
+    
+    Egp:box(9, vec2(Size * 1.95, Size / 7), vec2(400, 25), vec4(0))
+    Egp:text(10, lang("help"), vec2(Size * 1.95, Size / 7), vec(0, 150, 255), 25, "l")
+    
+    Egp:roundbox(100, vec2(Size, Size * 1.9), vec2(400, 20), ColorTXT)
+    
+}
+
+if(app_loop("metiers")){
+    
+    Egp:egpSetText(3, ServicesE2:wirelink():number("Citoyens"):toString() + " " + lang("jobs_citizens"))
+    Egp:egpSetText(4, ServicesE2:wirelink():number("Polices"):toString() + " " + lang("jobs_cops"))
+    Egp:egpSetText(5, ServicesE2:wirelink():number("Gangsters"):toString() + " " + lang("jobs_gangsters"))
+    Egp:egpSetText(6, ServicesE2:wirelink():number("Mercenaires"):toString() + " " + lang("jobs_mercs"))
+    Egp:egpSetText(7, ServicesE2:wirelink():number("Autres"):toString() + " " + lang("jobs_others"))
+    
+    if((changed(Use) & Use == 1) && Egp:button(9, Cursor)){ show_help() }
+    
+}
+if(app_init("horloge")){
+    
+    Egp:box(1, vec2(Size), vec2(Size * 2), ColorBG)
+    Egp:text(2, "", vec2(Size), ColorTXT, 150)
+    Egp:text(3, "", vec2(Size, Size * 1.3), ColorTXT, 30)
+    
+    Egp:roundbox(100, vec2(Size, Size * 1.9), vec2(400, 20), ColorTXT)
+    
+}
+if(app_loop("horloge")){
+
+    Egp:egpSetText(2, ServicesE2:wirelink():string("HMS"))
+    Egp:egpSetText(3, ServicesE2:wirelink():string("Date"):replace(ServicesE2:wirelink():string("Mois"), lang(ServicesE2:wirelink():string("Mois"):lower())))
+    
+}
+if(app_init("parametres")){
+    
+    Egp:box(1, vec2(Size), vec2(Size * 2), ColorBG)
+
+    Egp:text(2, lang("parametres"), vec2(Size, Size / 6), ColorTXT, 50)
+    
+    Egp:roundbox(3, vec2(Size, Size / 3.5), vec2(Size * 2, 2), ColorTXT)
+    
+    Egp:roundboxoutline(4, vec2(Size, Size / 3.5) + vec2(0, 70), vec2(Size * 1.75, 50), vec4(0))
+    Egp:text(5, lang("parametres_affichage") + ">", vec2(Size, Size / 3.5) + vec2(0, 70), vec4(0, 150, 255, 255), 30)
+    
+    Egp:roundboxoutline(6, vec2(Size, Size / 3.5) + vec2(0, 130), vec2(Size * 1.75, 50), vec4(0))
+    Egp:text(7, lang("parametres_restaurer") + ">", vec2(Size, Size / 3.5) + vec2(0, 130), vec4(0, 150, 255, 255), 30)
+    
+    Egp:roundboxoutline(8, vec2(Size, Size / 3.5) + vec2(0, 190), vec2(Size * 1.75, 50), vec4(0))
+    Egp:text(9, lang("parametres_informations") + ">", vec2(Size, Size / 3.5) + vec2(0, 190), vec4(0, 150, 255, 255), 30)
+    
+    Egp:roundbox(100, vec2(Size, Size * 1.9), vec2(400, 20), ColorTXT)
+    
+}
+if(app_loop("parametres")){
+    
+    if((changed(Use) & Use == 1) && Egp:button(4, Cursor)){ app("parametres_affichage") }
+    if((changed(Use) & Use == 1) && Egp:button(6, Cursor)){ app("parametres_restauration") }
+    if((changed(Use) & Use == 1) && Egp:button(8, Cursor)){ app("parametres_informations") }
+    
+}
+if(app_init("parametres_affichage")){
+    
+    Egp:box(1, vec2(Size), vec2(Size * 2), ColorBG)
+
+    Egp:text(2, lang("parametres_affichage"), vec2(Size, Size / 6), ColorTXT, 50)
+    
+    Egp:roundbox(3, vec2(Size, Size / 3.5), vec2(Size * 2, 2), ColorTXT)
+    
+    Egp:box(4, vec2(Size / 15), vec2(400, 25), vec4(0))
+    Egp:text(5, lang("config_back"), vec2(Size / 15), vec(0, 150, 255), 25, "r")
+    
+    Egp:roundboxoutline(6, vec2(Size, Size / 3.5) + vec2(0, 70), vec2(Size * 1.75, 50), vec4(0))
+    Egp:text(7, "", vec2(Size, Size / 3.5) + vec2(0, 70), vec4(0, 150, 255, 255), 30)
+    
+    Egp:text(8, lang("parametres_affichage_1"), vec2(Size, Size / 3.5) + vec2(0, 130), ColorTXT, 20)
+    Egp:text(9, lang("parametres_affichage_2"), vec2(Size, Size / 3.5) + vec2(0, 150), ColorTXT, 20)
+    
+    Egp:roundboxoutline(10, vec2(Size, Size / 3.5) + vec2(0, 300), vec2(Size * 1.75, 50), vec4(0))
+    Egp:text(11, lang("parametres_affichage_background"), vec2(Size, Size / 3.5) + vec2(0, 300), vec4(0, 150, 255, 255), 30)
+    
+}
+if(app_loop("parametres_affichage")){
+    
+    if((changed(Use) & Use == 1) && Egp:button(4, Cursor)){ app("parametres") }
+    if((changed(Use) & Use == 1) && Egp:button(10, Cursor)){ app("parametres_affichage_background") }
+    
+    if(Config["colormode", string] == "light"){
+
+        Egp:egpSetText(7, lang("parametres_affichage_activate"))
+        if((changed(Use) & Use == 1) && Egp:button(6, Cursor)){ Config["colormode", string] = "dark" save() init_color_mode() app(Current_App) }
+        
+    }
+    else
+    {
+        Egp:egpSetText(7, lang("parametres_affichage_desactivate"))
+        if((changed(Use) & Use == 1) && Egp:button(6, Cursor)){ Config["colormode", string] = "light" save() init_color_mode() app(Current_App) }
+    }
+    
+}
+if(app_init("parametres_affichage_background")){
+    
+    Egp:box(1, vec2(Size), vec2(Size * 2), ColorBG)
+
+    Egp:text(2, lang("parametres_affichage_background"), vec2(Size, Size / 6), ColorTXT, 50)
+    
+    Egp:roundbox(3, vec2(Size, Size / 3.5), vec2(Size * 2, 2), ColorTXT)
+    
+    Egp:box(4, vec2(Size / 15), vec2(400, 25), vec4(0))
+    Egp:text(5, lang("config_back"), vec2(Size / 15), vec(0, 150, 255), 25, "r")
+    
+    Egp:roundbox(6, vec2( Size - 150, (Size / 1.3) ), vec2(100, 100), vec4(255))
+    Egp:egpMaterial(6, "console/background02")
+    
+    Egp:roundbox(7, vec2( Size, (Size / 1.3) ), vec2(100, 100), vec4(255))
+    Egp:egpMaterial(7, "console/background03")
+    
+    Egp:roundbox(8, vec2( Size + 150, (Size / 1.3) ), vec2(100, 100), vec4(255))
+    Egp:egpMaterial(8, "console/background04")
+    
+    Egp:roundbox(9, vec2( Size - 150, (Size / 1.3) + 150 ), vec2(100, 100), vec4(255))
+    Egp:egpMaterial(9, "console/background05")
+    
+    Egp:roundbox(10, vec2( Size, (Size / 1.3) + 150 ), vec2(100, 100), vec4(255))
+    Egp:egpMaterial(10, "console/background06")
+    
+    Egp:roundbox(11, vec2( Size + 150, (Size / 1.3) + 150 ), vec2(100, 100), vec4(255))
+    Egp:egpMaterial(11, "nxrp/obama.png")
+    
+}
+if(app_loop("parametres_affichage_background")){
+    
+    if((changed(Use) & Use == 1) && Egp:button(4, Cursor)){ app("parametres_affichage") }
+    
+    if((changed(Use) & Use == 1) && Egp:button(6, Cursor)){ Config["background", string] = "console/background02" save() app("parametres_affichage") }
+    if((changed(Use) & Use == 1) && Egp:button(7, Cursor)){ Config["background", string] = "console/background03" save() app("parametres_affichage") }
+    if((changed(Use) & Use == 1) && Egp:button(8, Cursor)){ Config["background", string] = "console/background04" save() app("parametres_affichage") }
+    if((changed(Use) & Use == 1) && Egp:button(9, Cursor)){ Config["background", string] = "console/background05" save() app("parametres_affichage") }
+    if((changed(Use) & Use == 1) && Egp:button(10, Cursor)){ Config["background", string] = "console/background06" save() app("parametres_affichage") }
+    if((changed(Use) & Use == 1) && Egp:button(11, Cursor)){ Config["background", string] = "nxrp/obama.png" save() app("parametres_affichage") }
+    
+}
+
+
+
+if(app_init("parametres_restauration")){
+    
+    Egp:box(1, vec2(Size), vec2(Size * 2), ColorBG)
+
+    Egp:text(2, lang("parametres_restaurer"), vec2(Size, Size / 6), ColorTXT, 50)
+    
+    Egp:roundbox(3, vec2(Size, Size / 3.5), vec2(Size * 2, 2), ColorTXT)
+    
+    Egp:box(4, vec2(Size / 15), vec2(400, 25), vec4(0))
+    Egp:text(5, lang("config_back"), vec2(Size / 15), vec(0, 150, 255), 25, "r")
+    
+    Egp:roundboxoutline(6, vec2(Size, Size / 3.5) + vec2(0, 70), vec2(Size * 1.75, 50), vec4(0))
+    Egp:text(7, lang("parametres_restaurer"), vec2(Size, Size / 3.5) + vec2(0, 70), vec4(255, 100, 100, 255), 30)
+    
+    if(Config["protection", string] == "code"){
+        
+        Egp:egpSetText(7, lang("parametres_restaurer_code"))
+        
+    }
+
+}
+if(app_loop("parametres_restauration")){
+    
+    if((changed(Use) & Use == 1) && Egp:button(4, Cursor)){ app("parametres") }
+    
+    if(Config["protection", string] == "code"){
+        
+        if(dsClk("keyboard")){
+            if(dsGetString() == Config["code", string]){
+                
+                app("restore")
+                
+            }
+            else
+            {
+                dsSendDirect("sound", ServicesE2, "error")  
+            }
+        }
+        
+    }
+    elseif(Config["proection", string] == "faceid"){
+        
+        if(User:keyUse()){
+            if(User == owner()){
+                
+                app("restore")
+                
+            }
+            else
+            {
+                dsSendDirect("sound", ServicesE2, "error")  
+            }
+        }
+        
+    }
+    else
+    {
+        if((changed(Use) & Use == 1) && Egp:button(6, Cursor)){ app("restore") }
+    }
+    
+}
+if(app_init("restore")){
+    
+    Egp:box(1, vec2(Size), vec2(Size * 2), ColorBG)
+    
+    Egp:text(2, lang("restore"), vec2(Size), ColorTXT, 50)
+    
+    fileWrite("ipad_pro_data.txt", "")
+    
+    timer("restart", 1500)
+    
+}
+if(clk("restart")){ reset() }
+
+if(app_init("parametres_informations")){
+    
+    Egp:box(1, vec2(Size), vec2(Size * 2), ColorBG)
+
+    Egp:text(2, lang("parametres_informations"), vec2(Size, Size / 6), ColorTXT, 50)
+    
+    Egp:roundbox(3, vec2(Size, Size / 3.5), vec2(Size * 2, 2), ColorTXT)
+    
+    Egp:box(4, vec2(Size / 15), vec2(400, 25), vec4(0))
+    Egp:text(5, lang("config_back"), vec2(Size / 15), vec(0, 150, 255), 25, "r")
+    
+    Egp:roundboxoutline(6, vec2(Size, Size / 3.5) + vec2(0, 70), vec2(Size * 1.75, 50), vec4(0))
+    Egp:text(7, "", vec2(Size, Size / 3.5) + vec2(0, 70), vec4(0, 150, 255, 255), 30)
+    
+    Egp:text(8, Config["ipad-name", string], vec2(Size, Size / 3.5) + vec2(0, 70), ColorTXT, 30)
+    
+    Egp:text(9, "v" + Config["version", string], vec2(Size, Size / 3.5) + vec2(0, 130), ColorTXT, 30)
+    
+    Egp:text(10, "", vec2(Size, Size / 3.5) + vec2(0, 190), ColorTXT, 30)
+    
+    Egp:text(11, "By K3CR4FT.:DLL - 2020", vec2(Size, Size / 3.5) + vec2(0, 250), ColorTXT, 30)
+    
+}
+if(app_loop("parametres_informations")){
+    
+    if((changed(Use) & Use == 1) && Egp:button(4, Cursor)){ app("parametres") }
+    
+    Egp:egpSetText(10, "OPS : " + ops() + "/" + maxquota())
+    
+}
+
+if(app_init("musiques")){
+    
+    Musique_index = 1
+    
+    Egp:box(1, vec2(Size), vec2(Size * 2), ColorBG)
+    
+    Musique_list = table(
+    
+        table("Name" = "Citadelle", "Res" = "d1_canals_citadel_music"),
+        table("Name" = "Town Intro", "Res" = "d1_town.Music_Intro"),
+        table("Name" = "Radio", "Res" = "d1_trainstation.RadioMusic"),
+        table("Name" = "Stress", "Res" = "d1_trainstation.CourtyardMusic"),
+        table("Name" = "Chasse", "Res" = "d1_trainstation.ChaseMusic"),
+        table("Name" = "Song4", "Res" = "song4"),
+        table("Name" = "Song6", "Res" = "song6"),
+        table("Name" = "Song12", "Res" = "song12_long"),
+        table("Name" = "Song16", "Res" = "song16")
+    
+    )
+    
+    Egp:roundbox(2, vec2(Size) + vec2(-100, 174), vec2(170, 70), ColorTXT)
+    Egp:text(3, "Play", vec2(Size) + vec2(-100, 174), vec4(0, 150, 255, 255), 50)
+    
+    Egp:roundbox(4, vec2(Size) + vec2(100, 174), vec2(170, 70), ColorTXT)
+    Egp:text(5, "Stop", vec2(Size) + vec2(100, 174), vec4(0, 150, 255, 255), 50)
+    
+    Egp:text(6, "", vec2(Size, Size - 32), ColorTXT, 50)
+    
+    Egp:roundbox(7, vec2(Size) + vec2(-100, 100), vec2(170, 35), ColorTXT)
+    Egp:text(8, "<", vec2(Size) + vec2(-100, 100), vec4(0, 150, 255, 255), 35)
+    
+    Egp:roundbox(9, vec2(Size) + vec2(100, 100), vec2(170, 35), ColorTXT)
+    Egp:text(10, ">", vec2(Size) + vec2(100, 100), vec4(0, 150, 255, 255), 35)
+    
+    Egp:text(13, "", vec2(Size) + vec2(0, -90), ColorTXT, 15)
+    
+    Egp:roundbox(100, vec2(Size, Size * 1.9), vec2(400, 20), ColorTXT)
+        
+}
+if(app_loop("musiques")){
+    
+    local MusName = Musique_list[Musique_index, table]["Name", string]
+    local MusRes = Musique_list[Musique_index, table]["Res", string]
+    
+    Egp:egpSetText(6, MusName)
+    
+    if((changed(Use) & Use == 1) && Egp:button(2, Cursor)){ dsSendDirect("play_song", ServicesE2, MusRes) }
+    if((changed(Use) & Use == 1) && Egp:button(4, Cursor)){ dsSendDirect("stop_song", ServicesE2, "") }
+    
+    if((changed(Use) & Use == 1) && Egp:button(7, Cursor)){
+        
+        Musique_index--
+        
+        if(Musique_index < 1){ Musique_index = Musique_list:count() }
+
+    }
+    if((changed(Use) & Use == 1) && Egp:button(9, Cursor)){
+        
+        Musique_index++
+        
+        if(Musique_index > Musique_list:count()){ Musique_index = 1 }
+        
+    }
+ 
+}
+
+if(app_init("help")){
+    
+    Egp:box(1, vec2(Size), vec2(Size * 2), ColorBG)
+    
+    Egp:box(2, vec2(Size / 15), vec2(400, 25), vec4(0))
+    Egp:text(3, "<" + lang(AppContext), vec2(Size / 15), vec(0, 150, 255), 25, "r")
+    
+    Egp:text(4, lang("help_title") + " " + lang(AppContext), vec2(Size, Size / 5), ColorTXT, 30)
+    
+    Egp:roundbox(5, vec2(Size, Size / 3.5), vec2(Size * 2, 2), ColorTXT)
+    
+    if(AppContext == "printers"){
+        
+        Egp:text(6, lang("help_printers_1"), vec2(Size / 10, (Size / 2.5)), ColorTXT, 20, "r")
+        Egp:text(7, lang("help_printers_2"), vec2(Size / 10, (Size / 2.5) + 20), ColorTXT, 20, "r")
+        Egp:text(8, lang("help_printers_3"), vec2(Size / 10, (Size / 2.5) + 40), ColorTXT, 20, "r")
+        
+    }
+    
+    if(AppContext == "metiers"){
+        
+        Egp:text(6, lang("help_metiers_1"), vec2(Size / 10, (Size / 2.5)), ColorTXT, 20, "r")
+        Egp:text(7, lang("help_metiers_2"), vec2(Size / 10, (Size / 2.5) + 20), ColorTXT, 20, "r")
+        Egp:text(8, lang("help_metiers_3"), vec2(Size / 10, (Size / 2.5) + 40), ColorTXT, 20, "r")
+        
+    }
+    
+}
+
+if(app_loop("help")){
+    
+    if((changed(Use) & Use == 1) && Egp:button(2, Cursor)){
+        
+        app(AppContext)
+        
+    }
+    
+}
+
+
+if((changed(Use) & Use == 1) && Egp:button(100, Cursor)){ app("springboard") }
+
+Egp:egpColor(100, vec4(SinColor, SinColor, SinColor, 255))
+
+SinColor = abs(sin(I) * 255)
+I+=3

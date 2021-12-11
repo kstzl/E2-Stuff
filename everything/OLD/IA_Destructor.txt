@@ -1,0 +1,51 @@
+@name IA Destructor
+@inputs 
+@outputs 
+@persist H H2 Ang C Prop:entity Force
+@trigger 
+@model models/hunter/plates/plate1x1.mdl
+
+ runOnTick(1)
+
+ if(first()){ Force=3000
+    
+    H=0 holoCreate(H) holoScale(H,vec(0.5,0.5,1)) holoPos(H,entity():pos()+vec(0,0,13)) holoParent(H,entity())
+    H=1 holoCreate(H) holoScale(H,vec(1,1,1)) holoPos(H,entity():pos()+vec(0,0,13*2)) holoParent(H,entity())
+    H=2 holoCreate(H) holoScale(H,vec(1.5,1.5,1)) holoPos(H,entity():pos()+vec(0,0,13*3)) holoParent(H,entity())
+    H=3 holoCreate(H) holoScale(H,vec(3,3,1)) holoPos(H,entity():pos()+vec(0,0,13*4)) holoParent(H,entity())
+    
+ }
+
+ if(H2 < H){
+    H2++ 
+    Ang=randint(0,190)
+    
+    if(H2 == 0){ holoAng(H2,ang(0,Ang,0))}
+    if(H2 == 1){ holoAng(H2,ang(0,Ang,0))}
+    if(H2 == 2){ holoAng(H2,ang(0,Ang,0))}
+
+ }
+ if(H2 >= H){ H2 = -1 }
+
+    holoAng(3,find():angles())
+    findByClass("player")
+    findSortByDistance(entity():pos())
+
+
+ if(C < 20){
+    C++
+ 
+
+ }
+ if(C >= 20){
+
+    propDeleteAll()
+    Prop=propSpawn("models/props_phx/ball.mdl",0)
+    Prop:setPos(holoEntity(3):pos())
+    Prop:setTrails(10,2,1,"trails/smoke",vec(255,255,255),255)
+    Prop:applyForce(((find():pos()+vec(0,0,3)-Prop:massCenter())*Prop:mass()*Force))
+    Prop:propNotSolid(0)
+    
+ C=0   
+ }
+ Prop:applyForce(((find():pos()+vec(0,0,34)-Prop:massCenter())*Prop:mass()*Force/2))

@@ -1,0 +1,29 @@
+@name Cours E2
+@inputs Scr:wirelink A
+@outputs Reset
+@persist I
+@trigger 
+
+runOnTick(1)
+
+if(A == 1){ I+= 1 Reset = 1}
+if(I > 6){ I = 0 }
+
+if(I == 1){
+Scr:writeString("Bienvenue sur le cours de l'E2",1,1,vec(0,0,255),vec(255))
+}
+if(I == 2){
+Scr:writeString("@name <nom de l'E2>",1,1,vec(0,0,255),vec(255))
+}
+if(I == 3){
+Scr:writeString("@inputs <ex: bouton>",1,1,vec(0,0,255),vec(255))
+}
+if(I == 4){
+Scr:writeString("@outputs <ex: ecran>",1,1,vec(0,0,255),vec(255))
+}
+if(I == 5){
+Scr:writeString("@persist <variables enregistrees",1,1,vec(0,0,255),vec(255))
+}
+if(I == 6){
+Scr:writeString("@trigger ?",1,1,vec(0,0,255),vec(255))
+}

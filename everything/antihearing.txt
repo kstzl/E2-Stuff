@@ -1,0 +1,16 @@
+@name AntiHearing
+@persist [ I ]:number
+
+# Anti hearing 
+# It create a lot of sound with low pitch.
+# So it "break" other game's sounds.
+
+interval(1)
+
+holoCreate(I)
+holoAlpha(I, 0)
+
+holoEntity(I):soundPlay(I, 0, "Airboat.FireGunLoop")
+soundPitch(I, 3)
+I++
+

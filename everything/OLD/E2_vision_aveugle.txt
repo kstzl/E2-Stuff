@@ -1,0 +1,73 @@
+@name E2 vision aveugle
+@inputs 
+@outputs 
+@persist T:entity Alpha Max P:entity P2:entity P3:entity M
+@trigger 
+
+       runOnTick(1)
+    
+       if(first()){
+        
+        timer("sp",1200)
+        
+        ##### CONFIG #####
+        
+        Max=250
+
+        T=findPlayerByName("Kec")
+        
+        #### CONFIG #####
+        
+       holoCreate(1)
+       holoCreate(1) holoModel(1,"hqsphere") holoScale(1,vec(-5)) holoColor(1,vec(0))
+       holoPos(1,T:pos()+vec(0,0,50))
+       holoPos(1,T:attachmentPos("eyes"))
+       holoAng(1,T:attachmentAng("eyes"))
+       holoParentAttachment(1,T,"eyes")
+    
+       holoEntity(1):soundPlay(1,0,"Phx_Rubber_Tire.Strain")
+      
+       }
+       holoAlpha(1,Alpha) if(Alpha < Max){ Alpha+=0.5 }
+       if(changed(Alpha) && Alpha == Max){ holoEntity(1):soundPlay(2,0,"ambient.electrical_zap_2") 
+        P2=propSpawn("models/Gibs/HGIBS.mdl",0) P2:setPos(T:pos()+vec(0,200,50))
+        }
+
+ 
+       if(Alpha >= Max){
+          P:setPos(T:pos()+vec(0,0,20))
+          P:setAng(ang(0))
+          P:setAlpha(0)
+          P:propFreeze(1)
+        
+          P2:setPos(T:pos()+vec(0,200-M,50))
+                                      M+=0.5
+          holoScale(1,vec(-8))
+        
+      }
+    
+      if(P2:pos():distance(T:pos()) <= 100){
+
+        holoAlpha(1,randint(210,255))
+        holoColor(1,vec(randint(200,255),0,randint(0,255)))
+        
+        DeadSound=1
+        
+      }
+
+      if(changed(DeadSound) && DeadSound == 1){
+         holoEntity(1):soundPlay(3,0,"Player.Death") soundStop(1)
+        
+         P3=propSpawn("models/props_c17/playground_jungle_gym01a.mdl",0)
+         P3:setPos(T:pos()+vec(0,0,20))
+        
+         timer("dexplode",4600)
+         timer("destruct",5000)
+        
+         holoEntity(1):soundPlay(4,0,"k_lab.teleport_malfunction_sound")
+        
+        
+      }
+         if(clk("dexplode")){ P5=propSpawn("models/props_c17/oildrum001_explosive.mdl",0) P5:setPos(T:pos()+vec(0,0,220)) P5:propBreak() }
+         if(clk("destruct")){ propDeleteAll() selfDestructAll() }
+         P3:setAlpha(0)

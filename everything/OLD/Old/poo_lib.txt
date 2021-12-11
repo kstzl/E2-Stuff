@@ -1,0 +1,148 @@
+@name POO_Lib
+
+@persist [ POO_Objects ]:table
+
+@persist [ ThisObject NewInitiedObject ]:table
+
+@persist [ GlobalIndex ]:number
+
+#[
+
+ Expression2
+  _____   ____   ____    _      _ _     
+ |  __ \ / __ \ / __ \  | |    (_) |    
+ | |__) | |  | | |  | | | |     _| |__  
+ |  ___/| |  | | |  | | | |    | | '_ \ 
+ | |    | |__| | |__| | | |____| | |_) |
+ |_|     \____/ \____/  |______|_|_.__/ 
+                                                                                                          
+ By K3CR4FT.:DLL ; 2020
+                                       
+]#
+
+
+function number table:poo_getNumber(Attribute_:string){
+    return This["Content", table][Attribute_, number]
+}
+function string table:poo_getString(Attribute_:string){
+    return This["Content", table][Attribute_, string]
+}
+function vector table:poo_getVector(Attribute_:string){
+    return This["Content", table][Attribute_, vector]
+}
+function entity table:poo_getEntity(Attribute_:string){
+    return This["Content", table][Attribute_, entity]
+}
+function angle table:poo_getAng(Attribute_:string){
+    return This["Content", table][Attribute_, angle]
+}
+
+###
+
+function table:poo_setNumber(Attribute_:string, Var_:number){
+    This["Content", table][Attribute_, number] = Var_
+}
+function table:poo_setString(Attribute_:string, Var_:string){
+    This["Content", table][Attribute_, string] = Var_
+}
+function table:poo_setVector(Attribute_:string, Var_:vector){
+    This["Content", table][Attribute_, vector] = Var_
+}
+function table:poo_setEntity(Attribute_:string, Var_:entity){
+    This["Content", table][Attribute_, entity] = Var_
+}
+function table:poo_setAng(Attribute_:string, Var_:angle){
+    This["Content", table][Attribute_, angle] = Var_
+}
+
+function poo_print(Text_:string){
+    
+    print("[POO LIB] " + Text_)
+    
+}
+
+function table table:poo_content(){
+    return This["Content", table]
+}
+
+
+function number table:poo_objectIndex(){
+    return This["Index", number]
+}
+
+function number table:poo_loop(ClassName_:string){
+    
+    return (This["ClassName", string] == ClassName_)
+    
+    
+    
+}
+
+function number poo_init_(ClassName_:string){
+    return clk("poo_init_" + ClassName_)
+}
+
+function number table:poo_init(ClassName_:string){
+    
+    if(This["ClassName", string] == ClassName_){
+        if(!This["Init", number]){
+            This["Init", number] = 1
+            return 1
+        }
+        else
+        {
+            return 0
+        }
+    }
+    else
+    {
+        return 0
+    }
+
+}
+
+function table:poo_resetObject(){
+    This["Init", number] = 0
+}
+
+function table:poo_deleteObject(){
+    
+    for(I = 0, POO_Objects:count()){
+        
+        Object = POO_Objects[I, table]
+
+        if(This["Index", number] == Object["Index", number]){
+            
+            POO_Objects:removeTable(I)
+        }
+        
+    }
+    
+}
+
+function table poo_createObject(ClassName_:string){
+
+        GlobalIndex += int((time() * (POO_Objects:count()+1))/10^7)
+        Index = GlobalIndex
+        
+        POO_Objects:pushTable(table(
+        
+        "ClassName" = ClassName_,
+        "Index" = Index,
+        "Init" = 0,
+        "Content" = table()
+        
+        ))
+        
+        NewObject = POO_Objects[POO_Objects:count(), table]
+        
+        timer("poo_init_" + ClassName_, 0)
+        NewInitiedObject = NewObject
+        
+        return NewObject
+}
+
+if(first()){
+    poo_print("By K3CR4FT.:DLL - 2020")
+    
+}

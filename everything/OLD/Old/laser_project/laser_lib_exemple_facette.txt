@@ -1,0 +1,26 @@
+@name laser_lib_exemple_facette
+@inputs 
+@outputs 
+@persist 
+@trigger 
+#include "laser_project/laser_lib"
+
+if(first()){ laserMake(1) laserTrail(1,340,13,1,"trails/laser",vec(255,0,0),255)
+             laserMake(2) laserTrail(2,340,13,1,"trails/laser",vec(0,255,0),255)
+             laserMake(3) laserTrail(3,340,13,1,"trails/laser",vec(0,0,255),255)
+             laserMake(4) laserTrail(4,340,13,1,"trails/laser",vec(255,0,255),255)
+             laserMake(5) laserTrail(5,340,13,1,"trails/laser",vec(0,255,255),255)
+             laserMake(6) laserTrail(6,340,13,1,"trails/laser",vec(255,255,0),255)
+    
+    
+    
+    
+    
+}
+
+ laserStart(1,entity():pos()+vec(0,0,0),entity():pos()+vec(randint(-1000,1000),randint(-1000,1000),randint(-1000,1000)))
+ laserStart(2,entity():pos()+vec(0,0,0),entity():pos()+vec(randint(-1000,1000),randint(-1000,1000),randint(-1000,1000)))
+ laserStart(3,entity():pos()+vec(0,0,0),entity():pos()+vec(randint(-1000,1000),randint(-1000,1000),randint(-1000,1000)))
+ laserStart(4,entity():pos()+vec(0,0,0),entity():pos()+vec(randint(-1000,1000),randint(-1000,1000),randint(-1000,1000)))
+ laserStart(5,entity():pos()+vec(0,0,0),entity():pos()+vec(randint(-1000,1000),randint(-1000,1000),randint(-1000,1000)))
+ laserStart(6,entity():pos()+vec(0,0,0),entity():pos()+vec(randint(-1000,1000),randint(-1000,1000),randint(-1000,1000)))

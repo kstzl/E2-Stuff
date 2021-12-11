@@ -1,0 +1,98 @@
+@name Electric_Rings
+@persist [ Prop O ]:entity [ Color PropPos ]:vector [ Ring ]:table [ RingH DeadH C0 ]:number
+
+runOnTick(1)
+
+function createRing(){
+    
+    holoCreate(RingH)
+    holoScaleUnits(RingH, vec(0))
+    holoModel(RingH, "hq_torus_thin")
+    holoMaterial(RingH,"models/alyx/emptool_glow")
+    holoEntity(RingH):soundPlay(RingH, 0, "d3_citadel.weapon_zapper_beam_loop1")
+    
+    Ring[RingH, table] = table(0, 0)
+    
+    C0 = 255
+    
+    RingH += 1
+}
+
+if(first()){
+
+    O = owner() 
+    
+    Prop = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    
+    RingH = DeadH = 1
+    
+    holoCreate(0)
+    holoModel(0, "hqsphere")
+    holoScale(0, vec(5))
+    holoParent(0, entity())
+    
+    timer("ring", 0)
+
+}
+
+if(clk("ring")){
+    
+    createRing()
+    
+    timer("ring", randint(1500, 2500))
+    
+}
+
+for(I = DeadH, RingH){
+    
+    findByClass("player")
+    findSortByDistance(holoEntity(I):pos())
+    O = find()
+
+    Ring[I, table][0, number] = Ring[I, table][0, number] + 5
+    
+    Alpha = 255 - Ring[I, table][0, number]/3
+    holoScaleUnits(I, vec(Ring[I, table][0, number]))
+    holoAlpha(I, clamp(Alpha, 0, 255))
+    
+    Condition1 = abs(O:pos():z() - holoEntity(I):pos():z())
+    Condition2 = O:pos():distance(holoEntity(I):pos()) <= Ring[I, table][0, number]/2
+    Condition3 = O:pos():distance(holoEntity(I):pos()) >= Ring[I, table][0, number]/2 - 25
+    
+    if(Ring[I, table][1, number] == 0){
+        if(Condition1 < 25 && Condition2 && Condition3){
+            
+            PropPos = O:pos()
+            
+            holoColor(I, vec(255, 0, 0))
+            soundStop(I)
+            soundPlay(I, 0, "d3_citadel.zapper_warmup")
+            
+            Ring[I, table][1, number] = 1
+            
+        }
+        else
+        {
+            PropPos = PropPos + ( entity():pos() - PropPos ) / 105
+            holoColor(I, vec(255))
+        }
+    }
+    
+    if(Alpha < 5){
+        
+        holoDelete(I)
+        soundStop(I)
+        
+        DeadH += 1
+        
+    }
+    
+}
+
+Prop:setPos(PropPos)
+Prop:applyAngForce(ang(1,1,701)*Prop:mass()*30)
+Prop:setAlpha(0)
+
+holoColor(0, vec(0, C0/2, C0))
+
+C0 += (0 - C0)/15

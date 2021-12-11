@@ -1,0 +1,52 @@
+@name ChariotTueur
+@persist [ Target Prop ]:entity
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    holoModel(1, "models/props_junk/PushCart01a.mdl")
+    holoEntity(1):soundPlay(0, 0, "Airboat_engine_idle")
+    
+    Prop = propSpawn("models/props_c17/FurnitureBed001a.mdl", 0)
+    Prop:setAlpha(0)
+    Prop:ignite()
+
+}
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos())
+Target = find()
+
+rangerFilter(players())
+
+Ranger = rangerOffset(3000, holoEntity(1):pos(), holoEntity(1):forward())
+RangerD = rangerOffset(3000, holoEntity(1):pos(), -holoEntity(1):up())
+
+Prop:setPos(holoEntity(1):toWorld(vec(0, 0, 50)))
+Prop:applyAngForce(ang(700) * Prop:mass() * 130)
+
+if(Ranger:distance() < 150){
+    
+    holoAng(1, ( Target:pos() - holoEntity(1):pos() ):toAngle():setPitch(0))
+    
+}
+if(Target:pos():distance(holoEntity(1):pos()) < 150 && Target:keyAttack1()){
+    
+    holoAng(1, ( Target:pos() - holoEntity(1):pos() ):toAngle():setPitch(0) * -1)
+
+}
+
+if(RangerD:distance() > 1000){
+    
+    Z = holoEntity(1):pos():z()
+    
+}
+else
+{
+    Z = RangerD:pos():z()
+    
+}
+
+holoPos(1, holoEntity(1):toWorld(vec(10, 0, 0)):setZ(Z + 35))

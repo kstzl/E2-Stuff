@@ -1,0 +1,19 @@
+@name Combine ball autour
+@inputs 
+@outputs 
+@persist I A:array P:array B
+@trigger 
+
+ runOnTick(1)
+
+ A=findToArray()
+
+ I=0
+
+ findByClass("prop_combine_ball")
+
+ while(I < A:count()){
+       I++
+        A[I,entity]:propGravity(1)
+}
+

@@ -1,0 +1,519 @@
+@name k3_os_v2
+@inputs [ Egp SoundEmitter Trigger ]:wirelink
+@outputs
+@persist [ K3_ACTUAL_PROGRAM_NAME ]:string
+@persist [ K3_S K3_USE K3_ERROR_F K3_OPS ]:number
+@persist [ K3_USER ]:entity
+@persist [ K3_CURSOR ]:vector2
+@persist [ K3_ALERT_CONST K3_ALERT_CONST_INVERT ]:vector4
+
+#Bootscreen app
+@persist [ Bootscreen_c ]:number
+
+#Bureau app
+@persist [ Bureau_bt ]:number
+
+#Parametres app
+@persist [ Params_sounds Params_acc ]:number
+
+#Detection de Metiers app
+@persist [ DM_Index DM_CB ]:number [ DM_Job ]:string [ DM_Jobs ]:table
+
+
+interval(K3_OPS)
+
+#[
+  _  ______     ____   _____  __      _____  
+ | |/ /___ \   / __ \ / ____| \ \    / /__ \ 
+ | ' /  __) | | |  | | (___    \ \  / /   ) |
+ |  <  |__ <  | |  | |\___ \    \ \/ /   / / 
+ | . \ ___) | | |__| |____) |    \  /   / /_ 
+ |_|\_\____/   \____/|_____/      \/   |____|
+                                             
+    By K3CR4FT.:DLL - 2020
+]#
+
+
+################################################
+#EGP Library - coded by Ivef.
+
+function void wirelink:box(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpBox(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+}
+function void wirelink:boxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+    This:egpSize(Index,1)
+}
+function void wirelink:boxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4,Outline:number){
+    This:egpBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+    This:egpSize(Index,Outline)
+}
+function void wirelink:roundbox(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpRoundedBox(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+}
+function void wirelink:roundboxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpRoundedBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)  
+    This:egpSize(Index,1)
+}
+function void wirelink:roundboxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4,S:number){
+    This:egpRoundedBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)  
+    This:egpSize(Index,S)
+}
+function void wirelink:line(Index:number,Pos1:vector2,Pos2:vector2,Color:vector4,Size:number){
+    This:egpLine(Index,Pos1,Pos2)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+}
+function void wirelink:line(Index:number,Pos1:vector2,Pos2:vector2,Color:vector4){
+    This:egpLine(Index,Pos1,Pos2)
+    This:egpColor(Index,Color)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector,Size:number){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    This:egpAlign(Index,1,1)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector4,Size:number){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    This:egpAlign(Index,1,1)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector,Size:number,Align:string){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    if(Align == "c"){
+        This:egpAlign(Index,1,1)
+    }
+    elseif(Align == "l"){
+        This:egpAlign(Index,2,1)
+    }
+    elseif(Align == "r"){
+        This:egpAlign(Index,0,1)
+    }
+    else{
+        This:egpAlign(Index,1,1)
+    }
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector4,Size:number,Align:string){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    if(Align == "c"){
+        This:egpAlign(Index,1,1)
+    }
+    elseif(Align == "l"){
+        This:egpAlign(Index,2,1)
+    }
+    elseif(Align == "r"){
+        This:egpAlign(Index,0,1)
+    }
+    else{
+        This:egpAlign(Index,1,1)
+    }
+}
+function number wirelink:button(ID:number,Cursor:vector2){
+    local BPos = This:egpPos(ID)
+    local BSize = This:egpSize(ID)/2
+    local Pressed = inrange(Cursor,BPos-BSize,BPos+BSize)
+    return Pressed
+}
+##############################################################
+
+##############################################################
+
+function init_k3(){
+    
+    K3_S = 512 / 2
+    
+    Params_sounds = 1
+    
+    timer("K3_ALERT_CONST", 0)
+    
+}
+
+function ops_k3(Ops_:number){
+    
+    K3_OPS = Ops_ - ( (Params_acc == 1) * 150 )
+    
+}
+
+function start_prog(ProgName_:string){
+
+    K3_ACTUAL_PROGRAM_NAME = ProgName_
+
+    timer(ProgName_, 0)
+    
+}
+
+function number prog_is(ProgName_:string){
+    
+    Can = (K3_ACTUAL_PROGRAM_NAME == ProgName_)
+    
+    if(Can){ Egp:egpClear() }
+    
+    return Can 
+    
+}
+
+function play_sound(SoundName_:string){
+    
+    if(Params_sounds){
+        SoundEmitter:setNumber("Play", 1)
+        SoundEmitter:setString("SampleName", SoundName_)
+    }
+    
+}
+
+function error_show(Error_:string){
+    
+    Egp:box(120, vec2(K3_S), vec2(Error_:length() * 15, 100), K3_ALERT_CONST_INVERT)
+    Egp:text(121, "ERREUR", vec2(K3_S, K3_S * 0.9), K3_ALERT_CONST, 30)
+    Egp:text(122, Error_, vec2(K3_S, K3_S * 1.1), K3_ALERT_CONST, 30)
+    Egp:boxoutline(123, vec2(K3_S), vec2(Error_:length() * 15, 100), vec4(100, 0, 0, 255))
+    
+    if(changed(K3_ALERT_CONST) && K3_ALERT_CONST == vec4(0, 0, 0, 255)){
+        
+        play_sound("Buttons.snd11")
+        
+    }
+    
+}
+
+function string stn(N_:number){
+    
+    local S = ""
+    
+    if(N_ == 0){ S = "Non" }else{ S = "Oui" }
+    
+    return S
+    
+}
+
+function vector4 ctn(N_:number){
+    
+    local V = vec4(0)
+    
+    if(N_ == 0){ V = vec4(255, 0, 0, 255) }else{ V = vec4(0, 255, 0, 255) }
+    
+    return V
+    
+}
+
+##############################################################
+
+if(first() || dupefinished()){
+
+    init_k3()
+    start_prog("bootscreen") 
+    
+}
+
+##############################################################
+
+##############################################################
+
+if(prog_is("bootscreen")){
+    
+    ops_k3(10)
+    
+    if(clk("bootscreen")){
+        
+        play_sound("coast.thumper_startup")
+        
+    }
+        
+    K3_S = 512/2
+    
+    Egp:egpCircle(1, vec2(K3_S), vec2(80))
+    
+    Egp:egpCircle(2, vec2(K3_S + 85, K3_S - 10), vec2(50))
+    Egp:egpColor(2, vec4(0, 0, 0, 255))
+    
+    Egp:egpCircle(3, vec2(K3_S, K3_S + 120), vec2(50))
+    Egp:egpColor(3, vec4(0, 0, 0, 255))
+    
+    Egp:egpCircle(4, vec2(K3_S, K3_S - 120), vec2(50))
+    Egp:egpColor(4, vec4(0, 0, 0, 255))
+    
+    Egp:egpCircle(5, vec2(K3_S + 15, K3_S - 110), vec2(10, 30))
+    Egp:egpAngle(5, -45)
+
+    Bootscreen_c += 5
+    
+    if(Bootscreen_c > 255){
+        
+        Bootscreen_c = 0
+        start_prog("Bureau")
+        
+    }
+    
+}
+
+if(prog_is("Bureau")){
+    
+    ops_k3(110)
+
+    Egp:roundbox(1, vec2(K3_S, K3_S * 0.5), vec2(300, 50), vec4(0, 0, 255, 255))
+    Egp:text(2, "Detection De Printers", vec2(K3_S, K3_S * 0.5), vec(255), 30)
+    
+    Egp:roundbox(3, vec2(K3_S, K3_S * 0.75), vec2(300, 50), vec4(0, 0, 255, 255))
+    Egp:text(4, "Detection De Metiers", vec2(K3_S, K3_S * 0.75), vec(255), 30)
+    
+    Egp:roundbox(5, vec2(K3_S, K3_S * 1), vec2(300, 50), vec4(0, 0, 255, 255))
+    Egp:text(6, "Parametres", vec2(K3_S, K3_S * 1), vec(255), 30)
+    
+    Egp:roundbox(7, vec2(K3_S, K3_S * 1.25), vec2(300, 50), vec4(0, 0, 255, 255))
+    Egp:text(8, "Informations", vec2(K3_S, K3_S * 1.25), vec(255), 30)
+    
+    Egp:text(9, "iMac", vec2(K3_S, K3_S * 1.8), vec(255), 30)
+    
+    if( Egp:button(1, K3_CURSOR) ){ start_prog("Detection De Printers") play_sound("Buttons.snd14") }
+    if( Egp:button(3, K3_CURSOR) ){ start_prog("Detection de Metiers") play_sound("Buttons.snd14") }
+    if( Egp:button(5, K3_CURSOR) ){ start_prog("Parametres") play_sound("Buttons.snd14") }
+    if( Egp:button(7, K3_CURSOR) ){ start_prog("Informations") play_sound("Buttons.snd14") }
+    
+}
+
+if(prog_is("Detection De Printers")){
+    
+    ops_k3(100)
+    
+    local Ents = Trigger:array("Entities")
+    
+    if(!Trigger){
+        
+        error_show("Veuillez connecter le trigger.")
+        
+    }
+    else
+    {
+        if(Ents:count() < 1){
+            
+            error_show("Assurez vous de bouger le trigger")
+            
+        }
+        else
+        {
+            PrinterCount = 0
+            PrinterCountVip = 0
+            
+            foreach(K, Ent:entity = Ents){
+        
+                if(Ent:type() == "money_printer"){
+                    
+                    if(Ent:getSkin() == 0){
+                        
+                        PrinterCount++
+                        
+                    }
+                    else
+                    {
+                        PrinterCountVip++
+                    }
+                        
+                }
+        
+            }
+        
+            Egp:text(1, PrinterCount:toString() + " Printer(s) trouve(s).", vec2(K3_S, K3_S * 0.9), vec(255), 30)
+            Egp:text(2, PrinterCountVip:toString() + " Printer(s) vip trouve(s).", vec2(K3_S, K3_S * 1.1), vec(255), 30)
+            Egp:text(3, "N'oubliez pas de bouger le trigger !", vec2(K3_S, K3_S * 1.5), vec(255), 25)
+            Egp:roundboxoutline(4, vec2(K3_S, K3_S * 1.5), vec2(400, 35), vec4(255))
+            
+        }
+        
+    }
+    
+}
+
+if(prog_is("Detection de Metiers")){
+    
+    ops_k3(50)
+    
+    local Ents = Trigger:array("Entities")
+    
+    if(DM_Index == 0){ DM_Index = 1 }
+    
+    if(!Trigger){
+        
+        error_show("Veuillez connecter le trigger.")
+        
+    }
+    else
+    {
+            
+        DM_Job = DM_Jobs[DM_Index, table]["Name", string]
+        
+        DM_Jobs = table(
+        
+            table("Name" = "Citoyen", "Code" = "citizen"),
+            table("Name" = "Agent de police", "Code" = "cp"),
+            table("Name" = "Gangster", "Code" = "gangster"),
+            table("Name" = "Mercenaire", "Code" = "merc")
+        
+        )
+        
+        local Count = 0
+        local JobCode = DM_Jobs[DM_Index, table]["Code", string]
+
+        foreach(K, Ent:entity = Ents){
+            
+            if(Ent:type() == "player"){
+                
+                local Job = Ent:nxJob()
+                
+                if(Job == JobCode){
+                    
+                    Count++
+                    
+                }
+                
+            }
+    
+        }
+    
+        Egp:text(1, DM_Job, vec2(K3_S * 0.65, K3_S * 0.5), vec(255), 30)
+
+        Egp:text(3, "N'oubliez pas de bouger le trigger !", vec2(K3_S, K3_S * 1.8), vec(255), 25)
+        Egp:roundboxoutline(4, vec2(K3_S, K3_S * 1.8), vec2(400, 35), vec4(255))
+
+        Egp:roundbox(5, vec2(K3_S * 1.65, K3_S * 0.5), vec2(95, 50), vec4(0, 0, 255, 255))
+        Egp:text(6, "suivant", vec2(K3_S * 1.65, K3_S * 0.5), vec(255), 30)
+        
+        Egp:roundboxoutline(7, vec2(K3_S, K3_S * 1.1), vec2(180, 180), vec4(255))
+        Egp:text(8, Count:toString(), vec2(K3_S * 1, K3_S * 1.125), vec(255), 125)
+        
+        if( (changed(K3_USE) & K3_USE == 1) && Egp:button(5, K3_CURSOR) ){
+            
+            DM_Index++
+            
+            if(DM_Index > DM_Jobs:count()){ DM_Index = 0 }
+            
+            play_sound("Buttons.snd14")
+        
+        
+        }
+        
+        if(Count > 0){
+            
+            play_sound("NPC_AttackHelicopter.CrashingAlarm1")
+            
+        }
+        
+    }
+
+}
+
+if(prog_is("Parametres")){
+    
+    ops_k3(100)
+    
+    Egp:text(1, "Activer les sons", vec2(K3_S * 0.9, K3_S * 0.5), vec(255), 30)
+    
+    Egp:roundbox(2, vec2(K3_S * 1.5, K3_S * 0.5), vec2(60, 60), ctn(Params_sounds))
+    Egp:text(3, stn(Params_sounds), vec2(K3_S * 1.5, K3_S * 0.5), vec(255), 30)
+    
+    
+    
+    Egp:text(4, "Acceleration OPS", vec2(K3_S * 0.9, K3_S * 0.8), vec(255), 30)
+    
+    Egp:roundbox(5, vec2(K3_S * 1.5, K3_S * 0.8), vec2(60, 60), ctn(Params_acc))
+    Egp:text(6, stn(Params_acc), vec2(K3_S * 1.5, K3_S * 0.8), vec(255), 30)
+    
+    Egp:text(7, "OPS : " + ops(), vec2(K3_S, K3_S * 1.5), vec(255), 30)
+    
+    if( (changed(K3_USE) & K3_USE == 1) && Egp:button(2, K3_CURSOR) ){ Params_sounds = !Params_sounds play_sound("Buttons.snd18") }
+    if( (changed(K3_USE) & K3_USE == 1) && Egp:button(5, K3_CURSOR) ){
+        
+        Params_acc = !Params_acc
+         
+        if(Params_acc){
+        
+            play_sound("NPC_AttackHelicopter.ChargeGun")
+            
+        }
+        else
+        {
+            play_sound("coast.combine_apc_shutdown")
+        }
+        
+        
+    }
+    
+}
+
+if(prog_is("Informations")){
+    
+    ops_k3(100)
+
+    Egp:text(1, "K3_OS_V2", vec2(K3_S, K3_S * 0.5), vec(255), 30)
+    Egp:text(2, "By K3CR4FT.:DLL", vec2(K3_S, K3_S * 1.5), vec(255), 30)
+    
+}
+
+##############################################################
+
+##############################################################
+
+K3_USER = Egp["User", entity]
+K3_CURSOR = Egp:egpCursor(K3_USER)
+K3_USE = K3_USER:keyUse()
+
+if(K3_ACTUAL_PROGRAM_NAME != "bootscreen"){
+    
+    Egp:box(100, vec2(K3_S, 25), vec2(K3_S * 2, 50), vec4(100, 100, 100, 255))
+    Egp:box(101, vec2(K3_S * 1.91, 25), vec2(50, 50), vec4(Bureau_bt, 0, 0, 255))
+    
+    Egp:text(102, K3_ACTUAL_PROGRAM_NAME, vec2(K3_S, 25), vec(0), 30)
+    Egp:text(103, "X", vec2(K3_S * 1.91, 25), vec(0), 30)
+    
+    if( (changed(K3_USE) & K3_USE == 1) && Egp:button(101, K3_CURSOR) ){
+    
+        play_sound("Buttons.snd14")
+        start_prog("Bureau")
+        Bureau_bt = 0
+
+    }
+    
+    Bureau_bt += (255 - Bureau_bt) / 5
+     
+}
+
+if(clk("K3_ALERT_CONST")){
+    
+    if(K3_ALERT_CONST == vec4(255, 0, 0, 255)){
+        K3_ALERT_CONST = vec4(0, 0, 0, 255)
+        K3_ALERT_CONST_INVERT = vec4(255, 0, 0, 255)
+    }
+    else
+    {
+        K3_ALERT_CONST = vec4(255, 0, 0, 255)
+        K3_ALERT_CONST_INVERT = vec4(0, 0, 0, 255)
+    }
+    
+    timer("K3_ALERT_CONST", 1000)
+       
+}
+
+##############################################################
+
+#[
+  _  ______     ____   _____  __      _____  
+ | |/ /___ \   / __ \ / ____| \ \    / /__ \ 
+ | ' /  __) | | |  | | (___    \ \  / /   ) |
+ |  <  |__ <  | |  | |\___ \    \ \/ /   / / 
+ | . \ ___) | | |__| |____) |    \  /   / /_ 
+ |_|\_\____/   \____/|_____/      \/   |____|
+                                             
+    By K3CR4FT.:DLL - 2020
+]#
+

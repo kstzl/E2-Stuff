@@ -1,0 +1,257 @@
+@name BackToTheFuture
+@persist [ Mode Alpha  HE]:number [ Car Driver LastDriver ]:entity Vel:vector Material:string Circle:table CircleH DeadH Miles DAng:angle BeforeTP
+
+interval(1)
+runOnLast(1)
+
+function createParticle(Pos_:vector, Type_:string){
+    
+    Quota = (CircleH - DeadH)
+    
+    if(Quota < 30){
+        
+        holoCreate(CircleH)
+        holoPos(CircleH, Pos_)
+        holoScaleUnits(CircleH, vec(0))
+        
+        if(Type_ == "this"){
+            
+            holoModel(CircleH, Car:model())
+            holoAng(CircleH, Car:angles())
+        }
+        else
+        {
+            holoModel(CircleH, "hqsphere")
+        }
+        
+        if(Type_ == "electric"){
+            holoMaterial(CircleH,"models/alyx/emptool_glow")
+            holoEntity(CircleH):soundPlay(CircleH, 0, "d3_citadel.portal_shoot_beam2")
+        }
+        if(Type_ == "smoke")
+        {
+            holoColor(CircleH, vec(50))
+            holoMaterial(CircleH,"models/props_combine/tpballglow")
+        }
+        if(Type_ == "fire")
+        {
+            holoColor(CircleH, vec(255, 160, 0))
+        }
+        
+        Circle[CircleH, table] = table(0, 0, Type_)
+        
+        CircleH += 1
+        
+    }
+    else
+    {
+        holoEntity(0):soundPlay(0, 0, "d3_citadel.portal_shoot_beam2")
+    }
+}
+
+if(Driver){
+    
+    LastDriver = Driver
+    
+}
+
+if(changed(Driver) && !Driver){
+    
+    LastDriver:setMaterial("")
+    
+}
+
+if(last()){
+
+    LastDriver:setMaterial("")
+    
+}
+
+if(first()){
+    
+    CircleH = 2
+    DeadH = 2
+    Miles = 1500
+    
+    Car = entity():isWeldedTo()
+    
+    holoCreate(0)
+    holoModel(0, Car:model())
+    
+    holoCreate(1)
+    holoPos(1, Car:pos())
+    holoParent(1, Car)
+    holoAlpha(1, 0)
+    
+    entity():setAlpha(0)
+    
+    timer("alert", 1)
+
+}
+
+Car:setAlpha(0)
+
+if(clk("alert")){
+    
+    if(Car:vel():length() >= Miles){
+        holoEntity(0):soundPlay(0, 0, "Buttons.snd17")
+    }
+    
+    timer("alert", 250)
+    
+}
+
+if(changed(Driver)){
+    
+    if(Driver != owner()){
+        
+        Car:ejectPod()
+        
+    }
+    
+}
+
+if(changed(Mode) && Mode == 0){
+    
+    holoPos(0, Car:toWorld(vec(0, -500, 0)))
+    HE = 15
+    
+}
+
+if(changed(Mode) && Mode == 1){
+    
+    LastDriver:setMaterial("")
+    Car:setAng(Car:angles():setPitch(0):setRoll(0))
+    
+}
+
+if(changed(Mode)){
+
+    if(1 == 1){
+            
+        for(H = 0, 3){
+            
+            createParticle(Car:toWorld(vec(randint(-50, 50), randint(-50, 50), randint(-50, 50))), "electric")
+            
+        }
+        for(H = 0, 5){
+            
+            createParticle(Car:pos() + (Car:forward() * H * -50) + (Car:right() * randint(-100, 100)), "smoke")
+            
+        }
+        for(H = 0, 5){
+            
+            createParticle(Car:pos() + (Car:forward() * H * -100), "this")
+            
+        }
+    
+    }
+    
+    for(H = 0, 25){
+        
+        #ifdef effect()
+        A = effect()
+     
+        A:setOrigin(holoEntity(0):pos())
+        A:setMagnitude(1500)
+        A:play("Sparks") 
+        #endif
+
+    }
+    
+}
+
+if(Car:vel():length() >= Miles/2){
+    
+    #ifdef effect()
+    B = effect()
+    
+    B:setOrigin(holoEntity(0):pos() + holoEntity(0):forward() * 50)
+    B:setScale(50)
+    B:play("TeslaZap") 
+    #endif
+
+}
+
+if(changed(Mode) && Mode == 1){
+    
+    Material = "models/effects/comball_glow2"
+    Driver:setMaterial(Material)
+    
+}
+
+if(Mode == 1){
+    
+    holoPos(0, holoEntity(0):toWorld(vec(0, BeforeTP * 55, 0)))
+    
+    Speed = 35 + Driver:keySprint()*35
+    Vel = vec((Driver:keyForward() - Driver:keyBack()) * Speed, (Driver:keyLeft() - Driver:keyRight()) * Speed , 0) 
+    
+    Car:setPos(holoEntity(1):toWorld(Vel))
+
+    Alpha += (0 - Alpha) / 25
+    
+}
+else
+{
+    holoPos(0, holoEntity(0):pos() + (Car:pos() - holoEntity(0):pos()) / HE )
+    holoAng(0, Car:angles())
+    
+    Alpha += (255 - Alpha) / 15
+    HE += (1 - HE) / 15
+    
+    if(HE < 2){
+        Driver:setMaterial("")
+    }
+
+    Boost = (Driver:keySprint() * Car:mass() * 100) * (Driver:keyForward() - Driver:keyBack())
+    BeforeTP = (Driver:keyForward() - Driver:keyBack())
+    
+    Car:applyForce(Car:forward() * Boost)
+   
+}
+
+if(changed(Driver:keyAttack2()) && Driver:keyAttack2() == 1){
+    
+    if(Car:vel():length() >= Miles || Mode == 1){
+    
+        Mode = !Mode
+    }
+    
+}
+
+Driver = Car:driver()
+Car:propFreeze(Mode)
+
+holoAlpha(0, Alpha)
+
+holoAng(1, Driver:eye():toAngle())
+
+for(I = DeadH, CircleH){
+
+    Type = Circle[I, table][3, string]
+
+    Circle[I, table][0, number] = Circle[I, table][0, number] + 5
+ 
+    Alpha2 = 255 - Circle[I, table][0, number]/3
+    
+    if(Type == "this"){
+        holoScale(I, vec(1))
+    }
+    else
+    {
+        holoScaleUnits(I, vec(Circle[I, table][0, number]))
+    }
+
+    holoAlpha(I, clamp(Alpha2, 0, 255))
+    
+    if(Alpha2 < 1){
+        
+        holoDelete(I)
+        soundStop(I)
+        
+        DeadH += 1
+        
+    }
+    
+}

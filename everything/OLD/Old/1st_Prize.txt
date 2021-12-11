@@ -1,0 +1,115 @@
+@name 1st Prize
+@persist [ Target ]:entity
+@persist [ DesiredPitch Pitch SeePlayer HugPlayer Move ]:number
+@persist [ Sounds ]:array
+@persist [ Ang ]:angle
+
+#include "fastlib"
+
+interval(1)
+
+function play_sfx(ID_:number){
+    
+    streamStop(0)
+    holoEntity(0):streamStart(0, Sounds[ID_, string])
+    
+}
+
+if(first()){
+
+    #See
+    Sounds[0, string] = "https://vignette.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/7/77/1PR_AmComing-sharedassets2.assets-528.ogg/revision/latest?cb=20180602033847"
+    Sounds[1, string] = "https://vignette.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/5/57/1PR_ISeeYou-sharedassets2.assets-534.ogg/revision/latest?cb=20180602165214"
+    
+    #Dont See
+    Sounds[2, string] = "https://vignette.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/9/9e/1PR_HaveLost-sharedassets2.assets-526.ogg/revision/latest?cb=20180602165159"
+    Sounds[3, string] = "https://vignette.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/6/62/1PR_OhNo-sharedassets2.assets-599.ogg/revision/latest?cb=20180602165232"
+    
+    #While Push
+    Sounds[4, string] = "https://vignette.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/f/fd/1PR_IHug-sharedassets2.assets-525.ogg/revision/latest?cb=20180602165207"
+    Sounds[5, string] = "https://vignette.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/a/ad/1PR_Marry-sharedassets2.assets-602.ogg/revision/latest?cb=20180602165221"
+    
+    holoCreate(-1)
+    
+    holoCreate(-2)
+
+    holoCreate(0)
+    
+    holoCreate(1)
+    holoPos(1, holoEntity(0):toWorld(vec(23*1.5, 0, 23 * 1.5)))
+    holoScale(1, vec(1.5))
+    holoParent(1, 0)
+    holoModel(1, "models/props_phx/construct/metal_wire1x1x1.mdl")
+    holoMaterial(1, "phoenix_storms/gear")
+    holoColor(1, vec(0, 255, 255))
+    
+    holoCreate(2)
+    holoPos(2, holoEntity(0):toWorld(vec(0, 0, 23)))
+    holoParent(2, 1)
+    holoScale(2, vec(1.5))
+    holoModel(2, "models/balloons/balloon_classicheart.mdl")
+    holoColor(2, vec(255, 0, 0))
+    
+    holoEntity(0):soundPlay(0, 0, "d3_citadel.podarm_rotate")
+  
+    DesiredPitch = 100
+
+}
+
+findByClass("player")
+findSortByDistance(holoEntity(0):pos())
+Target = find()
+
+Ranger = rangerOffset(3000, holoEntity(-0):toWorld(vec(0, 0, 50)), holoEntity(0):right())
+holoPos(-2, Ranger:pos())
+
+SeePlayer = (Ranger:entity() == Target)
+HugPlayer = (holoEntity(0):pos():distance(Target:pos()) <= 100) * SeePlayer
+
+Pitch += (DesiredPitch - Pitch) / 5
+soundPitch(0, Pitch)
+
+holoPos(-1, holoEntity(-1):pos() + (Target:pos() - holoEntity(-1):pos()) / 55)
+
+if(changed(SeePlayer) && SeePlayer == 0){
+    
+    play_sfx(randint(2, 3))
+    
+}
+
+if(changed(SeePlayer) && SeePlayer == 1 && HugPlayer == 0){
+    
+    play_sfx(randint(0, 1))
+    
+}
+
+if(HugPlayer){
+    
+    Rd = randint(0, 2)
+
+    if(Rd == 0){
+        
+        play_sfx(randint(4, 5))
+        
+    }
+    
+}
+
+if(SeePlayer){
+    
+    Move = 5
+    
+}
+
+if(Move > 0){
+    
+    Move -= 0.1
+    DesiredPitch = 150
+    holoPos(0, holoEntity(0):toWorld(vec(0, -Move, 0)))
+    
+}
+else
+{
+    holoAng(0, holoEntity(1):angTo(holoEntity(-1):pos()):setPitch(0) + ang(0, 103, 0) )
+    DesiredPitch = 50
+}

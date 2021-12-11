@@ -1,0 +1,44 @@
+@name Sentry
+@inputs 
+@outputs Pos:vector Gimbal
+@persist [E Target]:entity
+@trigger
+
+#V1_ By k3
+
+AE = entity()
+Gimbal = 0
+
+if (first()) {
+    AE:soundPlay(0,0,"Buttons.snd17")
+runOnTick(1)
+runOnChat(1)
+}
+
+if (chatClk(owner())) {
+
+M = lastSaid():explode(" ")
+
+if (M:string(1) == "/sentry") {
+hideChat(1) 
+Target = findPlayerByName(M:string(2))
+if (Target) { 
+print("[SENTRY] Attacking " + Target:name())
+AE:soundPlay(0,0,"k_lab.eyescanner_deploy")
+} else {
+print("[SENTRY] No player named '" + M:string(2) + "' found.")
+AE:soundPlay(0,0,"Buttons.snd10")
+}
+
+} elseif (M:string(1) == "/off") {
+Gimbal = 0
+hideChat(1) 
+print("[SENTRY] Stopped attacking " + Target:name())
+AE:soundPlay(0,0,"NPC_CombineCamera.Retire")
+Target = noentity() 
+}
+} elseif (tickClk() & Target) {
+Pos = Target:pos() #+ vec(0,0,50)
+Gimbal = 1
+}
+

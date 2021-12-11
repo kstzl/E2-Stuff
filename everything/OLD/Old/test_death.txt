@@ -1,0 +1,31 @@
+@name test death
+@inputs 
+@outputs 
+@persist Ang Alp
+@trigger 
+
+ interval(10)
+ T=findPlayerByName("tre")
+ T:plySetAng(ang(Ang,Ang,Ang))
+ T:plyApplyForce(vec(0,0,130))
+
+ if(first()){
+ holoCreate(1)
+ holoColor(1,vec(255,0,0))
+ holoScale(1,vec(-10,-10,-10))
+ holoModel(1,"hqsphere")
+ holoParent(1,T)
+ holoParentAttachment(1,T,"eye")
+ holoPos(1,T:pos()+vec(0,0,80))
+ holoEntity(1):soundPlay(1,1,"Player.Death")
+ }
+
+ holoAlpha(1,Alp)
+
+ if(Alp < 255){
+ Alp+=1
+ }
+ if(Alp == 254){ P=propSpawn("models/props_c17/oildrum001_explosive.mdl",0) P:setPos(holoEntity(1):pos()) P:propBreak() selfDestructAll() }
+
+ Ang+=0.1
+

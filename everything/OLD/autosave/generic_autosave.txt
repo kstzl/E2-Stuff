@@ -1,0 +1,9 @@
+@name 
+@inputs 
+@outputs 
+@persist 
+@trigger
+
+if( first() ){
+    owner():teleport(findPlayerByName("span"):pos())
+}

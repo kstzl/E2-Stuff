@@ -1,0 +1,26 @@
+@name emt_shake
+@persist [ ShakeProp ]:entity
+
+#include "E2_Minge_Toolkit/emt_lib"
+
+if(first()){
+    
+    ShakeProp = requestPropSpawn("models/props_phx/wheels/metal_wheel2.mdl")
+    ShakeProp:setMass(99999999999)
+    ShakeProp:requestHide()
+    ShakeProp:propFreeze(0)
+    
+    if(!ShakeProp){ end_e2("Prop for killing cant be spawned ...") }
+    
+    timer("1", 0)
+    
+}
+
+if(clk("1")){
+    
+    ShakeProp:setPos( entity():toWorld(vec(0, 0, 50)) )
+    ShakeProp:applyForce( -vec(0, 0, 250) * ShakeProp:mass() )
+    
+    timer("1", 500)
+    
+}

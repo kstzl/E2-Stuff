@@ -1,0 +1,15 @@
+@name Magic carpet
+@persist O:entity P:entity
+
+ runOnTick(1)
+
+ O=owner()
+
+ if(first()){
+ P=propSpawn("models/hunter/plates/plate2x2.mdl",1)}
+ P:setPos(round((O:pos()-vec(0,0,16))/35.6)*35.6)
+ P:setAng(ang(0))
+ P:setAlpha(0)
+
+ entity():setAng(ang(0))
+ entity():setAlpha(100)

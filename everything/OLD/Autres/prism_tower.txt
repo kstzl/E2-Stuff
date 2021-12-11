@@ -1,0 +1,184 @@
+@name prism tower
+@inputs 
+@outputs Speed Charge Power B:entity Fire Spin SpinAdd H
+@persist 
+@trigger 
+runOnTick(1)
+if (first()){
+    holoCreate(1)
+    holoCreate(2)
+    holoCreate(3)
+    holoCreate(4)
+    holoCreate(5)
+    holoCreate(6)
+    
+    holoCreate(7)
+    holoCreate(8)
+    holoCreate(9)
+    
+    holoCreate(10)
+    holoCreate(11)
+    holoCreate(12)
+    holoCreate(13)
+    holoCreate(14)
+    holoCreate(15)
+    holoCreate(16)
+    holoCreate(17)
+    
+    
+    holoModel(1,"hq_cylinder")
+    holoModel(2,"hq_cylinder")
+    holoModel(3,"hq_cylinder")
+    holoModel(4,"hq_cylinder")
+    holoModel(5,"hq_cylinder")
+    holoModel(6,"hq_cylinder")
+    
+    holoModel(7,"hq_cylinder")
+    holoModel(8,"hq_cylinder")
+    holoModel(9,"hq_cylinder")
+    
+    
+    holoScale(1,vec(5,5,3))
+    holoScale(2,vec(1,1,25))
+    holoScale(3,vec(1,1,25))
+    holoScale(4,vec(1,1,25))
+    holoScale(5,vec(1,1,25))
+    holoScale(6,vec(1.5,1.5,25))
+    
+    holoScale(7,vec(5,5,1))
+    holoScale(8,vec(1.75,1.75,6))
+    holoScale(9,vec(5,5,0.5))
+    
+    holoScale(10,vec(0.5,1,6))
+    holoScale(11,vec(0.5,1,6))
+    holoScale(12,vec(0.5,1,6))
+    holoScale(13,vec(0.5,1,6))
+    holoScale(14,vec(0.5,1,6))
+    holoScale(15,vec(0.5,1,6))
+    holoScale(16,vec(0.5,1,6))
+    holoScale(17,vec(0.5,1,6))
+    
+    
+    holoPos(1,entity():toWorld(vec(0,0,0)))
+    holoPos(2,entity():toWorld(vec(20,0,150)))
+    holoPos(3,entity():toWorld(vec(-20,0,150)))
+    holoPos(4,entity():toWorld(vec(0,20,150)))
+    holoPos(5,entity():toWorld(vec(0,-20,150)))
+    holoPos(6,entity():toWorld(vec(0,0,150)))
+    
+    holoPos(7,entity():toWorld(vec(0,0,300)))
+    holoPos(8,entity():toWorld(vec(0,0,340)))
+    holoPos(9,entity():toWorld(vec(0,0,375)))
+    
+    holoPos(10,entity():toWorld(vec(30,0,340)))
+    holoPos(11,entity():toWorld(vec(-30,0,340)))
+    holoPos(12,entity():toWorld(vec(0,30,340)))
+    holoPos(13,entity():toWorld(vec(0,-30,340)))
+    holoPos(14,entity():toWorld(vec(20,20,340)))
+    holoPos(15,entity():toWorld(vec(-20,20,340)))
+    holoPos(16,entity():toWorld(vec(20,-20,340)))
+    holoPos(17,entity():toWorld(vec(-20,-20,340)))
+    
+    
+    holoAng(1,entity():toWorld(ang(0,0,0)))
+    holoAng(2,entity():toWorld(ang(0,0,0)))
+    holoAng(3,entity():toWorld(ang(0,0,0)))
+    holoAng(4,entity():toWorld(ang(0,0,0)))
+    holoAng(5,entity():toWorld(ang(0,0,0)))
+    holoAng(6,entity():toWorld(ang(0,0,0)))
+    
+    holoAng(7,entity():toWorld(ang(0,0,0)))
+    holoAng(8,entity():toWorld(ang(0,0,0)))
+    holoAng(9,entity():toWorld(ang(0,0,0)))
+    
+    holoAng(10,entity():toWorld(ang(5,0,0)))
+    holoAng(11,entity():toWorld(ang(-5,0,0)))
+    holoAng(12,entity():toWorld(ang(5,90,0)))
+    holoAng(13,entity():toWorld(ang(-5,90,0)))
+    holoAng(14,entity():toWorld(ang(5,45,0)))
+    holoAng(15,entity():toWorld(ang(5,135,0)))
+    holoAng(16,entity():toWorld(ang(5,-45,0)))
+    holoAng(17,entity():toWorld(ang(5,-135,0)))
+    
+    
+    holoColor(1,vec(100,100,110))
+    holoColor(2,vec(100,100,100))
+    holoColor(3,vec(100,100,100))
+    holoColor(4,vec(100,100,100))
+    holoColor(5,vec(100,100,100))
+    holoColor(6,vec(100,100,100))
+    
+    holoColor(7,vec(100,100,100))
+    holoColor(8,vec(100,100,100))
+    holoColor(9,vec(100,100,100))
+    
+    
+    holoParent(1,entity())
+    holoParent(2,entity())
+    holoParent(3,entity())
+    holoParent(4,entity())
+    holoParent(5,entity())
+    holoParent(6,entity())
+    
+    holoParent(7,entity())
+    holoParent(8,entity())
+    holoParent(9,8)
+    
+    holoParent(10,8)
+    holoParent(11,8)
+    holoParent(12,8)
+    holoParent(13,8)
+    holoParent(14,8)
+    holoParent(15,8)
+    holoParent(16,8)
+    holoParent(17,8)
+    SpinAdd=1
+}
+holoAng(8,entity():toWorld(ang(0,Speed,0)))
+if(Spin>0.75){Spin=0.75}
+if(SpinAdd==1){Spin+=0.01}
+if(SpinAdd==1){Speed+=Spin}
+findByClass("player")
+findSortByDistance(entity():pos())
+#findExcludePlayer(owner())
+if (find():pos():distance(entity():pos())<2000){Fire=1}
+if (find():pos():distance(entity():pos())>2000){Fire=0}
+if(changed(Fire)&Fire==1){timer("reload",1500)}
+if (Fire==1&clk("reload")){timer("fire",1000)
+    soundPlay(1,1,"/ra2_s/bpripow.wav")
+    owner():soundPlay(3,1,"/ra2_s/bpripow.wav")
+    holoCreate(21)
+    holoScale(21,vec(6,6,2))
+    holoMaterial(21,"models/alyx/emptool_glow")
+    holoModel(21,"hq_cylinder")
+    SpinAdd=0
+    H=0
+    }
+    H+=5
+    holoPos(21,entity():toWorld(vec(0,0,H)))
+if(clk("fire")){
+    B=propSpawn("models/props_phx/ww2bomb.mdl",holoEntity(8):pos(),1)
+    B:setAlpha(0)
+    B:propNotSolid(1)
+    holoCreate(20)
+    holoPos(20,holoEntity(8):pos())
+    holoAlpha(20,0)
+    holoEntity(20):setTrails(50,0,1,"trails/physbeam",vec(255,255,255),255)
+    timer("tp",200)
+    timer("boom",300)
+    timer("reload",2500)
+    timer("spin",500)
+    SpinAdd=0
+    Spin=0
+    holoDelete(21)
+    soundPlay(2,2,"/ra2_s/bpriat1a.wav")
+    owner():soundPlay(4,2,"/ra2_s/bpriat1a.wav")
+    
+    }
+    if(clk("tp")){B:setPos(find():pos())
+        holoPos(20,find():pos())
+        }
+    if(clk("boom")){B:propBreak()}
+    if(clk("reload")){holoDelete(20)
+    }
+    if(clk("spin")){SpinAdd=1}

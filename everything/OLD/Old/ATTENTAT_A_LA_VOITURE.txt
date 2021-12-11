@@ -1,0 +1,17 @@
+@name ATTENTAT A LA VOITURE
+@inputs 
+@outputs 
+@persist A:array I
+@trigger 
+
+ interval(1)
+ 
+ A=players()
+ I=randint(1,A:count())
+
+ P=propSpawn("models/props_phx/mk-82.mdl",0) propSpawnEffect(0)
+ P:setPos(A[I,entity]:pos()+vec(0,0,5200))
+ P:applyForce(vec(0,0,-150000000000))
+ P:setMass(50000)
+ P:setAng(ang(90,0,0))
+ P:setTrails(10,10,1,"trails/smoke",vec(255),255)

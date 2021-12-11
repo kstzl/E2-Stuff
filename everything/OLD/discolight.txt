@@ -1,0 +1,45 @@
+@name DiscoLight
+@persist A H DeadH Light:table
+
+interval(1)
+
+function create_light(Color_:vector){
+    
+    holoCreate(H)
+    holoModel(H, "models/effects/vol_light128x512.mdl")
+    holoParent(H, entity())
+    holoColor(H, Color_)
+    
+    lightCreate(H)
+    lightPos(H, holoEntity(H):pos())
+    lightParent(H, holoEntity(H))
+    lightColor(H, Color_)
+    lightBrightness(H, 500)
+    lightDistance(H, 250)
+    
+    H += 1
+}
+
+if(first()){
+    
+    for(I = 0, 15){
+        
+        create_light(vec(255 - I*25, 0, 255))
+        
+    }
+    
+}
+
+for(I = DeadH, H){
+    
+    Index = I - 1
+    
+    Ranger = rangerOffset(3000, holoEntity(Index):pos(), -holoEntity(Index):up())
+    
+    holoAng(Index, ang(Index*45 + A))
+    
+    holoScaleUnits(Index, vec(150, 150, Ranger:distance()))
+    
+}
+
+A += 1

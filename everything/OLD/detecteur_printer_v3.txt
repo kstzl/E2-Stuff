@@ -1,0 +1,214 @@
+@name Detecteur_Printer_V3
+@inputs Egp:wirelink [ Ents ]:array
+@persist [ ActualProgramName ]:string [ S Use ]:number [ User ]:entity [ Cursor ]:vector2
+
+#[
+  _  ______     ____   _____ 
+ | |/ /___ \   / __ \ / ____|
+ | ' /  __) | | |  | | (___  
+ |  <  |__ <  | |  | |\___ \ 
+ | . \ ___) | | |__| |____) |
+ |_|\_\____/   \____/|_____/ 
+                             
+                             By K3CR4FT.:DLL / Khapta Zenda
+                             Version 1.0 ( 2020 )
+                            
+]#
+
+interval(1)
+
+################################################
+#EGP Library - coded by Ivef.
+
+function void wirelink:box(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpBox(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+}
+function void wirelink:boxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+    This:egpSize(Index,1)
+}
+function void wirelink:boxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4,Outline:number){
+    This:egpBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+    This:egpSize(Index,Outline)
+}
+function void wirelink:roundbox(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpRoundedBox(Index,Pos,Size)
+    This:egpColor(Index,Color)   
+}
+function void wirelink:roundboxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4){
+    This:egpRoundedBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)  
+    This:egpSize(Index,1)
+}
+function void wirelink:roundboxoutline(Index:number,Pos:vector2,Size:vector2,Color:vector4,S:number){
+    This:egpRoundedBoxOutline(Index,Pos,Size)
+    This:egpColor(Index,Color)  
+    This:egpSize(Index,S)
+}
+function void wirelink:line(Index:number,Pos1:vector2,Pos2:vector2,Color:vector4,Size:number){
+    This:egpLine(Index,Pos1,Pos2)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+}
+function void wirelink:line(Index:number,Pos1:vector2,Pos2:vector2,Color:vector4){
+    This:egpLine(Index,Pos1,Pos2)
+    This:egpColor(Index,Color)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector,Size:number){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    This:egpAlign(Index,1,1)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector4,Size:number){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    This:egpAlign(Index,1,1)
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector,Size:number,Align:string){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    if(Align == "c"){
+        This:egpAlign(Index,1,1)
+    }
+    elseif(Align == "l"){
+        This:egpAlign(Index,2,1)
+    }
+    elseif(Align == "r"){
+        This:egpAlign(Index,0,1)
+    }
+    else{
+        This:egpAlign(Index,1,1)
+    }
+}
+function void wirelink:text(Index:number,Text:string,Pos:vector2,Color:vector4,Size:number,Align:string){
+    This:egpText(Index,Text,Pos)
+    This:egpColor(Index,Color)
+    This:egpSize(Index,Size)
+    if(Align == "c"){
+        This:egpAlign(Index,1,1)
+    }
+    elseif(Align == "l"){
+        This:egpAlign(Index,2,1)
+    }
+    elseif(Align == "r"){
+        This:egpAlign(Index,0,1)
+    }
+    else{
+        This:egpAlign(Index,1,1)
+    }
+}
+function number wirelink:button(ID:number,Cursor:vector2){
+    local BPos = This:egpPos(ID)
+    local BSize = This:egpSize(ID)/2
+    local Pressed = inrange(Cursor,BPos-BSize,BPos+BSize)
+    return Pressed
+}
+##############################################################
+
+##########
+# Apps   #
+##########
+
+
+#Starter
+function start_prog(ProgName_:string){
+
+    ActualProgramName = ProgName_
+
+    timer(ProgName_, 0)
+    
+}
+
+function error_show(Error_:string){
+    
+    Egp:box(103, vec2(S), vec2(Error_:length() * 15, 100), vec4(255, 0, 0, 255))
+    Egp:text(104, "ERREUR", vec2(S, S * 0.9), vec(255), 30)
+    Egp:text(105, Error_, vec2(S, S * 1.1), vec(255), 30)
+    
+}
+
+#Bootscreen
+if(clk("bootscreen")){
+    
+    Egp:box(1, vec2(S), vec2(256, 100), vec4(255, 0, 0, 255))
+    Egp:text(2, "K3 OS", vec2(S, S * 0.9), vec(255), 30)
+    Egp:text(3, "By K3CR4FT.:DLL", vec2(S, S * 1.1), vec(255), 30)
+    Egp:text(4, "'Detecteur De Printers' version only.", vec2(S, S * 1.8), vec(255), 30)
+    
+    timer("end_bootscreen", 2500)
+}
+if(clk("end_bootscreen")){ start_prog("Detecteur De Printers") }
+
+
+#DetectionPrinter
+if(clk("Detecteur De Printers")){
+    
+    Egp:egpClear()
+    
+    if(Ents:count() < 1){
+        
+        error_show("Veuillez connecter le trigger.")
+        
+    }
+    else
+    {
+        PrinterCount = 0
+        PrinterCountVip = 0
+        
+        foreach(K, Ent:entity = Ents){
+    
+            if(Ent:type() == "money_printer"){
+                
+                if(Ent:getSkin() == 0){
+                    
+                    PrinterCount++
+                    
+                }
+                else
+                {
+                    PrinterCountVip++
+                }
+                    
+            }
+    
+        }
+    
+        Egp:text(1, PrinterCount:toString() + " Printer(s) trouve(s).", vec2(S, S), vec(255), 30)
+        Egp:text(2, PrinterCountVip:toString() + " Printer(s) vip trouve(s).", vec2(S, S * 1.1), vec(255), 30)
+        Egp:text(3, "N'oubliez pas de bouger le trigger !", vec2(S, S * 1.5), vec(255), 25)
+    }
+
+    timer("Detecteur De Printers", 1)
+    
+}
+
+
+
+
+###############################################################
+
+Egp:box(100, vec2(S, 25), vec2(S * 2, 50), vec4(100, 100, 100, 255))
+
+Egp:text(102, ActualProgramName, vec2(S, 25), vec(0), 30)
+
+User = Egp["User", entity]
+Cursor = Egp:egpCursor(User)
+Use = User:keyUse()
+
+###############################################################
+
+
+if(first() || dupefinished()){
+    
+    S = 512 / 2
+    Audio_play = 0
+    
+    start_prog("bootscreen")
+    
+}

@@ -1,0 +1,22 @@
+@name TopDons
+@inputs Egp:wirelink
+@outputs [ Dons ]:table I
+
+interval(1)
+
+#include "borne_automatique/egplib"
+
+if(first()){
+    
+    Dons[0, table] = table("Kevin Bretzel", 500)
+    
+}
+
+Egp:egpClear()
+I = 0
+
+foreach(K, Don:table = Dons){
+    
+    Egp:text(I, Don[1, string] + " : " + Don[1, string] + " kr", vec2(256, 256), vec(255), 150)
+    I++
+}

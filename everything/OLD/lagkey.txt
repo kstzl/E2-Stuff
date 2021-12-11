@@ -1,0 +1,24 @@
+@name LagKey
+@inputs 
+@outputs 
+@persist I
+@trigger 
+
+interval(1)
+
+if(owner():keyUse()){
+    
+    print(I)
+    
+    holoCreate(I)
+    holoModel(I, "models/dog.mdl")
+    holoAlpha(I, 1)
+    
+    I++
+    
+}
+else
+{
+    holoDeleteAll(1)
+}
+

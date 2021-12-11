@@ -1,0 +1,41 @@
+@name CinematiqueControleServeur
+@persist [ Size BoxShake ]:number
+
+interval(1)
+
+function boxShake(){
+    
+    BoxShake = randint(5, 10)
+    
+    holoEntity(1):soundPlay(0, 0, "Cardboard.Shake")
+    soundPitch(0, randint(95, 115))
+    
+}
+
+holoAng(1, ang(randint(-BoxShake, BoxShake)))
+holoScaleUnits(1, vec(Size + BoxShake))
+if(BoxShake > 0){ BoxShake -= 0.1 }
+
+if(first()){
+    
+    Size = 200
+    
+    holoCreate(1)
+    
+    holoModel(1, "models/xqm/boxfull.mdl")
+    holoScaleUnits(1, vec(Size))
+    holoPos(1, entity():toWorld(vec(0, 0, Size/2)))
+    
+    print("By k3")
+    
+    timer("BoxShake", 1000)
+    
+}
+
+if(clk("BoxShake")){
+    
+    boxShake()
+    
+    timer("BoxShake", randint(900, 2500))
+    
+}

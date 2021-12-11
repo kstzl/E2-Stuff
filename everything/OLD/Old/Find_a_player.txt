@@ -1,0 +1,22 @@
+@name Find a player
+@inputs 
+@outputs 
+@persist T:entity Ang 
+@trigger 
+
+ runOnTick(1)
+
+ if(first()){
+    
+ T=findPlayerByName("Fest")
+
+ holoCreate(1)
+ holoModel(1,"pyramid")
+ holoScale(1,vec(30,0.5,30))
+ holoColor(1,vec(255,0,0))
+ holoMaterial(1,"models/XQM/lightlinesRed_tool")
+
+ }
+  holoPos(1,T:pos()+vec(0,0,250))
+  holoAng(1,ang(0,Ang,180))
+                  Ang+=1

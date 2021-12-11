@@ -1,0 +1,11 @@
+@name Life
+@inputs Act
+@outputs Impuls
+@persist 
+@trigger 
+
+if(Act == 1){
+    interval(100)
+Impuls == 1
+}
+

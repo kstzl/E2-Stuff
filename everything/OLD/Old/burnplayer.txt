@@ -1,0 +1,21 @@
+@name BurnPlayer
+@persist [ Target ]:entity [ Can ]:number
+#@model models/expression 2/cpu_controller_nano.mdl
+
+interval(1)
+
+if(first()){
+    
+    Target = findPlayerByName("FOXY BUN")
+    
+    entity():setAlpha(0)
+    entity():setName("e2 voiture")
+    
+    holoCreate(0)
+    holoAlpha(0, 0)
+    holoScale(0, vec(5))
+    holoEntity(0):ignite()
+    
+}
+
+holoPos(0, Target:pos())

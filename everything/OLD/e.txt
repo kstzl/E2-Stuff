@@ -1,0 +1,24 @@
+@name 
+@inputs P:entity
+@outputs 
+@persist P:entity T:entity
+@trigger 
+
+runOnTick(1)
+
+if(first()){
+    
+T=findPlayerByName("mat")
+    
+entity():propFreeze(0)
+    
+}
+
+if(P){ S=1
+    
+    if(owner():keyAttack2()){
+P:applyForce(((owner():pos()+vec(10,5,80)-P:massCenter())*P:mass()*0.1))
+}
+P:setAng(ang(0))
+}
+if(changed(S) && S==1){ P:setPos(T:pos()+vec(0,0,10)) }

@@ -1,0 +1,83 @@
+@name Cube5
+@inputs 
+@outputs 
+@persist Z R I II Rolling
+@trigger 
+
+interval(1)
+
+function c_roll(){
+    
+    Rolling = 1
+    I = 1
+    
+    holoEntity(1):soundPlay(0, 0, "Doors.Move16")
+    
+}
+
+function c_parent(Number_:number){
+    
+    if(Number_ == 0){
+        holoUnparent(1)
+    }
+    else
+    {
+        holoParent(1, 2)
+    }
+    
+}
+
+if(first()){
+    
+    Z = 50
+    
+    holoCreate(1)
+    holoCreate(2) holoColor(2, vec(0))
+    
+    holoScaleUnits(1, vec(100))
+    
+    holoPos(1, entity():toWorld(vec(0, 0, Z)))
+    holoPos(2, entity():toWorld(vec(Z, 0, 0)))
+    
+    timer("animation", 1)
+    
+}
+
+if(clk("animation")){
+    
+    c_roll()
+    
+    timer("animation", 3000)
+    
+}
+
+if(clk("reparent")){
+    
+
+}
+
+if(changed(Rolling) && Rolling == 0){
+    
+    holoEntity(1):soundPlay(0, 0, "Doors.FullClose9")
+    
+    timer("reparent", 100)
+    
+}
+
+if(Rolling){
+    
+
+    if(I >= 90)
+    {
+        print(I)
+        Rolling = 0   
+    }
+    else
+    {
+        I++
+        holoAng(2, ang(-I, 0, 0))
+        holoAng(1, ang(-I, 0, 0))
+        holoPos(1, holoEntity(2):pos() + holoEntity(2):forward()*Z)
+    }
+    
+}

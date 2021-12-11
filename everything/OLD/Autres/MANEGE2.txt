@@ -1,0 +1,41 @@
+@name MANEGE2
+@persist Count N X1 Y1 Z1 T 
+@inputs E:entity
+#@model models/balloons/balloon_dog.mdl
+#CODE PAR k3 REPRODUCTION INTERDITE
+
+
+runOnTick(1)
+
+findByClass("player")
+findSortByDistance(holoEntity(1):pos())
+
+if(first()){
+    holoCreate(2)
+    
+     holoEntity(2):setTrails(9999999999,1,1,"trails/smoke",vec(0,255,0),255)
+    
+holoAlpha(1,0)
+
+
+#entity():setAlpha(0)
+holoScale(1,vec(9,9,90))
+holoEntity(1):soundPlay(100,100,"d3_citadel.combine_ball_field_loop2")
+
+}
+    
+Count += 6
+N = 30002
+
+X1 = N*cosr(3930*Count)
+Y1 = N*sinr(3940*Count)
+Z1 = 10
+
+
+T++
+
+holoPos(2,entity():pos() + vec(X1,Y1,Z1))
+
+E:setPos(holoEntity(1):pos())
+
+#CODE PAR k3 REPRODUCTION INTERDITE

@@ -1,0 +1,44 @@
+@name feu_tricolore
+@outputs [ Rouge Orange Vert FadingDoor ]:number [ Mode ]:string
+@persist 
+
+interval(1)
+
+if(first()){
+    
+    timer("start", 0)
+    
+}
+
+###
+Rouge = (Mode == "r")
+Orange = (Mode == "o")
+Vert = (Mode == "v")
+
+FadingDoor = Rouge
+###
+
+if(clk("start")){
+    
+    timer("rouge", 0)
+    
+}
+
+if(clk("rouge")){
+    
+    Mode = "r"
+    timer("vert", 5000)   
+}
+
+if(clk("orange")){
+    
+    Mode = "o"
+    timer("rouge", 2500)   
+}
+
+if(clk("vert")){
+    
+    Mode = "v"
+    timer("orange", 5000)   
+}
+

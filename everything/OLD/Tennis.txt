@@ -1,0 +1,19 @@
+@name Tennis
+@inputs 
+@outputs 
+@persist 
+@trigger 
+
+ runOnTick(1)
+
+ findByModel("models/dav0r/hoverball.mdl") 
+ findSortByDistance(owner():pos())
+
+ if(owner():weapon():type()=="weapon_crowbar"){
+ if(find():pos():distance(owner():pos()) <= 100){
+ if(changed(owner():keyAttack2()) && owner():keyAttack2()==1 ){
+    
+    
+ }
+ }
+ }

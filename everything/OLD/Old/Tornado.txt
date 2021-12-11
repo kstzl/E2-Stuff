@@ -1,0 +1,69 @@
+@name Tornado
+@inputs 
+@outputs 
+@persist A S C Ang X Y Z I AR:array Count X1 Y1 Z1 RD
+@trigger 
+
+ interval(ops())
+
+ if(first()){ holoCreate(0) holoEntity(0):soundPlay(1,0,"d3_citadel.portal_windup_loop") holoAlpha(0,0) A=1 }
+ if(A < 10){
+    A++
+    S+=5
+    
+    holoCreate(A)
+    holoPos(A,entity():pos()+vec(S*5,0,S*10))   
+    holoParent(A,0)
+    holoEntity(A):setTrails(1000,5,1,"trails/smoke",vec(S*2,S*2,S*2),255)
+    holoAlpha(A,0)
+    entity():propFreeze(0)
+    
+    
+ }
+ holoPos(0,entity():pos())
+ holoAng(0,ang(0,Ang,0))
+                 Ang+=300
+
+ findExcludeEntity(entity())
+ findByClass("prop_*")
+ findSortByDistance(entity():pos())
+ AR=findToArray()
+ I=0
+
+ if(C < 100){ C++ }
+ if(C >= 100){
+    
+    RD=randint(-4,5)
+    X=randint(-1300,1300) 
+    Y=randint(-1300,1300) 
+    Z=randint(0,5) 
+    
+    if(find() & RD >= 1){ entity():applyForce(AR[I,entity]:pos()-entity():massCenter()*entity():mass()*1) }else{
+        
+    entity():applyForce(vec(X,Y,Z))
+    }
+    
+    C=0
+ }
+    while(I < AR:count()){
+          I++
+            
+    Count += 0.005
+    N = 100
+
+   X1 = N*cosr(1*Count)
+   Y1 = N*sinr(1*Count)
+   Z1 = N*sinr(2*Count)
+
+    if(RD <= 0 && entity():pos():distance(AR[I,entity]:pos()) <= 640){
+    AR[I,entity]:setPos(entity():pos()+vec(X1,Y1,Z1+450))
+    
+      }
+ if(RD >= 1 && entity():pos():distance(AR[I,entity]:pos()) <= 140){
+     AR[I,entity]:applyForce(vec(randint(-300,300),randint(-300,300),randint(0,300)*AR[I,entity]:mass()))
+     Sound=1 
+}
+     
+ }
+ if(changed(Sound) && Sound == 1){ holoEntity(0):soundPlay(2,1,"Weapon_MegaPhysCannon.Launch") }
+entity():setAlpha(0)

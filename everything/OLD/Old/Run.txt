@@ -1,0 +1,56 @@
+@name Run
+@inputs 
+@outputs 
+@persist Vel C C2
+@trigger 
+
+runOnTick(1)
+
+if(owner():vel():length() >= 390){
+    Sound=1
+    if(Vel <= 1300){
+    Vel+=10
+    }
+}
+else
+{
+Vel=200  
+}
+
+owner():plySetRunSpeed(Vel)
+
+ if(changed(Sound) && Sound == 1){
+ owner():soundPlay(1,3,"HL2Player.SprintStart")
+
+}
+
+
+ if(owner():vel():length() >= 1200){
+    Trail=1
+    
+    if(C < 10){
+       C++   
+    }
+    if(C >= 10){
+       C=0
+       C2+=1  
+    if(C2 == 1){
+        owner():soundPlay(2,11,"Buttons.snd17")
+        soundPitch(2,90)
+        
+    }
+    if(C2 == 2){
+       C2=0
+        owner():soundPlay(3,11,"Buttons.snd17")
+        soundPitch(3,100)
+    }
+     
+    
+    if(owner():keyJump()){ owner():plyApplyForce(vec(0,0,230)) }
+    }
+    
+    
+ }
+
+ if(changed(Trail) && Trail == 1){ owner():setTrails(10,0.1,0.1,"trails/smoke",vec(255,255,255),255) }
+ if(changed(Trail) && Trail == 0){ owner():removeTrails() }

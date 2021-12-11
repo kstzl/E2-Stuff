@@ -1,0 +1,102 @@
+@name HoverPlate
+@inputs [Pod]:wirelink Seat:entity SeatAct
+@persist [Rangers Rr]:array Rn [E E2 Seat P]:entity AngleR:angle Sense Active PerpVel SeatAct 
+@model models/sprops/rectangles/size_4/rect_36x66x3.mdl
+
+if(duped()){reset()}
+
+interval(10) 
+
+E = entity()
+
+if(first()){
+    #noCollideAll(E,0)
+    runOnLast(1)
+    Rn=25
+    E:setMass(1000)
+    E:propFreeze(0)
+    E:setColor(vec(0),255)
+    
+    rangerDefaultZero(1)
+    rangerPersist(1)
+    rangerHitWater(1)
+    rangerFilter(E)  
+
+    for(I=1,4){
+        holoCreate(I)
+        holoCreate(I+4) 
+        holoParent(I,E)
+        holoAng(I,ang(0,0,0))
+        holoAlpha(I,0)
+        holoAlpha(I+4,0)
+    }
+    
+    holoPos(1,E:pos()+vec(E:boxSize()[1],E:boxSize()[2],0):rotate(E:angles())/2) 
+    holoPos(2,E:pos()+vec(E:boxSize()[1],-E:boxSize()[2],0):rotate(E:angles())/2) 
+    holoPos(3,E:pos()-vec(E:boxSize()[1],E:boxSize()[2],0):rotate(E:angles())/2)
+    holoPos(4,E:pos()-vec(E:boxSize()[1],-E:boxSize()[2],0):rotate(E:angles())/2)
+    
+}
+if(last()){P:propDelete()}
+
+Active = Pod["Active",number]
+
+if($Active&Active)
+{
+    soundPlay(1,99999,"vehicles/apc/apc_start_loop3.wav",0)
+}
+elseif($Active&!Active)
+{
+    soundPlay(2,10,"vehicles/apc/apc_shutdown.wav",0)
+    soundStop(1,1)
+}
+
+
+if(Active)
+{
+    W = Pod["W",number]
+    A = Pod["A",number]
+    S = Pod["S",number]
+    D = Pod["D",number]
+    R = Pod["R",number]
+    Space = Pod["Space",number]
+    Shift = Pod["Shift",number]
+    
+    soundPitch(1,E:vel():length()/20+100,1)
+}
+
+if(R){
+    
+    AngleR = E:angles():setPitch(0)
+    AngleR = E:angles():setRoll(0)
+    E:setAng(AngleR)
+    
+}
+
+E:applyAngForce(-E:angVel()*ang(0.3,0.1,0.8)*4*E:mass())
+
+for(I=1,4){
+    T = ""
+    rangerFilter(E)
+    Rangers[I,ranger]=rangerOffset(Rn,holoEntity(I):pos(),-holoEntity(I):up())
+    Rr[I,number]=Rn-Rangers[I,ranger]:distance()
+    
+    if(Rangers[I,ranger]:distance()!=0)
+    {
+        E:applyOffsetForce(E:up()*(changed(Rr[I,number])+Rr[I,number])*E:mass()*0.5 ,Rangers[I,ranger]:position())
+        Sense = 1
+    }
+    else
+    {
+        Sense = 0
+    }
+    holoPos(I+4,Rangers[I,ranger]:pos())
+}
+if(Sense)
+{
+    E:applyForce((-E:vel()/2*vec(0.01+Space*0.1,0.01+Space*0.1,0.2))*E:mass())
+    
+    E:applyForce(E:forward()*E:mass()*((W-S)+(Shift*2*(W-S)))*20)
+    E:applyAngForce(ang(0,5,0)*E:mass()*(A-D)*20)
+}
+

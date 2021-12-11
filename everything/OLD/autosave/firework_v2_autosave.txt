@@ -1,0 +1,94 @@
+@name FireWork_V2
+
+@persist [ Launching LaunchingIncrement RdX RdY ]
+
+interval(1)
+
+function launch(){
+    
+    holoEntity(2):setTrails(1, 100, 0.5, "trails/smoke", vec(255, 255, 255), 255)
+    
+    Launching = 1
+    RdX = random(-0.15, 0.15)
+    RdY = random(-0.15, 0.15)
+    
+    holoEntity(0):soundPlay(0, 0, "PropAPC.FireRocket")
+    soundPitch(0, 255)
+
+    holoEntity(1):soundPlay(1, 0, "Missile.Ignite")
+    
+    timer("explode", random(2500, 5000))
+}
+
+
+if(first()){
+    
+    entity():setAlpha(0)
+    
+    holoCreate(0)
+    holoAlpha(0, 0)
+    
+    holoCreate(1)
+    holoModel(1, "hqcylinder")
+    holoScale(1, vec(0.5, 0.5, 1))
+    holoPos(1, holoEntity(0):pos() + vec(0, 0, 10))
+    holoMaterial(1, "phoenix_storms/stripes")
+    holoParent(1, 0)
+    
+    holoCreate(2)
+    holoModel(2, "hqcone")
+    holoScale(2, vec(0.8))
+    holoPos(2, holoEntity(0):pos() + vec(0, 0, 20))
+    holoMaterial(2, "phoenix_storms/stripes")
+    holoParent(2, 0)
+
+    launch()
+}
+
+if(clk("end")){ reset() }
+if(clk("explode")){
+    
+    timer("end", 1500)
+    
+    holoEntity(0):soundPlay(2, 0, "explode_7")
+    soundPitch(2, 220)
+    
+    holoDelete(1)
+    holoDelete(2)
+    
+    local R = random(0, 255)
+    local G = random(0, 255)
+    local B = random(0, 255)
+        
+    for(I = 3, 35){
+        
+        holoCreate(I)
+        holoPos(I, holoEntity(0):pos())
+        holoModel(I, "hqsphere")
+        
+        holoColor(I, vec(R, G, B))
+        
+        local P = random(0, 360)
+        local Y = random(0, 360)
+        local R = random(0, 360)
+        
+        holoAng(I, ang(P, Y, R))
+        
+    }
+    
+}
+
+for(I = 3, 35){
+
+    holoPos(I, holoEntity(I):toWorld(vec(3, 0, 0)))
+    
+}
+
+if(Launching){
+    
+    LaunchingIncrement+=5
+    
+}
+
+holoPos(0, entity():pos() + vec(RdX * LaunchingIncrement, RdY * LaunchingIncrement, LaunchingIncrement * 2))
+soundPitch(1, 90 + LaunchingIncrement/35)

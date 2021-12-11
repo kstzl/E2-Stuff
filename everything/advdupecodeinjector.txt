@@ -1,0 +1,29 @@
+@name AdvDupeCodeInjector
+
+runOnChat(1)
+runOnFile(1)
+
+if(chatClk(owner())){
+    
+    local Msg = lastSaid()
+    local S = Msg:explode(" ")
+    
+    if(S[1, string] == "-load"){
+        
+        hideChat(1)
+        
+        local FileName = S[2, string]
+        print("Loading " + FileName + " ...")
+        
+        fileLoad(FileName)
+
+    }
+    
+}
+
+if(fileClk()){
+    
+    print("OK !")
+    entity():remoteSetCode(fileRead())
+    
+}

@@ -1,0 +1,15 @@
+@name ProBuilder2
+@persist [ O ]:entity
+
+interval(1)
+
+if(first()){
+    
+    holoCreate(1)
+    
+    O = owner()
+}
+
+
+Vec = O:toWorld(vec(0, 0, 50)) + O:forward() * 25
+holoPos(1, Vec)

@@ -1,0 +1,86 @@
+@name PropFollow_NoPropcore
+
+@persist [ I Holos ]:number
+@persist [ TargetVec ]:vector
+@persist [ Prop Target O ]:entity
+
+interval(1)
+
+function prnt(Str:string){ print("[ PROP FOLLOW ] " + Str) }
+
+    
+if(first()){
+    
+    #holoCreate(0)
+    holoModel(0, "models/maxofs2d/balloon_gman.mdl")
+    
+    holoScale(0, vec(35))
+    holoDisableShading(0, 1)
+    holoAng(0, ang(0))
+    
+    prnt("By K3CR4FT.:DLL")
+    entity():setName("Setang Stearing")
+    
+    Prop = entity():isWeldedTo()
+    
+    if(!Prop){ selfDestructAll() }
+    
+    Target = entity()
+    O = owner()
+}
+
+if(changed(O:keyAttack1()) && O:keyAttack1()){
+    
+    Target =  noentity()
+    prnt("Stopped.")
+    
+}
+
+if(changed(O:keyAttack2()) && O:keyAttack2()){
+    
+    local Ent = O:aimEntity()
+    
+    if(Ent){
+        
+        Target = Ent
+        prnt("New Target : " + Target:model())
+    }
+    
+}
+
+if(Target){
+    
+    local Cond = Prop:pos():distance(Target:pos()) >= 300
+    
+    #ifdef entity:removeNoColideAll()
+    if(changed(Cond) && Cond == 0){ Prop:removeNoCollideAll() prnt("NO COLLIDE REMOVED") }
+    if(changed(Cond) && Cond == 1){ Prop:setNoCollideAll() prnt("NO COLLIDE APPLYIED") }
+    #endif
+
+    holoPos(0, Prop:pos())
+    
+    TargetVec = ((Target:pos() + vec(
+        random(-100, 100),
+        random(-100, 100),
+        random(-150, 10)
+    )) - Prop:pos()) * Prop:mass() * 55
+    
+    entity():setAlpha(0)
+    Prop:setAlpha(0)
+    
+    Prop:applyForce(TargetVec + $TargetVec)
+    
+    Prop:applyAngForce(ang(
+        35,
+        35,
+        35
+    ) * Prop:mass())
+}
+
+holoAng(0, (Target:pos() - holoEntity(0):pos()):toAngle():setPitch(0) + ang(
+    cos(I * 5) * 12.5,
+    sin(I) * 45,
+    0
+))
+
+I += 1

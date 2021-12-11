@@ -1,0 +1,31 @@
+@name Real_Ai
+@inputs 
+@outputs 
+@persist [ ACTUAL_STATE STATE_WALKING STATE_JUMPING STATE_CROUCHING ]
+@trigger 
+
+interval(1)
+
+function setState(NewState:number){
+    
+    ACTUAL_STATE = NewState
+    
+}
+
+if(changed(ACTUAL_STATE) && ACTUAL_STATE == STATE_WALKING){
+    
+    holoAnim(1, "menu_walk")
+}
+
+if(first()){
+    
+    STATE_WALKING       = 1
+    STATE_JUMPING       = 2
+    STATE_CROUCHING     = 3
+    
+    
+    holoCreate(1)
+    holoModel(1, "models/player/barney.mdl")
+    
+    setState(STATE_WALKING)
+}

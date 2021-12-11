@@ -1,0 +1,112 @@
+@name Portal2_Plate_Trampoline
+@persist [I I2 Dist Force US]:number [Ang]:angle
+
+interval(ops() / 2)
+
+#By k3 / 2017
+
+if(first()){
+    
+    Force = 1000
+    Dist = 50
+    Ang = ang(0, 0, 0)
+    
+    #Plaque sol
+    H=0 holoCreate(H) holoScale(H, vec(11, 5, 0.1)) holoColor(H, vec(0)) holoAlpha(H, 255)
+    H=1 holoCreate(H) holoScale(H, vec(11, 5, 1)) holoColor(H, vec(30)) holoAlpha(H, 255) holoModel(H, "hq_stube") holoPos(H, entity():pos() + vec(0, 0, 6.7))
+    
+    #Rotation 1
+    H=2 holoCreate(H) holoScale(H, vec(1.5, 1.5, 1.5)) holoColor(H, vec(150)) holoAlpha(H, 255) holoModel(H, "hqcylinder") holoPos(H, entity():pos() + vec(-30, 0, 1)) holoAng(H, ang(0, 0, 90))
+    
+    #Barres
+    H=3 holoCreate(H) holoScale(H, vec(5, 0.5, 1)) holoColor(H, vec(100)) holoAlpha(H, 255) holoModel(H, "hqsphere") holoPos(H, entity():pos() + vec(0, 12, 3)) holoParent(H, 2)
+    H=4 holoCreate(H) holoScale(H, vec(5, 0.5, 1)) holoColor(H, vec(100)) holoAlpha(H, 255) holoModel(H, "hqsphere") holoPos(H, entity():pos() + vec(0, -12, 3)) holoParent(H, 2)
+    
+    H=5 holoCreate(H) holoScale(H, vec(0.5, 0.5, 3)) holoColor(H, vec(100)) holoAlpha(H, 255) holoModel(H, "hqcylinder") holoPos(H, entity():pos() + vec(-30, 0, 3)) holoAng(H, ang(0, 0, 90))
+    H=6 holoCreate(H) holoScale(H, vec(2, 2, 2)) holoColor(H, vec(200)) holoAlpha(H, 255) holoModel(H, "hqtube") holoPos(H, entity():pos() + vec(30, 0, 3)) holoAng(H, ang(0, 0, 90))
+    
+    #Roation 2
+    H=7 holoCreate(H) holoScale(H, vec(1.3, 1.3, 2)) holoColor(H, vec(100)) holoAlpha(H, 255) holoModel(H, "hqcylinder") holoPos(H, entity():pos() + vec(30, 0, 3)) holoAng(H, ang(0, 0, 90)) holoParent(H, 2)
+    
+    #Rotation 3
+    H=8 holoCreate(H) holoScale(H, vec(3, 3, 2)) holoColor(H, vec(200)) holoAlpha(H, 255) holoModel(H, "hqsphere") holoPos(H, entity():pos() + vec(30, 0, 3)) holoAng(H, ang(0, 0, 90)) holoParent(H, 7)
+   
+    #Cercles
+    H=9 holoCreate(H) holoScale(H, vec(3.3, 3.3, 1.5)) holoColor(H, vec(150)) holoAlpha(H, 255) holoModel(H, "hqsphere") holoPos(H, entity():pos() + vec(30, 0, 3)) holoAng(H, ang(0, 0, 90)) holoParent(H, 8)
+   
+    #Barres
+    H=10 holoCreate(H) holoScale(H, vec(0.1, 0.5, 4)) holoColor(H, vec(150)) holoAlpha(H, 255) holoModel(H, "cube") holoPos(H, entity():pos() + vec(30, 0, 10)) holoAng(H, ang(0, 0, 0)) holoParent(H, 9)
+    H=11 holoCreate(H) holoScale(H, vec(0.1, 0.5, 4)) holoColor(H, vec(100)) holoAlpha(H, 255) holoModel(H, "cube") holoPos(H, entity():pos() + vec(35, 0, 10)) holoAng(H, ang(-10, 0, 0)) holoParent(H, 9)
+    
+    #Cylinder Barres / Rotation 4
+    H=12 holoCreate(H) holoScale(H, vec(1, 1, 0.5)) holoColor(H, vec(100)) holoAlpha(H, 255) holoModel(H, "hqcylinder") holoPos(H, entity():pos() + vec(35, 0, 35)) holoAng(H, ang(0, 0, 0)) holoParent(H, 9)
+    
+    #Haut
+    H=13 holoCreate(H) holoScale(H, vec(10, 4, 0.5)) holoColor(H, vec(50)) holoAlpha(H, 255) holoModel(H, "hqtube") holoPos(H, entity():pos() + vec(35, 0, 35)) holoAng(H, ang(0, 0, 0)) holoParent(H, 12)
+    H=14 holoCreate(H) holoScale(H, vec(0.3, 4, 0.5)) holoColor(H, vec(50)) holoAlpha(H, 255) holoModel(H, "cube") holoPos(H, entity():pos() + vec(35, 0, 35)) holoAng(H, ang(0, 0, 0)) holoParent(H, 12)
+    H=15 holoCreate(H) holoScale(H, vec(8, 0.3, 0.5)) holoColor(H, vec(50)) holoAlpha(H, 255) holoModel(H, "cube") holoPos(H, entity():pos() + vec(35, 0, 35)) holoAng(H, ang(0, 0, 0)) holoParent(H, 12)
+    H=16 holoCreate(H) holoScale(H, vec(1, 1, 0.1)) holoColor(H, vec(0, 100, 255)) holoAlpha(H, 255) holoModel(H, "hqcylinder") holoPos(H, entity():pos() + vec(35, 0, 38)) holoAng(H, ang(0, 0, 0)) holoParent(H, 12)
+    H=17 holoCreate(H) holoScale(H, vec(0.8, 0.8, 0.2)) holoColor(H, vec(0, 150, 255)) holoAlpha(H, 255) holoModel(H, "hqcylinder") holoPos(H, entity():pos() + vec(35, 0, 38)) holoAng(H, ang(0, 0, 0)) holoParent(H, 12)
+    H=18 holoCreate(H) holoScale(H, vec(8, 4, 0.1)) holoColor(H, vec(50)) holoAlpha(H, 150) holoModel(H, "hqcylinder") holoPos(H, entity():pos() + vec(35, 0, 35)) holoAng(H, ang(0, 0, 0)) holoParent(H, 12)
+    H=19 holoCreate(H) holoAlpha(H, 255) holoAng(H, ang(0, 0, -45))
+
+    
+    holoParent(4, 3)
+    holoParent(5, 3)
+    holoParent(6, 3)
+    holoParent(7, 3)
+    
+}
+
+if(changed(owner():keyUse()) && owner():keyUse() == 1 && US == 0){
+    
+    holoAng(19, ( owner():aimPos() - entity():pos() ):toAngle():setPitch(45) )
+    print("OK !")
+    US = 1
+    
+}
+
+findByClass("player")
+findSortByDistance(entity():pos())
+
+if(find():pos():distance(entity():pos()) <= 100 && find():trusts(owner())){
+    
+    Sound = 1
+    Dist = 50
+    I = 0
+    
+    Find = find()
+    
+    #Find:plyApplyForce(holoEntity(19):up() * Force - Find:vel())
+    holoAng(12, holoEntity(8):angles() - ang(0, 0, 90))
+    
+}
+
+if(changed(Sound) && Sound == 1){
+
+    holoEntity(3):soundPlay(1, 1, "Metal_SeafloorCar.BulletImpact")
+    W = 0
+}
+if(changed(Dist) && Dist < 1){
+    
+     holoEntity(3):soundPlay(2, 2, "Streetwar.d3_c17_10b_doormove3")
+    
+}
+
+if(Dist > 0){
+    
+    Dist -= 1
+    I2 = 0
+    
+}
+else
+{
+    if(I2 > -60){
+        I2 -= 10
+    }
+    holoAng(12, ang(0))
+}
+
+holoAng(2, ang(-15 + sin(-I) * Dist - I2 / 2.2, 0, 90)) 
+holoAng(8, ang(sin(I) * Dist + I2, 0, 90))
+I += 10
